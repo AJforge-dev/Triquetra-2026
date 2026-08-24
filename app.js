@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const REGISTRATION_SHEET_URL = "https://script.google.com/macros/s/AKfycbziLjxRfWxV3J2yTiN177B241LwBXnTexvpFErpfBSydWrQWrCsbRoBv-drvAjdh7Oexg/exec";
 
   // 2. Dedicated Event Management Web App URL (Schedules, Event Names, Categories from Google Sheets)
-  const EVENT_MGMT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxbzc0NZXQRy7QJ4-8DGsjvqL1guKqi48GspHkyZePsdNtGQKyDCb9TY3Vk2dBD-5bi/exec";
+  const EVENT_MGMT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1LjaGIgQhQxhvAwLjX-04dB7JdXb3A1FwuhYs46bE41hKPJ6ngObyibVmLgMYthB2/exec";
   const GOOGLE_SHEET_DRIVE_URL = "https://docs.google.com/spreadsheets";
 
   // Initialize Lucide Icons
@@ -446,19 +446,46 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const dataStr = (typeof payload === "object") ? JSON.stringify(payload) : String(payload);
       
-      // Send as POST request with text/plain body to avoid CORS issues and URL length limits
-      fetch(EVENT_MGMT_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action: action, data: dataStr })
-      })
-      .then(() => console.log(`[Event Management Cloud Sync] '${action}' synced to Google Sheets.`))
-      .catch(err => {
-        console.warn(`[Event Management Cloud Sync POST fallback to GET] '${action}':`, err);
-        const url = `${EVENT_MGMT_SCRIPT_URL}?action=${encodeURIComponent(action)}&data=${encodeURIComponent(dataStr)}`;
-        fetch(url, { method: "GET", mode: "no-cors" });
-      });
+      // 1. Send via GET query parameter (Instant across mobile and web)
+      const url = `${EVENT_MGMT_SCRIPT_URL}?action=${encodeURIComponent(action)}&data=${encodeURIComponent(dataStr)}&_t=${Date.now()}`;
+      fetch(url, { method: "GET", mode: "no-cors" })
+        .then(() => console.log(`[Event Management Cloud Sync GET] '${action}' synced to Google Sheets.`))
+        .catch(() => {});
+
+      // 2. Also send via Hidden Form POST to hidden iframe (Transmits large payloads without 302 redirect body-drops)
+      let hiddenIframe = document.getElementById("gscript-sync-iframe");
+      if (!hiddenIframe) {
+        hiddenIframe = document.createElement("iframe");
+        hiddenIframe.id = "gscript-sync-iframe";
+        hiddenIframe.name = "gscript-sync-iframe";
+        hiddenIframe.style.display = "none";
+        document.body.appendChild(hiddenIframe);
+      }
+
+      const syncForm = document.createElement("form");
+      syncForm.method = "POST";
+      syncForm.action = EVENT_MGMT_SCRIPT_URL;
+      syncForm.target = "gscript-sync-iframe";
+      syncForm.style.display = "none";
+
+      const actionInput = document.createElement("input");
+      actionInput.type = "hidden";
+      actionInput.name = "action";
+      actionInput.value = action;
+      syncForm.appendChild(actionInput);
+
+      const dataInput = document.createElement("input");
+      dataInput.type = "hidden";
+      dataInput.name = "data";
+      dataInput.value = dataStr;
+      syncForm.appendChild(dataInput);
+
+      document.body.appendChild(syncForm);
+      syncForm.submit();
+      setTimeout(() => {
+        if (syncForm.parentNode) syncForm.parentNode.removeChild(syncForm);
+      }, 3000);
+
     } catch (e) {
       console.warn("[Event Management Cloud Sync Exception]:", e);
     }
@@ -484,18 +511,6 @@ document.addEventListener("DOMContentLoaded", () => {
     sendCloudAction("save_categories", categoriesDb);
   }
 
-  function resetAllDatabasesToDefault() {
-    registrationsDb = JSON.parse(JSON.stringify(DEFAULT_REGISTRATIONS_DB));
-    eventsDb = JSON.parse(JSON.stringify(DEFAULT_EVENTS_DB));
-    scheduleDb = JSON.parse(JSON.stringify(DEFAULT_SCHEDULE_DB));
-    categoriesDb = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES_DB));
-
-    persistRegistrationsDb();
-    persistEventsDb();
-    persistScheduleDb();
-    persistCategoriesDb();
-  }
-
   // Global Cloud Initializer (Fetches live event management data directly from Google Sheets on load)
   function fetchCloudData() {
     if (!EVENT_MGMT_SCRIPT_URL || EVENT_MGMT_SCRIPT_URL === "YOUR_DEPLOYED_WEB_APP_URL_HERE") return;
@@ -515,19 +530,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (cloudData && cloudData.status === "success") {
         let hasUpdates = false;
 
-        if (cloudData.categories && typeof cloudData.categories === "object" && Object.keys(cloudData.categories).length > 0) {
+        if (cloudData.categories && typeof cloudData.categories === "object") {
           categoriesDb = cloudData.categories;
           saveStoredDb(STORAGE_KEYS.CATEGORIES, categoriesDb);
           hasUpdates = true;
         }
 
-        if (cloudData.events && typeof cloudData.events === "object" && Object.keys(cloudData.events).length > 0) {
+        if (cloudData.events && typeof cloudData.events === "object") {
           eventsDb = cloudData.events;
           saveStoredDb(STORAGE_KEYS.EVENTS, eventsDb);
           hasUpdates = true;
         }
 
-        if (cloudData.schedule && typeof cloudData.schedule === "object" && Object.keys(cloudData.schedule).length > 0) {
+        if (cloudData.schedule && typeof cloudData.schedule === "object") {
           scheduleDb = cloudData.schedule;
           saveStoredDb(STORAGE_KEYS.SCHEDULE, scheduleDb);
           hasUpdates = true;
@@ -549,7 +564,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const cloudScript = document.createElement("script");
-    cloudScript.src = `${EVENT_MGMT_SCRIPT_URL}?action=get_data&callback=${callbackName}`;
+    cloudScript.src = `${EVENT_MGMT_SCRIPT_URL}?action=get_data&callback=${callbackName}&_t=${Date.now()}`;
     cloudScript.onerror = function() {
       console.warn("[Triquetra Cloud] Fallback to cached store (Offline/First run).");
       if (cloudScript && cloudScript.parentNode) {
