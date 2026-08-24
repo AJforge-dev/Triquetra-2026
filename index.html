@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Triquetra - Event Symposium App</title>
+  
+  <!-- CSS Link -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- Master Responsive App Layout -->
+  <div class="app-container">
+    
+    <!-- Top Sticky Web App Header -->
+    <header class="app-header">
+      <div class="app-brand">
+        <img src="logo.png" alt="Triquetra Logo" class="app-n-logo">
+        <span class="app-title-wordmark" id="header-title">TRIQUETRA</span>
+      </div>
+      <div class="app-header-right">
+        <!-- Shield Lock Icon for Admin Console -->
+        <button class="app-admin-btn" id="btn-admin-portal" title="Admin Portal Dashboard" style="display:flex; align-items:center; gap:6px; padding: 6px 12px; border-radius: 20px; border: 1.5px solid var(--primary-teal); background: var(--primary-teal-light); color: var(--primary-teal); font-weight: 700; font-size: 0.75rem; cursor:pointer;">
+          <i data-lucide="shield-check" style="width:16px;height:16px"></i>
+          <span>Admin Portal</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="app-content-wrapper" id="app-content-wrapper">
+      
+      <!-- Payment loading overlay -->
+      <div class="payment-loading-modal" id="payment-modal">
+        <div class="spinner"></div>
+        <p class="payment-text">Processing Registration</p>
+        <p class="payment-subtext">Connecting to gateway securely...</p>
+      </div>
+
+      <!-- ================= SCREEN 1: HOME ================= -->
+      <div class="app-screen active" id="screen-home">
+        <div class="screen-inner">
+          <div class="home-layout-centered">
+            
+            <!-- College Info Badge -->
+            <div class="home-college-badge">
+              <div class="home-college-logo">
+                <i data-lucide="graduation-cap" style="width:14px;height:14px"></i>
+              </div>
+              <span>Ganadipathy Tulsi's Jain Engineering College</span>
+            </div>
+            
+            <!-- Department Badge -->
+            <div class="dept-pill" style="max-width: 340px; text-align: center; display: inline-block;">
+              STUDENT ASSOCIATION OF IT, AI&DS and CSBS
+            </div>
+
+            <!-- Symposium Official Emblem -->
+            <div class="mascot-container">
+              <div class="mascot-glow-ring"></div>
+              <img src="triquetra_logo.png" alt="Triquetra Emblem" class="mascot-img">
+              <i data-lucide="sparkle" class="mascot-deco-diamond mascot-deco-diamond-1" style="width:24px;height:24px;"></i>
+              <i data-lucide="sparkle" class="mascot-deco-diamond mascot-deco-diamond-2" style="width:18px;height:18px;"></i>
+            </div>
+
+            <!-- Main Titles -->
+            <h2 class="home-title">Intra College Symposium 2026</h2>
+            <p class="home-subtitle">A platform to showcase ideas, innovation and technical excellence.</p>
+
+            <!-- CTA Button -->
+            <button class="cta-button" id="btn-explore-events" style="margin-bottom: 2rem; max-width: 320px;">
+              Explore Events <i data-lucide="arrow-right" style="width: 18px; height:18px"></i>
+            </button>
+
+
+
+            <!-- About Box -->
+            <div class="section-card" style="text-align: left; width: 100%;">
+              <h3 class="section-title">About the Symposium</h3>
+              <p class="section-desc">
+                Triquetra 2026 is organized by the
+                <strong>students with IT, AI&DS and CSBS</strong>
+                to bring together creative and ambitious students across college campuses. Structured around a three-Department pattern, the symposium provides a dynamic platform for participants to showcase their technical prowess, problem-solving skills, and innovative capabilities.
+              </p>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCREEN 2: EVENT CATEGORIES ================= -->
+      <div class="app-screen" id="screen-categories">
+        <div class="screen-inner">
+          <div class="screen-title-area">
+            <div>
+              <h2 class="screen-title">Event Categories</h2>
+              <p class="screen-subtitle">Explore events across different domains</p>
+            </div>
+          </div>
+
+          <!-- Responsive Grid of 6 Categories -->
+          <div class="categories-grid" id="categories-list-container">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCREEN 3: EVENT DETAIL ================= -->
+      <div class="app-screen" id="screen-detail">
+        <div class="screen-inner">
+          
+          <!-- Breadcrumb -->
+          <div class="breadcrumb" id="detail-breadcrumb">
+            <span id="breadcrumb-category-link" style="cursor:pointer; color:var(--text-gray); transition:color 0.2s;">Events</span>
+            <i data-lucide="chevron-right" style="width:12px;height:12px"></i>
+            <span id="detail-breadcrumb-cat" style="color: var(--primary-teal); font-weight:700">Technical</span>
+          </div>
+
+          <!-- Category Events Switcher (Pills) -->
+          <div class="category-events-switcher" id="category-events-switcher">
+            <!-- Populated dynamically by JS -->
+          </div>
+
+          <!-- Event Header Category Badge -->
+          <div style="margin-bottom: 1.25rem;">
+            <span class="detail-banner-tag" id="detail-banner-tag" style="position:static; display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; padding:0.4rem 0.9rem; border-radius:20px; background:var(--primary-teal); color:#FFFFFF; font-weight:700;">
+              <i data-lucide="tag" style="width:14px;height:14px"></i> <span id="detail-tag-text">Technical</span>
+            </span>
+          </div>
+
+          <div class="detail-layout-grid">
+            <!-- Left Info Column -->
+            <div class="detail-left-col">
+              <h2 class="detail-title" id="detail-title">CodeCraze</h2>
+              <p class="detail-desc" id="detail-desc">
+                Put your coding skills to the test in this ultimate speed-programming challenge.
+              </p>
+
+              <!-- About Paragraph -->
+              <div class="section-card">
+                <h3 class="section-title">About the Event</h3>
+                <p class="section-desc" id="detail-about">
+                  Event details will appear here.
+                </p>
+              </div>
+            </div>
+
+            <!-- Right Parameters Column -->
+            <div class="detail-right-col">
+              <!-- Quick Info Details Grid (Live-loaded from JS state) -->
+              <div class="info-grid" id="detail-info-grid">
+                <!-- Inner HTML is rendered dynamically in app.js -->
+              </div>
+
+              <!-- Rules Section -->
+              <div class="section-card">
+                <h3 class="section-title">Rules</h3>
+                <ul class="rules-list" id="detail-rules-list">
+                  <!-- Inner HTML rendered dynamically -->
+                </ul>
+              </div>
+
+              <!-- Action Register Button -->
+              <button class="cta-button" id="btn-register-now" style="margin-top: 1rem;">
+                Register Now <i data-lucide="edit-3" style="width: 18px; height: 18px"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ================= SCREEN 4: EVENT SCHEDULE ================= -->
+      <div class="app-screen" id="screen-schedule">
+        <div class="screen-inner">
+          <div class="schedule-container">
+            
+            <div class="screen-title-area" style="text-align: center;">
+              <h2 class="screen-title">Event Schedule</h2>
+              <p class="screen-subtitle">Plan your day and don't miss out on any events.</p>
+            </div>
+
+            <!-- Date Pills Row -->
+            <div class="date-tabs-container">
+              <div class="date-pill active">23 May 2026</div>
+              <div class="date-pill">24 May 2026</div>
+              <div class="date-pill">25 May 2026</div>
+            </div>
+
+            <!-- Timeline vertical layout -->
+            <div class="timeline-list" id="schedule-list">
+              <!-- Populated Dynamically by JS -->
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCREEN 5: REGISTRATION FORM ================= -->
+      <div class="app-screen" id="screen-register">
+        <div class="screen-inner">
+          <div class="screen-title-area">
+            <h2 class="screen-title">Register for Event</h2>
+            <p class="screen-subtitle">Fill in your details to participate in the symposium.</p>
+          </div>
+
+          <form id="symposium-reg-form" onsubmit="return false;">
+            <div class="form-layout-grid">
+              
+              <!-- Left Column: User fields -->
+              <div class="form-left-col">
+                <div class="form-section-title">Participant Details</div>
+                
+                <div class="form-group">
+                  <label class="form-label" for="reg-name">Full Name</label>
+                  <input type="text" id="reg-name" class="form-input" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="reg-num">Register Number</label>
+                  <input type="text" id="reg-num" class="form-input" placeholder="Enter your register number" required>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="reg-dept">Department</label>
+                    <div class="dropdown-icon-wrapper">
+                      <select id="reg-dept" class="form-input select" required>
+                        <option value="" disabled selected hidden>Select Department</option>
+                        <option value="IT">IT</option>
+                        <option value="AI&DS">AI&amp;DS</option>
+                        <option value="CSBS">CSBS</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label class="form-label" for="reg-year">Year</label>
+                    <div class="dropdown-icon-wrapper">
+                      <select id="reg-year" class="form-input select" required>
+                        <option value="" disabled selected hidden>Select Year</option>
+                        <option value="I">I Year</option>
+                        <option value="II">II Year</option>
+                        <option value="III">III Year</option>
+                        <option value="IV">IV Year</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: Event Info & Payment -->
+              <div class="form-right-col">
+                <div class="form-section-title">Event Selection</div>
+                
+                <!-- Select Event Dropdown -->
+                <div class="form-group" style="margin-bottom: 1rem;">
+                  <label class="form-label" for="reg-event-select">Select Event</label>
+                  <div class="dropdown-icon-wrapper">
+                    <select id="reg-event-select" class="form-input select">
+                      <!-- Populated dynamically -->
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Selected event summary card -->
+                <div class="event-summary-card">
+                  <div class="event-summary-thumb">
+                    <i data-lucide="code"></i>
+                  </div>
+                  <div class="event-summary-info">
+                    <!-- Inner HTML is rendered dynamically in app.js -->
+                  </div>
+                </div>
+
+                <!-- Registration Fee Box -->
+                <div class="fee-container">
+                  <span class="fee-label">Registration Fee</span>
+                  <div class="fee-amount-group">
+                    <span class="fee-amount">Free</span>
+                  </div>
+                </div>
+
+                <!-- Rules Agreement Checkbox -->
+                <label class="checkbox-label" for="reg-agree">
+                  <input type="checkbox" id="reg-agree" class="checkbox-input" required>
+                  <span>I agree to the event rules, guidelines, and code of conduct defined by the coordinators.</span>
+                </label>
+
+                <!-- Action Button -->
+                <button type="submit" class="cta-button" id="btn-proceed-pay">
+                  Proceed to Register
+                </button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ================= SCREEN 6: CONFIRMATION ================= -->
+      <div class="app-screen" id="screen-confirmation">
+        <div class="screen-inner">
+          <div class="conf-container">
+            
+            <!-- Confetti Check Circle -->
+            <div class="conf-badge-wrapper">
+              <div class="confetti confetti-1"></div>
+              <div class="confetti confetti-2"></div>
+              <div class="confetti confetti-3"></div>
+              <div class="confetti confetti-4"></div>
+              <div class="confetti confetti-5"></div>
+              <div class="confetti confetti-6"></div>
+              
+              <div class="conf-badge">
+                <i data-lucide="check"></i>
+              </div>
+            </div>
+
+            <h2 class="conf-heading">Thank You!</h2>
+            <p class="conf-subtext">
+              Take a screenshot for future reference.
+            </p>
+
+            <!-- Receipt Card Details -->
+            <div class="conf-card">
+              <div style="font-size:0.85rem; font-weight:800; border-bottom:1px solid var(--bg-light); padding-bottom: 8px; margin-bottom: 8px; display:flex; justify-content:space-between; align-items:center;">
+                <span>REGISTRATION ID</span>
+                <span style="color:var(--primary-teal);" id="conf-val-id">TQ-01</span>
+              </div>
+              
+              <div class="conf-detail-row">
+                <span class="conf-detail-label">Participant</span>
+                <span class="conf-detail-value" id="conf-val-name">Amit Kumar</span>
+              </div>
+              <div class="conf-detail-row">
+                <span class="conf-detail-label">Register Number</span>
+                <span class="conf-detail-value" id="conf-val-reg-num">-</span>
+              </div>
+              <div class="conf-detail-row">
+                <span class="conf-detail-label">Class</span>
+                <span class="conf-detail-value" id="conf-val-dept">AI & DS (III Year)</span>
+              </div>
+              <div class="conf-detail-row">
+                <span class="conf-detail-label">Registered Event</span>
+                <span class="conf-detail-value" id="conf-val-event" style="color:var(--primary-teal);">CodeCraze</span>
+              </div>
+              <div class="conf-detail-row">
+                <span class="conf-detail-label">Status</span>
+                <span class="conf-detail-value" style="color:#10B981; display:flex; align-items:center; gap:2px">
+                  <i data-lucide="shield-check" style="width:14px;height:14px"></i> Registered
+                </span>
+              </div>
+            </div>
+
+            <!-- Back to Home CTA -->
+            <button class="cta-button" id="btn-back-to-home">
+              <i data-lucide="home" style="width: 18px; height: 18px"></i> Back to Home
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCREEN 7: CONTACT (BONUS) ================= -->
+      <div class="app-screen" id="screen-contact">
+        <div class="screen-inner">
+          
+          <div class="screen-title-area">
+            <h2 class="screen-title">Symposium Helpdesk</h2>
+            <p class="screen-subtitle">Feel free to reach out to us for any queries.</p>
+          </div>
+
+          <div class="contact-grid">
+            
+            <div class="contact-card">
+              <div class="contact-title">Organizing Department</div>
+              <p style="font-size:0.85rem; color:var(--text-gray); line-height: 1.5;">
+                Department of Artificial Intelligence & Data Science,<br>
+                Ganadipathy Tulsi's Jain Engineering College
+              </p>
+            </div>
+
+            <div class="contact-card">
+              <div class="contact-title">AI&DS Lab</div>
+              <p style="font-size:0.85rem; color:var(--text-gray); line-height: 1.5;">
+                GTEC
+              </p>
+              <p style="font-size:0.8rem; color:var(--text-light); margin-top:0.75rem; display:flex; align-items:center; gap:4px">
+                <i data-lucide="map-pin" style="width:14px;height:14px"></i> BHAGWAN PARASWANATH BLOCK
+              </p>
+            </div>
+
+            <div class="contact-card">
+              <div class="contact-title">Student Coordinator</div>
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem; padding: 6px 0;">
+                <span style="font-weight:600; color:var(--text-dark)">Kamalesh S (AI & DS)</span>
+                <span style="color:var(--text-gray)">+91 63842 14459</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ================= SCREEN 8: ADMIN LOGIN AUTHORIZATION ================= -->
+      <div class="app-screen" id="screen-admin-login">
+        <div class="screen-inner" style="max-width: 480px;">
+          <div class="screen-title-area" style="text-align: center;">
+            <h2 class="screen-title">Admin Authorization</h2>
+            <p class="screen-subtitle">Sign in to access the symposium administrative workspace</p>
+          </div>
+
+          <div class="section-card">
+            <form id="admin-login-form">
+              <div class="form-group">
+                <label class="form-label" for="admin-login-email">Admin Username</label>
+                <input type="text" id="admin-login-email" class="form-input" placeholder="triquetra26" value="triquetra26" required>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label class="form-label" for="admin-login-pass">Security Password</label>
+                <input type="password" id="admin-login-pass" class="form-input" placeholder="••••••••" value="24007" required>
+              </div>
+
+              <div class="sql-error-box" id="login-error-msg" style="margin-bottom: 1.25rem; display:none;"></div>
+
+              <button type="submit" class="cta-button" id="btn-admin-login-submit">
+                Unlock Admin Console <i data-lucide="unlock" style="width:16px;height:16px"></i>
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ================= SCREEN 9: ADMIN WORKSPACE CONSOLE ================= -->
+      <div class="app-screen" id="screen-admin">
+        <div class="screen-inner">
+          <div class="screen-title-area" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <h2 class="screen-title">Admin Workstation</h2>
+              <p class="screen-subtitle">Inspect registration tables, edit event rules, and configure date schedules.</p>
+            </div>
+            
+            <!-- Admin Top Actions -->
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="cta-button" id="btn-admin-logout" style="max-width: 130px; padding: 0.55rem 1rem; font-size: 0.8rem; background-color: #EF4444;">
+                Logout <i data-lucide="log-out" style="width:14px;height:14px"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Section Tabs -->
+          <div class="admin-tab-bar">
+            <button class="admin-tab active" data-section="sql">SQL Registrations</button>
+            <button class="admin-tab" data-section="events">Manage Events</button>
+            <button class="admin-tab" data-section="schedule">Manage Schedule</button>
+            <button class="admin-tab" data-section="categories">Manage Categories</button>
+          </div>
+
+          <!-- TAB 1: SQL DATABASE SIMULATOR -->
+          <div class="admin-section" id="admin-sec-sql">
+            <div class="sql-workspace">
+              
+              <!-- Left Sidebar: Presets -->
+              <div class="sql-presets-card">
+                <h4 style="font-size:0.85rem; font-weight:700; color:var(--text-dark); margin-bottom: 0.5rem; display:flex; align-items:center; gap:4px">
+                  <i data-lucide="database" style="width:14px;height:14px"></i> SQL Query Presets
+                </h4>
+                <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.4; margin-bottom: 1rem;">
+                  Click any query below to execute live against registrations.
+                </p>
+                
+                <div class="sql-presets-list">
+                  <button class="sql-preset" data-sql="SELECT * FROM registrations;">Show All Registrations</button>
+                  <button class="sql-preset" data-sql="SELECT * FROM registrations WHERE department = 'AI&DS';">Filter AI&DS Students</button>
+                  <button class="sql-preset" data-sql="SELECT * FROM registrations WHERE department = 'IT';">Filter IT Students</button>
+                  <button class="sql-preset" data-sql="SELECT * FROM registrations WHERE department = 'CSBS';">Filter CSBS Students</button>
+                  <button class="sql-preset" data-sql="SELECT department, COUNT(*) as count FROM registrations GROUP BY department;">Registrations by Department</button>
+                  <button class="sql-preset" data-sql="SELECT event, COUNT(*) as count FROM registrations GROUP BY event;">Registrations by Event</button>
+                </div>
+              </div>
+
+              <!-- Google Sheets Link Card -->
+              <div class="sql-presets-card" style="margin-top: 1rem; border-color: rgba(16, 185, 129, 0.2); background-color: rgba(16, 185, 129, 0.03);">
+                <h4 style="font-size:0.85rem; font-weight:700; color:#10B981; margin-bottom: 0.5rem; display:flex; align-items:center; gap:4px">
+                  <i data-lucide="file-text" style="width:14px;height:14px"></i> Google Sheets Live Sync
+                </h4>
+                <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.4; margin-bottom: 1rem;">
+                  Registrations are automatically synced to your Google Sheet in Google Drive.
+                </p>
+                <a id="btn-google-sheets-link" href="#" target="_blank" class="cta-button" style="padding: 0.5rem; font-size: 0.75rem; background-color: #10B981; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                  Open Google Sheet <i data-lucide="external-link" style="width:12px;height:12px"></i>
+                </a>
+              </div>
+
+              <!-- Right Sidebar: Console -->
+              <div class="sql-console-card">
+                <h4 style="font-size:0.85rem; font-weight:700; color:var(--text-dark); margin-bottom: 0.5rem;">
+                  Interactive SQL Terminal
+                </h4>
+                
+                <div class="sql-textarea-wrapper">
+                  <textarea id="sql-query-input" class="sql-textarea">SELECT * FROM registrations;</textarea>
+                </div>
+
+                <div class="sql-error-box" id="sql-error-box"></div>
+
+                <button class="cta-button" id="btn-run-sql" style="max-width: 180px; padding: 0.75rem 1rem; font-size: 0.85rem;">
+                  Run SQL Query <i data-lucide="play" style="width:14px;height:14px"></i>
+                </button>
+
+                <!-- Query Outputs -->
+                <div class="sql-output-area">
+                  <div class="sql-output-header">
+                    <h5 style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:var(--text-dark)">QUERY RESULTS</h5>
+                    <span id="sql-rows-count" style="font-size:0.75rem; color:var(--text-gray); background-color:var(--bg-light); padding:2px 8px; border-radius:4px">0 rows returned</span>
+                  </div>
+                  
+                  <div class="sql-table-wrapper">
+                    <table class="sql-results-table" id="sql-results-table">
+                      <!-- Populated dynamically -->
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <!-- TAB 2: MANAGE EVENTS -->
+          <div class="admin-section" id="admin-sec-events" style="display:none;">
+            <div class="admin-events-grid">
+              
+              <!-- Form to edit / add events -->
+              <div class="section-card" style="margin-bottom:0">
+                <h4 class="section-title" id="admin-evt-form-title">Add / Edit Event Details</h4>
+                <form id="admin-form-event">
+                  
+                  <div class="form-group">
+                    <label class="form-label" for="admin-evt-name">Event Title</label>
+                    <input type="text" id="admin-evt-name" class="form-input" placeholder="e.g. CodeCraze" required>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="admin-evt-category">Event Category</label>
+                      <div class="dropdown-icon-wrapper">
+                        <select id="admin-evt-category" class="form-input select" required>
+                          <!-- Populated dynamically -->
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="admin-evt-fee">Registration Fee</label>
+                      <input type="text" id="admin-evt-fee" class="form-input" placeholder="e.g. Free" required>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="admin-evt-date">Event Date</label>
+                      <input type="text" id="admin-evt-date" class="form-input" placeholder="e.g. 24 May 2026" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="admin-evt-time">Start Time</label>
+                      <input type="text" id="admin-evt-time" class="form-input" placeholder="e.g. 10:00 AM" required>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="admin-evt-venue">Venue</label>
+                      <input type="text" id="admin-evt-venue" class="form-input" placeholder="e.g. Computer Lab 3" required>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label" for="admin-evt-team">Team Size</label>
+                      <input type="text" id="admin-evt-team" class="form-input" placeholder="e.g. 1-3 Members" required>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="admin-evt-desc">Tagline / Short Overview</label>
+                    <input type="text" id="admin-evt-desc" class="form-input" placeholder="e.g. Put your coding skills to the test in this speed-programming challenge" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="admin-evt-about">About the Event</label>
+                    <textarea id="admin-evt-about" class="form-input" style="height: 65px; resize: vertical;" placeholder="Detailed info about event structure, rounds, compiler tools, etc."></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="admin-evt-rules">Rules (one per line)</label>
+                    <textarea id="admin-evt-rules" class="form-input" style="height: 65px; resize: vertical;" placeholder="Calculators and pre-written code snippets are prohibited&#10;Plagiarism leads to immediate disqualification&#10;Judge decision will be final"></textarea>
+                  </div>
+
+                  <div style="display:flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <button type="submit" class="cta-button" id="btn-evt-submit" style="max-width: 220px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 0.5rem;">
+                      Save Event Details <i data-lucide="save" style="width:14px;height:14px"></i>
+                    </button>
+                    <button type="button" class="cta-button" id="btn-evt-cancel" style="display:none; max-width: 120px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 0.5rem; background-color: var(--text-gray);">
+                      Cancel <i data-lucide="x" style="width:14px;height:14px"></i>
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+
+              <!-- Current Events and Actions -->
+              <div class="section-card" style="margin-bottom:0">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:8px;">
+                  <h4 class="section-title" style="margin-bottom:0;">Current Events</h4>
+                  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button type="button" id="btn-evt-delete-selected" class="cta-button" style="display:none; width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #EF4444;">
+                      <i data-lucide="trash-2" style="width:12px;height:12px"></i> Delete Selected (<span id="count-evt-selected">0</span>)
+                    </button>
+                    <button type="button" id="btn-evt-save-all" class="cta-button" style="width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #10B981;">
+                      <i data-lucide="check-circle" style="width:12px;height:12px"></i> Save Events
+                    </button>
+                    <button type="button" id="btn-evt-new" class="cta-button" style="width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem;">
+                      <i data-lucide="plus" style="width:12px;height:12px"></i> New Event
+                    </button>
+                  </div>
+                </div>
+                <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.4; margin-bottom: 1rem;">
+                  Select checkboxes to delete multiple events at once, or click an event to edit.
+                </p>
+                
+                <div class="sql-table-wrapper" style="max-height: 380px; overflow-y: auto; margin-bottom: 1.25rem;">
+                  <table class="sql-results-table">
+                    <thead>
+                      <tr>
+                        <th style="width:40px; text-align:center;"><input type="checkbox" id="chk-evt-select-all" title="Select All Events" class="table-checkbox"></th>
+                        <th>Event Name</th>
+                        <th>Category</th>
+                        <th>Date & Venue</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="admin-events-list-body">
+                      <!-- Populated dynamically by JS -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div style="background-color: var(--primary-teal-light); border: 1px dashed rgba(26,107,107,0.25); padding: 0.8rem; border-radius: 8px;">
+                  <h5 style="font-size:0.75rem; font-weight:700; color:var(--primary-teal); margin-bottom: 0.25rem;">Live Auto-Fetching Across App</h5>
+                  <p style="font-size:0.7rem; color:var(--text-gray); line-height: 1.4;">
+                    Updating, adding, or deleting events immediately recalculates category counts on Screen 2, syncs registration choices, and updates detail views in real-time.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- TAB 3: MANAGE SCHEDULE -->
+          <div class="admin-section" id="admin-sec-schedule" style="display:none;">
+            <div class="schedule-manager-grid">
+              
+              <!-- Form to add / edit schedule entry -->
+              <div class="section-card" style="margin-bottom: 0;">
+                <h4 class="section-title" id="admin-sch-form-title">Add Timeline Event</h4>
+                <form id="admin-form-schedule">
+                  
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="admin-sch-day">Schedule Day</label>
+                      <input type="text" id="admin-sch-day" class="form-input" placeholder="e.g. 23 May 2026" required>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="form-label" for="admin-sch-time">Slot Time</label>
+                      <input type="text" id="admin-sch-time" class="form-input" placeholder="e.g. 11:30 AM" required>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="admin-sch-name">Event/Task Name</label>
+                    <input type="text" id="admin-sch-name" class="form-input" placeholder="e.g. AI Project Presentation" required>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label class="form-label" for="admin-sch-venue">Venue / Room</label>
+                      <input type="text" id="admin-sch-venue" class="form-input" placeholder="e.g. Seminar Hall 3" required>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label class="form-label" for="admin-sch-icon">Activity Icon</label>
+                      <div class="dropdown-icon-wrapper">
+                        <select id="admin-sch-icon" class="form-input select">
+                          <option value="calendar">Calendar (Default)</option>
+                          <option value="sparkles">Sparkles (Inauguration)</option>
+                          <option value="presentation">Presentation (Speech)</option>
+                          <option value="code">Code (Programming)</option>
+                          <option value="coffee">Coffee (Break)</option>
+                          <option value="lightbulb">Lightbulb (Idea Pitching)</option>
+                          <option value="users">Users (Group)</option>
+                          <option value="activity">Activity (Gaming/Robotics)</option>
+                          <option value="palette">Palette (Design)</option>
+                          <option value="monitor">Monitor (Exhibition)</option>
+                          <option value="award">Award (Prize Distribution)</option>
+                          <option value="help-circle">Quiz / Help</option>
+                          <option value="briefcase">Briefcase (Business/AdMad)</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="display:flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <button type="submit" class="cta-button" id="btn-sch-submit" style="max-width: 220px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 1rem;">
+                      Add to Schedule <i data-lucide="plus" style="width:14px;height:14px"></i>
+                    </button>
+                    <button type="button" class="cta-button" id="btn-sch-cancel" style="display:none; max-width: 120px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 1rem; background-color: var(--text-gray);">
+                      Cancel <i data-lucide="x" style="width:14px;height:14px"></i>
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+
+              <!-- List of current slots to edit or delete -->
+              <div class="section-card" style="margin-bottom: 0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:8px;">
+                  <h4 class="section-title" style="margin-bottom:0;">Current Timeline Entries</h4>
+                  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button type="button" id="btn-sch-delete-selected" class="cta-button" style="display:none; width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #EF4444;">
+                      <i data-lucide="trash-2" style="width:12px;height:12px"></i> Delete Selected (<span id="count-sch-selected">0</span>)
+                    </button>
+                    <button type="button" id="btn-sch-save-all" class="cta-button" style="width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #10B981;">
+                      <i data-lucide="check-circle" style="width:12px;height:12px"></i> Save Schedule
+                    </button>
+                  </div>
+                </div>
+                <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.4; margin-bottom: 1rem;">
+                  Select checkboxes to delete multiple timeline slots at once, or click Edit to modify.
+                </p>
+                
+                <div class="sql-table-wrapper" style="max-height: 380px; overflow-y: auto;">
+                  <table class="sql-results-table">
+                    <thead>
+                      <tr>
+                        <th style="width:40px; text-align:center;"><input type="checkbox" id="chk-sch-select-all" title="Select All Slots" class="table-checkbox"></th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Event</th>
+                        <th>Venue</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="admin-schedule-list-body">
+                      <!-- Populated dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- TAB 4: MANAGE CATEGORIES -->
+          <div class="admin-section" id="admin-sec-categories" style="display:none;">
+            <div class="admin-events-grid">
+              
+              <!-- Form to add/edit categories -->
+              <div class="section-card" style="margin-bottom:0">
+                <h4 class="section-title" id="admin-cat-form-title">Add / Edit Category</h4>
+                <form id="admin-form-category">
+                  
+                  <div class="form-group">
+                    <label class="form-label" for="admin-cat-name">Category Name</label>
+                    <input type="text" id="admin-cat-name" class="form-input" placeholder="e.g. Non-Technical" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="admin-cat-desc">Description</label>
+                    <input type="text" id="admin-cat-desc" class="form-input" placeholder="e.g. Managerial and business tasks" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="admin-cat-icon">Category Icon</label>
+                    <div class="dropdown-icon-wrapper">
+                      <select id="admin-cat-icon" class="form-input select">
+                        <option value="code">Code (Programming)</option>
+                        <option value="briefcase">Briefcase (Non-Tech)</option>
+                        <option value="palette">Palette (Design)</option>
+                        <option value="lightbulb">Lightbulb (Innovation)</option>
+                        <option value="presentation">Presentation (PPT)</option>
+                        <option value="smile">Smile (Fun/Games)</option>
+                        <option value="award">Award (Competition)</option>
+                        <option value="coffee">Coffee (Break)</option>
+                        <option value="users">Users (Group)</option>
+                        <option value="activity">Activity (Robotics)</option>
+                        <option value="help-circle">Help / Quiz</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div style="display:flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <button type="submit" class="cta-button" id="btn-cat-submit" style="max-width: 220px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 1rem;">
+                      Save Category <i data-lucide="save" style="width:14px;height:14px"></i>
+                    </button>
+                    <button type="button" class="cta-button" id="btn-cat-cancel" style="display:none; max-width: 120px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 1rem; background-color: var(--text-gray);">
+                      Cancel <i data-lucide="x" style="width:14px;height:14px"></i>
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+
+              <!-- Current Categories and Actions -->
+              <div class="section-card" style="margin-bottom:0">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:8px;">
+                  <h4 class="section-title" style="margin-bottom:0;">Current Categories</h4>
+                  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button type="button" id="btn-cat-delete-selected" class="cta-button" style="display:none; width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #EF4444;">
+                      <i data-lucide="trash-2" style="width:12px;height:12px"></i> Delete Selected (<span id="count-cat-selected">0</span>)
+                    </button>
+                    <button type="button" id="btn-cat-save-all" class="cta-button" style="width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #10B981;">
+                      <i data-lucide="check-circle" style="width:12px;height:12px"></i> Save Categories
+                    </button>
+                    <button type="button" id="btn-cat-new" class="cta-button" style="width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem;">
+                      <i data-lucide="plus" style="width:12px;height:12px"></i> New Category
+                    </button>
+                  </div>
+                </div>
+                <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.4; margin-bottom: 1rem;">
+                  Select checkboxes to delete multiple categories at once, or click a category to edit.
+                </p>
+                
+                <div class="sql-table-wrapper" style="max-height: 380px; overflow-y: auto; margin-bottom: 1.25rem;">
+                  <table class="sql-results-table">
+                    <thead>
+                      <tr>
+                        <th style="width:40px; text-align:center;"><input type="checkbox" id="chk-cat-select-all" title="Select All Categories" class="table-checkbox"></th>
+                        <th>Category</th>
+                        <th>Icon</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="admin-categories-list-body">
+                      <!-- Populated dynamically by JS -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div style="background-color: var(--primary-teal-light); border: 1px dashed rgba(26,107,107,0.25); padding: 0.8rem; border-radius: 8px;">
+                  <h5 style="font-size:0.75rem; font-weight:700; color:var(--primary-teal); margin-bottom: 0.25rem;">Dynamic Portal Categories</h5>
+                  <p style="font-size:0.7rem; color:var(--text-gray); line-height: 1.4;">
+                    Adding or deleting categories instantly updates the home dashboard categories grid and updates the event creation category dropdown.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sticky Bottom Navigation Tabs -->
+    <nav class="app-bottom-nav">
+      <button class="nav-tab active" id="tab-home">
+        <i data-lucide="home" class="tab-icon"></i>
+        <span class="tab-label">Home</span>
+      </button>
+      <button class="nav-tab" id="tab-events">
+        <i data-lucide="grid" class="tab-icon"></i>
+        <span class="tab-label">Events</span>
+      </button>
+      <button class="nav-tab" id="tab-schedule">
+        <i data-lucide="calendar" class="tab-icon"></i>
+        <span class="tab-label">Schedule</span>
+      </button>
+      <button class="nav-tab" id="tab-register">
+        <i data-lucide="edit-3" class="tab-icon"></i>
+        <span class="tab-label">Register</span>
+      </button>
+      <button class="nav-tab" id="tab-contact">
+        <i data-lucide="help-circle" class="tab-icon"></i>
+        <span class="tab-label">Contact</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- JS Scripts -->
+  <script src="app.js"></script>
+</body>
+</html>
