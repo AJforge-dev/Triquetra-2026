@@ -805,39 +805,37 @@ document.addEventListener("DOMContentLoaded", () => {
     lucide.createIcons();
   }
 
-  // Render event details dynamically based on selected event & category
-  function renderEventDetails(eventName, categoryFallback) {
+  // Render event details dynamically based on selected event
+  function renderEventDetails(eventName) {
     const activeKey = eventName || appState.registration.selectedEvent || Object.keys(eventsDb)[0];
     const data = eventsDb[activeKey];
-    const catName = (data && data.category) || categoryFallback || appState.selectedCategory || "Technical";
 
     // 1. Breadcrumb
     const breadcrumbCat = document.getElementById("detail-breadcrumb-cat");
-    if (breadcrumbCat) breadcrumbCat.textContent = catName;
+    if (breadcrumbCat) breadcrumbCat.textContent = (data && data.name) || activeKey || "Event";
     
     const breadcrumbLink = document.getElementById("breadcrumb-category-link");
     if (breadcrumbLink) {
+      breadcrumbLink.textContent = "All Events";
       breadcrumbLink.onclick = () => navigateTo("categories");
     }
 
-    // 2. Category Events Switcher (Pills)
+    // 2. All Events Switcher (Pills)
     const switcher = document.getElementById("category-events-switcher");
     if (switcher) {
       switcher.innerHTML = "";
-      const siblingKeys = Object.keys(eventsDb).filter(k => {
-        return (eventsDb[k].category || "").trim().toLowerCase() === catName.trim().toLowerCase();
-      });
+      const allKeys = Object.keys(eventsDb);
 
-      if (siblingKeys.length > 1) {
+      if (allKeys.length > 1) {
         switcher.style.display = "flex";
-        siblingKeys.forEach(key => {
+        allKeys.forEach(key => {
           const pill = document.createElement("button");
           pill.type = "button";
           pill.className = `evt-pill ${key === activeKey ? 'active' : ''}`;
           pill.textContent = eventsDb[key].name;
           pill.addEventListener("click", () => {
             appState.registration.selectedEvent = key;
-            renderEventDetails(key, catName);
+            renderEventDetails(key);
           });
           switcher.appendChild(pill);
         });
@@ -848,9 +846,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // If event exists
     if (data) {
-      // Banner Tag
+      // Category Tag
       const bannerTag = document.getElementById("detail-banner-tag");
-      if (bannerTag) bannerTag.textContent = data.category || catName;
+      if (bannerTag) {
+        const tagText = document.getElementById("detail-tag-text");
+        if (tagText) tagText.textContent = data.category || "Event";
+        else bannerTag.textContent = data.category || "Event";
+      }
 
       // Title & Tagline
       const titleEl = document.getElementById("detail-title");
@@ -911,7 +913,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="info-item-icon"><i data-lucide="map-pin"></i></div>
             <div class="info-item-text">
               <span class="info-item-label">Venue</span>
-              <span class="info-item-value">${escapeHtml(data.venue || 'TBA')}</span>
+              <span class="info-item-value">${escapeHtml(data.venue || 'Campus')}</span>
             </div>
           </div>
           <div class="info-item">
@@ -936,11 +938,10 @@ document.addEventListener("DOMContentLoaded", () => {
         };
       }
     } else {
-      // Empty category placeholder
       const titleEl = document.getElementById("detail-title");
-      if (titleEl) titleEl.textContent = `No Events in ${catName}`;
+      if (titleEl) titleEl.textContent = `Event Not Found`;
       const descEl = document.getElementById("detail-desc");
-      if (descEl) descEl.textContent = `There are currently no events registered under the ${catName} category.`;
+      if (descEl) descEl.textContent = `Please select an event from the Events page.`;
       const aboutEl = document.getElementById("detail-about");
       if (aboutEl) aboutEl.textContent = "Check back soon or add events through the administrator console.";
       const rulesList = document.getElementById("detail-rules-list");
@@ -1000,49 +1001,77 @@ document.addEventListener("DOMContentLoaded", () => {
     return count;
   }
 
-  // Render Category Cards Dynamically with Auto-Fetched Counts
+  // Render All Live Events Dynamically on the Events Screen
   function renderCategoryCards() {
     const container = document.getElementById("categories-list-container");
     if (!container) return;
 
     container.innerHTML = "";
-    Object.keys(categoriesDb).forEach(key => {
-      const cat = categoriesDb[key];
-      const count = getCategoryEventCount(cat.name);
-      
-      const card = document.createElement("div");
-      card.className = "category-card";
-      card.id = cat.id || `cat-${cat.name.toLowerCase().replace(/\s+/g, '-')}`;
-      card.innerHTML = `
-        <div class="category-icon-chip">
-          <i data-lucide="${escapeHtml(cat.icon || 'tag')}"></i>
+    const eventKeys = Object.keys(eventsDb);
+
+    if (eventKeys.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1.5rem; background: var(--card-white); border-radius: 20px; border: 1px dashed var(--border-color);">
+          <i data-lucide="calendar" style="width:36px;height:36px; color:var(--text-light); margin-bottom:0.75rem;"></i>
+          <h3 style="font-size:1.1rem; font-weight:800; color:var(--text-dark); margin-bottom:0.5rem;">No Events Listed Yet</h3>
+          <p style="font-size:0.85rem; color:var(--text-gray);">Events configured by administrators will appear here in real-time.</p>
         </div>
-        <div>
-          <h3 class="category-name">${escapeHtml(cat.name)}</h3>
-          <p class="category-desc">${escapeHtml(cat.desc || '')}</p>
-        </div>
-        <span class="category-count">${count} ${count === 1 ? 'Event' : 'Events'}</span>
       `;
-      
+      lucide.createIcons();
+      return;
+    }
+
+    eventKeys.forEach(key => {
+      const evt = eventsDb[key];
+      const card = document.createElement("div");
+      card.className = "event-card";
+      card.innerHTML = `
+        <div>
+          <div class="event-card-header">
+            <h3 class="event-card-title">${escapeHtml(evt.name)}</h3>
+            <span class="event-summary-tag">${escapeHtml(evt.category || 'Event')}</span>
+          </div>
+          <p class="event-card-desc">${escapeHtml(evt.desc || '')}</p>
+        </div>
+
+        <div>
+          <div class="event-card-meta">
+            <div class="event-card-meta-item">
+              <i data-lucide="calendar"></i>
+              <span>${escapeHtml(evt.date || 'TBA')}</span>
+            </div>
+            <div class="event-card-meta-item">
+              <i data-lucide="clock"></i>
+              <span>${escapeHtml(evt.time || 'TBA')}</span>
+            </div>
+            <div class="event-card-meta-item">
+              <i data-lucide="map-pin"></i>
+              <span>${escapeHtml(evt.venue || 'Campus')}</span>
+            </div>
+            <div class="event-card-meta-item">
+              <i data-lucide="users"></i>
+              <span>${escapeHtml(evt.teamSize || '1 Member')}</span>
+            </div>
+          </div>
+
+          <div class="event-card-footer">
+            <span class="event-card-fee">${escapeHtml(evt.fee || 'Free')}</span>
+            <span class="event-card-btn">
+              View Rules & Details <i data-lucide="arrow-right" style="width:14px;height:14px"></i>
+            </span>
+          </div>
+        </div>
+      `;
+
       card.addEventListener("click", () => {
-        appState.selectedCategory = cat.name;
-        // Find matching events in this category
-        const matchingKeys = Object.keys(eventsDb).filter(k => {
-          return (eventsDb[k].category || "").trim().toLowerCase() === cat.name.trim().toLowerCase();
-        });
-        
-        if (matchingKeys.length > 0) {
-          appState.registration.selectedEvent = matchingKeys[0];
-          renderEventDetails(matchingKeys[0], cat.name);
-        } else {
-          renderEventDetails(null, cat.name);
-        }
+        appState.registration.selectedEvent = key;
+        renderEventDetails(key);
         navigateTo("detail");
       });
-      
+
       container.appendChild(card);
     });
-    
+
     lucide.createIcons();
   }
 
