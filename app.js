@@ -50,12 +50,12 @@ document.addEventListener("DOMContentLoaded", () => {
     categories: document.getElementById("admin-sec-categories")
   };
 
-  // LocalStorage Persistence Keys (Version 4: Live Data with Real Google Sheet Candidates)
+  // LocalStorage Persistence Keys (Version 5: Live Google Sheets Auto-Sync with Real Candidates)
   const STORAGE_KEYS = {
-    EVENTS: "triquetra_events_db_v4",
-    CATEGORIES: "triquetra_categories_db_v4",
-    SCHEDULE: "triquetra_schedule_db_v4",
-    REGISTRATIONS: "triquetra_registrations_db_v4"
+    EVENTS: "triquetra_events_db_v5",
+    CATEGORIES: "triquetra_categories_db_v5",
+    SCHEDULE: "triquetra_schedule_db_v5",
+    REGISTRATIONS: "triquetra_registrations_db_v5"
   };
 
   // Blacklist of obsolete dummy events to strictly exclude
@@ -71,7 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "triquetra_events", "triquetra_categories", "triquetra_schedule", "triquetra_registrations",
     "triquetra_events_db_v1", "triquetra_categories_db_v1", "triquetra_schedule_db_v1", "triquetra_registrations_db_v1",
     "triquetra_events_db_v2", "triquetra_categories_db_v2", "triquetra_schedule_db_v2", "triquetra_registrations_db_v2",
-    "triquetra_events_db_v3", "triquetra_categories_db_v3", "triquetra_schedule_db_v3", "triquetra_registrations_db_v3"
+    "triquetra_events_db_v3", "triquetra_categories_db_v3", "triquetra_schedule_db_v3", "triquetra_registrations_db_v3",
+    "triquetra_events_db_v4", "triquetra_categories_db_v4", "triquetra_schedule_db_v4", "triquetra_registrations_db_v4"
   ];
   obsoleteStorageKeys.forEach(k => {
     try { localStorage.removeItem(k); } catch (e) {}
@@ -88,7 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: 7, name: "RAMYA V", registerNumber: "510825205057", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ06", status: "Registered", timestamp: "8/27/2026 20:32" },
     { id: 8, name: "Ajaykumar J", registerNumber: "510823243011", department: "AI&DS", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 20:54" },
     { id: 9, name: "Thanisha S", registerNumber: "510825205080", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ26-1005", status: "Registered", timestamp: "8/27/2026 21:27" },
-    { id: 10, name: "Preethika", registerNumber: "510824243034", department: "AI&DS", year: "III", event: "Tech Talk", receipt: "TQ26-1005", status: "Registered", timestamp: "8/27/2026 21:28" }
+    { id: 10, name: "Preethika", registerNumber: "510824243034", department: "AI&DS", year: "III", event: "Tech Talk", receipt: "TQ26-1005", status: "Registered", timestamp: "8/27/2026 21:28" },
+    { id: 11, name: "Pooja k", registerNumber: "510825243036", department: "AI&DS", year: "II", event: "Tech Talk", receipt: "TQ26-1006", status: "Registered", timestamp: "8/27/2026 22:00" }
   ];
 
   // Default Core Events Details Database (Synced with Google Sheets)
