@@ -61,7 +61,8 @@ function doGet(e) {
         status: "success",
         categories: allData.categories,
         events: allData.events,
-        schedule: allData.schedule
+        schedule: allData.schedule,
+        registrations: allData.registrations
       }, callback);
     }
 
@@ -226,10 +227,33 @@ function readMgmtSheet(ss) {
     }
   }
 
+  var regSheet = ss.getSheetByName("Registrations");
+  var registrations = [];
+  if (regSheet && regSheet.getLastRow() > 1) {
+    var regData = regSheet.getRange(2, 1, regSheet.getLastRow() - 1, 9).getValues();
+    for (var r = 0; r < regData.length; r++) {
+      var rRow = regData[r];
+      if (rRow[1] || rRow[2]) {
+        registrations.push({
+          id: rRow[0] || (r + 1),
+          name: String(rRow[1] || ""),
+          registerNumber: String(rRow[2] || ""),
+          department: String(rRow[3] || ""),
+          year: String(rRow[4] || ""),
+          event: String(rRow[5] || ""),
+          receipt: String(rRow[6] || ""),
+          status: String(rRow[7] || "Registered"),
+          timestamp: String(rRow[8] || "")
+        });
+      }
+    }
+  }
+
   return {
     categories: Object.keys(categories).length > 0 ? categories : null,
     events: Object.keys(events).length > 0 ? events : null,
-    schedule: Object.keys(schedule).length > 0 ? schedule : null
+    schedule: Object.keys(schedule).length > 0 ? schedule : null,
+    registrations: registrations.length > 0 ? registrations : null
   };
 }
 

@@ -60,356 +60,68 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Default Mock SQL Database state
   const DEFAULT_REGISTRATIONS_DB = [
-    { id: 1, name: "Karan Sharma", registerNumber: "511122104015", department: "AI&DS", year: "III", event: "CodeCraze", receipt: "TQ26-1001", status: "Registered" },
-    { id: 2, name: "Arthi Murali", registerNumber: "511122104003", department: "AI&DS", year: "III", event: "CodeCraze", receipt: "TQ26-1002", status: "Registered" },
-    { id: 3, name: "Deepak Raj", registerNumber: "511121104008", department: "CSBS", year: "IV", event: "WebSprint", receipt: "TQ26-1003", status: "Registered" },
-    { id: 4, name: "Sneha V", registerNumber: "511123104022", department: "IT", year: "II", event: "BugHunt", receipt: "TQ26-1004", status: "Registered" }
+    { id: 1, name: "Karan Sharma", registerNumber: "511122104015", department: "AI&DS", year: "III", event: "Tech Talk", receipt: "TQ26-1001", status: "Registered", timestamp: "27 Aug 2026, 08:30 PM" },
+    { id: 2, name: "Arthi Murali", registerNumber: "511122104003", department: "AI&DS", year: "III", event: "Tech Talk", receipt: "TQ26-1002", status: "Registered", timestamp: "27 Aug 2026, 08:45 PM" },
+    { id: 3, name: "Deepak Raj", registerNumber: "511121104008", department: "CSBS", year: "IV", event: "Cognify", receipt: "TQ26-1003", status: "Registered", timestamp: "27 Aug 2026, 09:00 PM" },
+    { id: 4, name: "Sneha V", registerNumber: "511123104022", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ26-1004", status: "Registered", timestamp: "27 Aug 2026, 09:15 PM" }
   ];
 
-  // Default Core Events Details Database
+  // Default Core Events Details Database (Synced with Google Sheets)
   const DEFAULT_EVENTS_DB = {
-    // Technical (4)
-    CodeCraze: {
-      name: "CodeCraze",
+    "Tech Talk": {
+      name: "Tech Talk",
       category: "Technical",
-      date: "24 May 2026",
-      time: "10:00 AM",
-      venue: "Computer Lab 3",
-      teamSize: "1-3 Members",
+      date: "28-08-2026",
+      time: "3:00PM to 4:30PM",
+      venue: "AI & DS - AI&DS Lab, IT - IT Lab, CSBS - CSBS Lab",
+      teamSize: "Individual",
       fee: "Free",
-      desc: "Put your coding skills to the test in this ultimate speed-programming challenge. Solve complex algorithms, fix bug-ridden code, and optimize runtime under tight deadlines.",
-      about: "CodeCraze tests your syntax mastery, logic compilation, and complexity tracking. Supported compilers are GNU C/C++, Java 17, and Python 3. The event consists of a 20-minute debugging preliminary screening, followed by a 60-minute core algorithm optimization phase.",
-      rules: [
-        "Calculators, pre-written code snippets, and custom packages are strictly prohibited.",
-        "In case of a tie, execution runtime efficiency and memory utilization metrics will decide.",
-        "Any form of plagiarism or screen sharing will lead to immediate disqualification."
-      ]
-    },
-    WebCraft: {
-      name: "WebCraft",
-      category: "Technical",
-      date: "24 May 2026",
-      time: "01:30 PM",
-      venue: "IT Lab 2",
-      teamSize: "1-2 Members",
-      fee: "Free",
-      desc: "Build responsive, high-performance web applications and sleek landing interfaces matching real-world UI design specifications.",
-      about: "Participants will be given an interactive UI wireframe and asset pack to implement within 90 minutes using modern frontend technologies.",
-      rules: [
-        "Internet access is permitted only for standard framework documentation.",
-        "Pre-built full website templates are strictly prohibited.",
-        "Cross-device responsiveness and accessibility are primary judging criteria."
-      ]
-    },
-    BugHunt: {
-      name: "BugHunt",
-      category: "Technical",
-      date: "24 May 2026",
-      time: "11:30 AM",
-      venue: "Computer Lab 1",
-      teamSize: "1 Member",
-      fee: "Free",
-      desc: "Identify logical flaws, memory leaks, and syntax vulnerabilities across complex codebases under ticking clock conditions.",
-      about: "BugHunt provides contestants with faulty codebases containing intentional edge-case errors, concurrency issues, and race conditions. Contestants must isolate and patch bugs with minimal code alterations.",
+      desc: "Think Fast. Speak Smart. Make an Impact. Tech Talk — Where ideas meet confidence and communication.",
+      about: "Tech Talk is an individual presentation event designed to test participants’ ability to think quickly, analyze unfamiliar topics, and communicate their ideas effectively. Participants will receive a topic randomly on the spot, prepare within a limited time, and present their views before the judges. The event emphasizes knowledge, logical thinking, clarity, confidence, and effective communication.",
       rules: [
         "Individual participation only.",
-        "Submissions are scored on the number of passed unit test cases.",
-        "No external AI copilot assistance allowed during the hunt."
+        "Topics will be assigned randomly on the spot.",
+        "Participants will be given limited time to analyze and prepare.",
+        "Each participant must present within the allotted time.",
+        "Content must be relevant to the assigned topic.",
+        "Participants should communicate clearly and confidently.",
+        "Use of inappropriate or offensive content is strictly prohibited.",
+        "Winners will be selected based on content relevance, clarity, and communication.",
+        "Judges’ decision will be final."
       ]
     },
-    AlgoRush: {
-      name: "AlgoRush",
+    Cognify: {
+      name: "Cognify",
       category: "Technical",
-      date: "25 May 2026",
-      time: "10:00 AM",
+      date: "27-08-2026",
+      time: "3:00PM - 4:30PM",
       venue: "AI&DS Lab",
-      teamSize: "1-2 Members",
+      teamSize: "Individual",
       fee: "Free",
-      desc: "Fast-paced competitive programming showdown focusing on dynamic programming, graph theory, and greedy algorithms.",
-      about: "Two rounds of intense algorithmic problem solving. Round 1 features rapid-fire medium difficulty questions; Round 2 features deep graph, tree, and string manipulation challenges.",
+      desc: "Put your analytical problem-solving and cognitive intelligence to the test in this technical challenge.",
+      about: "Cognify challenges participants across algorithmic problem-solving, cognitive reasoning, and fast-paced technological aptitude rounds.",
       rules: [
-        "Standard competitive programming submission guidelines apply.",
-        "Time penalty applied for incorrect submissions.",
-        "Judges' automated test suite decides test validation."
-      ]
-    },
-
-    // Non-Technical (3)
-    AdMad: {
-      name: "AdMad",
-      category: "Non-Technical",
-      date: "24 May 2026",
-      time: "04:00 PM",
-      venue: "Seminar Hall 2",
-      teamSize: "2-4 Members",
-      fee: "Free",
-      desc: "Showcase your marketing genius, humorous scripts, and advertising creativity to pitch unexpected and quirky products.",
-      about: "Teams receive an unexpected on-the-spot product theme and have 10 minutes preparation time followed by a 3-minute live commercial pitch and jingle act in front of the jury.",
-      rules: [
-        "No offensive content, vulgar language, or defamatory remarks.",
-        "Props and creative costuming are encouraged.",
-        "Time limits will be strictly monitored with buzzer signals."
-      ]
-    },
-    CorporateClash: {
-      name: "CorporateClash",
-      category: "Non-Technical",
-      date: "24 May 2026",
-      time: "02:00 PM",
-      venue: "Seminar Hall 3",
-      teamSize: "2-3 Members",
-      fee: "Free",
-      desc: "Tackle realistic corporate dilemmas, managerial crisis scenarios, and executive board-room decision simulations.",
-      about: "Simulated boardroom battle where teams resolve emergency brand reputation crises, workforce restructuring, and supply chain breakdowns through strategic negotiation.",
-      rules: [
-        "Teams will be evaluated on crisis management, leadership, and diplomacy.",
-        "Strict adherence to executive decorum and speaking times.",
-        "Cross-questioning rounds will challenge strategy depth."
-      ]
-    },
-    PitchPerfect: {
-      name: "PitchPerfect",
-      category: "Non-Technical",
-      date: "25 May 2026",
-      time: "11:00 AM",
-      venue: "Conference Room A",
-      teamSize: "1-3 Members",
-      fee: "Free",
-      desc: "Elevator pitch marathon: present high-impact venture ideas and commercialization plans in 180 seconds.",
-      about: "Pitch your startup concept to venture judges. Highlight market size, monetization strategy, competitive moat, and target customer acquisition.",
-      rules: [
-        "Presentation deck capped at 5 visual slides.",
-        "Strict 3-minute pitch followed by 2-minute judge Q&A.",
-        "Financial projections must be justified."
-      ]
-    },
-
-    // Design (2)
-    DesignSprint: {
-      name: "DesignSprint",
-      category: "Design",
-      date: "24 May 2026",
-      time: "11:30 AM",
-      venue: "Design Lab 1",
-      teamSize: "1-2 Members",
-      fee: "Free",
-      desc: "Design intuitive user interfaces, micro-interactions, and design systems for next-generation mobile and web applications.",
-      about: "Given a problem statement, teams must produce high-fidelity Figma prototypes with interactive flows and design tokens.",
-      rules: [
-        "Figma or Adobe XD are the accepted prototyping tools.",
-        "Stock design kits must be declared; original UI components score higher.",
-        "Interactive prototypes must be clickable and demonstrable."
-      ]
-    },
-    PosterCraft: {
-      name: "PosterCraft",
-      category: "Design",
-      date: "25 May 2026",
-      time: "02:00 PM",
-      venue: "Media Studio",
-      teamSize: "1 Member",
-      fee: "Free",
-      desc: "Create impactful digital posters and visual storytelling graphics exploring technological revolutions.",
-      about: "Solo creative contest where digital artists compose stunning promotional artwork around contemporary AI, sustainability, or space-tech themes.",
-      rules: [
-        "Accepted tools: Photoshop, Illustrator, Canva, or Figma.",
-        "Final export must be high-resolution 300 DPI PDF or PNG.",
-        "Generative AI artwork must be credited with prompts provided."
-      ]
-    },
-
-    // Innovation (2)
-    AIIdeathon: {
-      name: "AIIdeathon",
-      category: "Innovation",
-      date: "23 May 2026",
-      time: "02:00 PM",
-      venue: "Seminar Hall 2",
-      teamSize: "2-4 Members",
-      fee: "Free",
-      desc: "Formulate disruptive applications of GenAI, computer vision, and NLP to address real-world socio-economic problems.",
-      about: "Teams pitch novel solutions leveraging AI architectures, demonstrating architectural flowcharts, dataset curation approaches, and feasibility studies.",
-      rules: [
-        "Idea must be original and technically grounded.",
-        "Presentation should cover feasibility, tech stack, and social impact.",
-        "Working POC or architectural prototype awards bonus points."
-      ]
-    },
-    ModelExpo: {
-      name: "ModelExpo",
-      category: "Innovation",
-      date: "25 May 2026",
-      time: "09:30 AM",
-      venue: "Exhibition Center",
-      teamSize: "2-4 Members",
-      fee: "Free",
-      desc: "Display working hardware prototypes, IoT devices, robotics systems, and embedded computing solutions.",
-      about: "Hands-on exhibition where student inventors demonstrate functional prototypes to industry evaluators and symposium attendees.",
-      rules: [
-        "All hardware setups must adhere to electrical safety standards.",
-        "Each team must provide a project banner/display board.",
-        "Judges will evaluate innovation, build quality, and live demonstration."
-      ]
-    },
-
-    // Presentation (3)
-    TechPaper: {
-      name: "TechPaper",
-      category: "Presentation",
-      date: "24 May 2026",
-      time: "10:00 AM",
-      venue: "Seminar Hall 1",
-      teamSize: "1-2 Members",
-      fee: "Free",
-      desc: "Present peer-reviewed research, emerging paradigms, and technological breakthroughs before an expert panel.",
-      about: "Paper presentation track inviting technical papers in AI/ML, Cloud Architecture, Quantum Computing, IoT, and Cyber Security.",
-      rules: [
-        "IEEE paper format required (max 6 pages).",
-        "Presentation duration: 8 minutes presentation + 3 minutes Q&A.",
-        "Plagiarism index must be below 15%."
-      ]
-    },
-    CaseStudy: {
-      name: "CaseStudy",
-      category: "Presentation",
-      date: "25 May 2026",
-      time: "01:30 PM",
-      venue: "Seminar Hall 2",
-      teamSize: "1-3 Members",
-      fee: "Free",
-      desc: "Analyze famous engineering failures, software post-mortems, and technology turnaround sagas.",
-      about: "Contestants break down landmark engineering cases, examining architectural flaws, human factors, recovery strategies, and lessons learned.",
-      rules: [
-        "Teams are judged on analytical depth and clear takeaway recommendations.",
-        "Slides should cite empirical post-mortem reports.",
-        "Time limit is 10 minutes total."
-      ]
-    },
-    ProjectDisplay: {
-      name: "ProjectDisplay",
-      category: "Presentation",
-      date: "25 May 2026",
-      time: "09:30 AM",
-      venue: "Main Auditorium",
-      teamSize: "2-4 Members",
-      fee: "Free",
-      desc: "Capstone software showcase featuring full-stack applications, mobile apps, and machine learning deployments.",
-      about: "Finalists display full working software deployments, live databases, and user experiences to panel reviewers.",
-      rules: [
-        "Live demo is mandatory (slides alone will not suffice).",
-        "Source code repository must be presented during review.",
-        "Architecture, UI design, and database normalization are evaluated."
-      ]
-    },
-
-    // Fun & Creative (4)
-    QuizMaster: {
-      name: "QuizMaster",
-      category: "Fun & Creative",
-      date: "24 May 2026",
-      time: "02:00 PM",
-      venue: "Seminar Hall 1",
-      teamSize: "1-2 Members",
-      fee: "Free",
-      desc: "Test your quick reflexes and encyclopedic knowledge across tech trivia, sci-fi pop culture, and computing history.",
-      about: "Exciting multi-stage quiz including rapid buzzer rounds, visual identify-the-logo segments, audio-visual clues, and tech riddle showdowns.",
-      rules: [
-        "No electronic devices permitted during rounds.",
-        "Quizmaster's decisions are conclusive and final.",
-        "Negative points for false buzzer triggers."
-      ]
-    },
-    RoboWar: {
-      name: "RoboWar",
-      category: "Fun & Creative",
-      date: "25 May 2026",
-      time: "11:00 AM",
-      venue: "Main Courtyard",
-      teamSize: "2-4 Members",
-      fee: "Free",
-      desc: "Remote-controlled combat bots clash inside the battle arena in high-voltage destruction matches.",
-      about: "Bots compete in 1v1 arena rounds. Points awarded for aggression, arena hazards utilization, immobilizations, and armor integrity.",
-      rules: [
-        "Bot weight must adhere to category weight classifications (max 15kg).",
-        "No dangerous chemical or projectile weapons.",
-        "Safety fail-safes are inspected prior to qualification."
-      ]
-    },
-    LensCraft: {
-      name: "LensCraft",
-      category: "Fun & Creative",
-      date: "23 May 2026",
-      time: "04:30 PM",
-      venue: "Central Lawn",
-      teamSize: "1 Member",
-      fee: "Free",
-      desc: "Capture the spirit of Triquetra 2026 through candid photography, architectural perspectives, and creative reel making.",
-      about: "Participants shoot themed photography across the symposium events and submit their best edited photographs and 30-second reels.",
-      rules: [
-        "All submitted photographs must be captured on campus during the symposium.",
-        "Basic color correction permitted; heavy CGI manipulation is prohibited.",
-        "Raw EXIF data must be preserved."
-      ]
-    },
-    MemeMania: {
-      name: "MemeMania",
-      category: "Fun & Creative",
-      date: "24 May 2026",
-      time: "03:30 PM",
-      venue: "Seminar Hall 3",
-      teamSize: "1 Member",
-      fee: "Free",
-      desc: "Create hilarious, viral-worthy memes depicting programmer struggles, college life, and artificial intelligence quirks.",
-      about: "Contestants get surprise funny scenarios and 20 minutes to generate top-tier original memes using custom templates.",
-      rules: [
-        "No vulgarity, hate speech, or targeted personal attacks.",
-        "Must be 100% original creations generated in the session.",
-        "Judged by audience laughter and jury ratings."
+        "Individual participation only.",
+        "Strict adherence to event schedule and time limits.",
+        "Judges' evaluation is final and binding."
       ]
     }
   };
 
-  // Default Event Schedule Database
+  // Default Event Schedule Database (Synced with Google Sheets)
   const DEFAULT_SCHEDULE_DB = {
-    "23 May 2026": [
-      { id: 101, time: "09:00 AM", event: "Inauguration Ceremony", loc: "Main Auditorium", icon: "sparkles" },
-      { id: 102, time: "10:30 AM", event: "Keynote Address: GenAI", loc: "Main Auditorium", icon: "presentation" },
-      { id: 103, time: "01:00 PM", event: "Lunch Break", loc: "Campus Cafeteria", icon: "coffee" },
-      { id: 104, time: "02:00 PM", event: "AIIdeathon", loc: "Seminar Hall 2", icon: "lightbulb" },
-      { id: 105, time: "04:30 PM", event: "LensCraft", loc: "Central Lawn", icon: "users" }
+    "27-08-2026": [
+      { id: 2137, time: "3:00PM - 4:30PM", event: "Cognify", loc: "AI&DS Lab", icon: "code" }
     ],
-    "24 May 2026": [
-      { id: 201, time: "10:00 AM", event: "CodeCraze", loc: "Computer Lab 3", icon: "code" },
-      { id: 202, time: "10:00 AM", event: "TechPaper", loc: "Seminar Hall 1", icon: "presentation" },
-      { id: 203, time: "11:30 AM", event: "BugHunt", loc: "Computer Lab 1", icon: "code" },
-      { id: 204, time: "11:30 AM", event: "DesignSprint", loc: "Design Lab 1", icon: "palette" },
-      { id: 205, time: "01:00 PM", event: "Lunch Break", loc: "Campus Cafeteria", icon: "coffee" },
-      { id: 206, time: "01:30 PM", event: "WebCraft", loc: "IT Lab 2", icon: "code" },
-      { id: 207, time: "02:00 PM", event: "QuizMaster", loc: "Seminar Hall 1", icon: "help-circle" },
-      { id: 208, time: "02:00 PM", event: "CorporateClash", loc: "Seminar Hall 3", icon: "briefcase" },
-      { id: 209, time: "03:30 PM", event: "MemeMania", loc: "Seminar Hall 3", icon: "smile" },
-      { id: 210, time: "04:00 PM", event: "AdMad", loc: "Seminar Hall 2", icon: "briefcase" }
-    ],
-    "25 May 2026": [
-      { id: 301, time: "09:30 AM", event: "ModelExpo", loc: "Exhibition Center", icon: "monitor" },
-      { id: 302, time: "09:30 AM", event: "ProjectDisplay", loc: "Main Auditorium", icon: "monitor" },
-      { id: 303, time: "10:00 AM", event: "AlgoRush", loc: "AI&DS Lab", icon: "code" },
-      { id: 304, time: "11:00 AM", event: "RoboWar", loc: "Main Courtyard", icon: "activity" },
-      { id: 305, time: "11:00 AM", event: "PitchPerfect", loc: "Conference Room A", icon: "briefcase" },
-      { id: 306, time: "01:30 PM", event: "CaseStudy", loc: "Seminar Hall 2", icon: "presentation" },
-      { id: 307, time: "02:00 PM", event: "PosterCraft", loc: "Media Studio", icon: "palette" },
-      { id: 308, time: "03:30 PM", event: "Valedictory & Prize Distribution", loc: "Main Auditorium", icon: "award" }
+    "28-08-2026": [
+      { id: 7352, time: "3:00PM to 4:30PM", event: "Tech Talk", loc: "AI & DS - AI&DS Lab, IT - IT Lab, CSBS - CSBS Lab", icon: "lightbulb" }
     ]
   };
 
-  // Default Event Categories Database
+  // Default Event Categories Database (Synced with Google Sheets)
   const DEFAULT_CATEGORIES_DB = {
-    Technical: { id: "cat-technical", name: "Technical", desc: "Coding matches & debugging", icon: "code" },
-    "Non-Technical": { id: "cat-non-technical", name: "Non-Technical", desc: "Managerial and business tasks", icon: "briefcase" },
-    Design: { id: "cat-design", name: "Design", desc: "UI/UX and creative graphics", icon: "palette" },
-    Innovation: { id: "cat-innovation", name: "Innovation", desc: "Idea pitching and models", icon: "lightbulb" },
-    Presentation: { id: "cat-presentation", name: "Presentation", desc: "Paper & PPT presentations", icon: "presentation" },
-    "Fun & Creative": { id: "cat-fun", name: "Fun & Creative", desc: "Gaming, photography & quizzes", icon: "smile" }
+    Technical: { id: "cat-technical", name: "Technical", desc: "Technical symposium events and tech talks", icon: "code" },
+    "Non-Technical": { id: "cat-non-technical", name: "Non-Technical", desc: "Managerial and business tasks", icon: "briefcase" }
   };
 
   // Safe LocalStorage Loader Helper
@@ -548,13 +260,37 @@ document.addEventListener("DOMContentLoaded", () => {
           hasUpdates = true;
         }
 
+        if (cloudData.registrations && Array.isArray(cloudData.registrations) && cloudData.registrations.length > 0) {
+          cloudData.registrations.forEach(cloudReg => {
+            const exists = registrationsDb.some(r => (r.receipt && r.receipt === cloudReg.receipt) || (r.registerNumber === cloudReg.registerNumber && r.event === cloudReg.event));
+            if (!exists) {
+              registrationsDb.push(cloudReg);
+            }
+          });
+          persistRegistrationsDb();
+          hasUpdates = true;
+        }
+
         if (hasUpdates) {
+          const availEvts = Object.keys(eventsDb);
+          if (!eventsDb[appState.registration.selectedEvent] && availEvts.length > 0) {
+            appState.registration.selectedEvent = availEvts[0];
+          }
+
+          const availDays = Object.keys(scheduleDb);
+          if (!scheduleDb[appState.selectedDate] && availDays.length > 0) {
+            appState.selectedDate = availDays[0];
+          }
+
           renderCategoryCards();
           populateCategoryOptions();
           populateEventDropdown();
-          renderEventDetails();
+          renderRegistrationEventCard(appState.registration.selectedEvent);
+          renderEventDetails(appState.registration.selectedEvent);
           renderScheduleTabs();
-          filterTimeline(appState.selectedDate || "23 May 2026");
+          filterTimeline(appState.selectedDate);
+          populateExportEventDropdown();
+
           if (appState.isAdminAuthenticated) {
             refreshAdminData();
           }
@@ -577,13 +313,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Active State (Restores admin session from sessionStorage)
   let appState = {
     currentScreen: "home",
-    selectedDate: "23 May 2026",
+    selectedDate: "27-08-2026",
     selectedCategory: "Technical",
     isAdminAuthenticated: (typeof window !== "undefined" && window.sessionStorage && sessionStorage.getItem("triquetra_admin_auth") === "true"),
     registration: {
       fullName: "",
       registerNumber: "",
-      selectedEvent: "CodeCraze",
+      selectedEvent: "Tech Talk",
       dept: "",
       year: "",
       agreeRules: false
@@ -817,7 +553,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Render event details dynamically based on selected event
   function renderEventDetails(eventName) {
-    const activeKey = eventName || appState.registration.selectedEvent || Object.keys(eventsDb)[0];
+    let activeKey = eventName || appState.registration.selectedEvent;
+    if (!eventsDb[activeKey]) {
+      activeKey = Object.keys(eventsDb)[0] || "";
+    }
     const data = eventsDb[activeKey];
 
     // 1. Breadcrumb
@@ -1094,10 +833,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize filters & data
   populateEventDropdown();
-  renderEventDetails();
+  renderRegistrationEventCard(appState.registration.selectedEvent);
+  renderEventDetails(appState.registration.selectedEvent);
   renderScheduleTabs();
   renderCategoryCards();
-  filterTimeline("23 May 2026");
+  filterTimeline(appState.selectedDate || Object.keys(scheduleDb)[0] || "27-08-2026");
+  populateExportEventDropdown();
 
   // Synchronize with live Google Cloud Database (Across all visitors & devices)
   fetchCloudData();
@@ -1302,6 +1043,7 @@ document.addEventListener("DOMContentLoaded", () => {
               year: newRecord.year,
               event: newRecord.event,
               receipt: newRecord.receipt,
+              receiptId: newRecord.receipt,
               status: newRecord.status
             });
             fetch(`${REGISTRATION_SHEET_URL}?${queryParams.toString()}`, {
@@ -1310,6 +1052,13 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .then(() => console.log("Student registration synced to Google Sheets successfully."))
             .catch(err => console.error("Student registration sync failed:", err));
+
+            if (EVENT_MGMT_SCRIPT_URL && EVENT_MGMT_SCRIPT_URL !== REGISTRATION_SHEET_URL) {
+              fetch(`${EVENT_MGMT_SCRIPT_URL}?${queryParams.toString()}`, {
+                method: "GET",
+                mode: "no-cors"
+              }).catch(() => {});
+            }
           }
 
           paymentModal.style.display = "none";
