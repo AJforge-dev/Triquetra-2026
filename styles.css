@@ -135,31 +135,67 @@ body::before {
 
 .app-admin-btn {
   background: #EFF6FF;
-  border: 1px solid #BFDBFE;
+  border: 1.5px solid #BFDBFE;
   color: var(--royal-sapphire);
   cursor: pointer;
-  width: 36px;
-  height: 36px;
-  display: flex;
+  height: 34px;
+  padding: 0 13px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  gap: 6px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
   transition: all var(--transition-speed);
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.1);
+  flex-shrink: 0;
 }
 
 .app-admin-btn:hover {
   background-color: #DBEAFE;
   color: var(--royal-navy);
+  border-color: #93C5FD;
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
 }
 
 .app-admin-btn svg {
-  width: 17px;
-  height: 17px;
+  width: 15px;
+  height: 15px;
   stroke: currentColor;
-  stroke-width: 2.2;
+  stroke-width: 2.3;
+  flex-shrink: 0;
+}
+
+.admin-btn-text {
+  line-height: 1;
+  letter-spacing: 0.2px;
+}
+
+@media (max-width: 380px) {
+  .app-header {
+    padding: 0 0.65rem;
+  }
+  .app-title-wordmark {
+    font-size: 0.95rem;
+    letter-spacing: 1.5px;
+  }
+  .app-n-logo {
+    width: 32px;
+    height: 32px;
+  }
+  .app-admin-btn {
+    padding: 0 9px;
+    height: 32px;
+    font-size: 0.72rem;
+    gap: 4px;
+  }
+  .app-admin-btn svg {
+    width: 13px;
+    height: 13px;
+  }
 }
 
 .app-menu-btn {
