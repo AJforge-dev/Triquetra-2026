@@ -1981,3 +1981,13 @@ body::before {
   0% { transform: translateY(0) scale(1.1) rotate(0); }
   100% { transform: translateY(-20px) scale(0.9) rotate(-30deg); }
 }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-animation {
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}

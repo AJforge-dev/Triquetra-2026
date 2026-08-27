@@ -165,17 +165,23 @@ document.addEventListener("DOMContentLoaded", () => {
   let scheduleDb = loadStoredDb(STORAGE_KEYS.SCHEDULE, DEFAULT_SCHEDULE_DB);
   let categoriesDb = loadStoredDb(STORAGE_KEYS.CATEGORIES, DEFAULT_CATEGORIES_DB);
 
-  // Ensure Karan Sharma, Arthi Murali, TQ01, TQ02, and all dummy events are purged
-  registrationsDb = (registrationsDb || []).filter(r => {
-    if (!r) return false;
-    const name = (r.name || "").toLowerCase();
-    const evt = (r.event || "").trim().toLowerCase();
-    const rec = (r.receipt || "").toUpperCase();
-    if (name.includes("karan") || name.includes("arthi")) return false;
-    if (rec === "TQ01" || rec === "TQ02" || rec === "TQ-01" || rec === "TQ-02") return false;
-    if (BLACKLISTED_DUMMY_EVENTS.includes(evt)) return false;
-    return true;
-  });
+  // Sanitize function to permanently ban dummy mock candidates (Karan Sharma, Arthi Murali, Deepak Raj, Sneha V, TQ01-TQ04)
+  function sanitizeRegistrations(list) {
+    if (!Array.isArray(list)) return [];
+    return list.filter(r => {
+      if (!r) return false;
+      const name = (r.name || "").toLowerCase();
+      const evt = (r.event || "").trim().toLowerCase();
+      const rec = (r.receipt || "").toUpperCase();
+      if (name.includes("karan") || name.includes("arthi") || name.includes("deepak") || name.includes("sneha")) return false;
+      if (rec === "TQ01" || rec === "TQ02" || rec === "TQ03" || rec === "TQ04" || rec === "TQ-01" || rec === "TQ-02" || rec === "TQ-03" || rec === "TQ-04") return false;
+      if (BLACKLISTED_DUMMY_EVENTS.includes(evt)) return false;
+      return true;
+    });
+  }
+
+  // Ensure all dummy candidates and dummy events are permanently purged
+  registrationsDb = sanitizeRegistrations(registrationsDb);
   persistRegistrationsDb();
 
   BLACKLISTED_DUMMY_EVENTS.forEach(evtName => {
@@ -259,8 +265,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Global Cloud Initializer (Fetches live event management data directly from Google Sheets on load)
-  function fetchCloudData() {
-    if (!EVENT_MGMT_SCRIPT_URL || EVENT_MGMT_SCRIPT_URL === "YOUR_DEPLOYED_WEB_APP_URL_HERE") return;
+  function fetchCloudData(onComplete) {
+    if (!EVENT_MGMT_SCRIPT_URL || EVENT_MGMT_SCRIPT_URL === "YOUR_DEPLOYED_WEB_APP_URL_HERE") {
+      if (typeof onComplete === "function") onComplete(false);
+      return;
+    }
 
     const callbackName = "triquetraCloudCallback_" + Date.now();
     window[callbackName] = function(cloudData) {
@@ -285,6 +294,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (cloudData.events && typeof cloudData.events === "object") {
           eventsDb = cloudData.events;
+          BLACKLISTED_DUMMY_EVENTS.forEach(evtName => {
+            Object.keys(eventsDb).forEach(k => {
+              if (k.trim().toLowerCase() === evtName) delete eventsDb[k];
+            });
+          });
           saveStoredDb(STORAGE_KEYS.EVENTS, eventsDb);
           hasUpdates = true;
         }
@@ -295,19 +309,21 @@ document.addEventListener("DOMContentLoaded", () => {
           hasUpdates = true;
         }
 
-        if (cloudData.registrations && Array.isArray(cloudData.registrations) && cloudData.registrations.length > 0) {
-          cloudData.registrations.forEach(cloudReg => {
+        if (cloudData.registrations && Array.isArray(cloudData.registrations)) {
+          const cleanCloudRegs = sanitizeRegistrations(cloudData.registrations);
+          cleanCloudRegs.forEach(cloudReg => {
             const exists = registrationsDb.some(r => (r.receipt && r.receipt === cloudReg.receipt) || (r.registerNumber === cloudReg.registerNumber && r.event === cloudReg.event));
             if (!exists) {
               registrationsDb.push(cloudReg);
             }
           });
+          registrationsDb = sanitizeRegistrations(registrationsDb);
           persistRegistrationsDb();
           hasUpdates = true;
         }
 
         if (hasUpdates) {
-          const availEvts = Object.keys(eventsDb);
+          const availEvts = Object.keys(eventsDb).filter(k => !BLACKLISTED_DUMMY_EVENTS.includes(k.trim().toLowerCase()));
           if (!eventsDb[appState.registration.selectedEvent] && availEvts.length > 0) {
             appState.registration.selectedEvent = availEvts[0];
           }
@@ -331,6 +347,9 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           console.log("[Triquetra Cloud] Live Event Management data loaded from Google Sheets!");
         }
+        if (typeof onComplete === "function") onComplete(true);
+      } else {
+        if (typeof onComplete === "function") onComplete(false);
       }
     };
 
@@ -341,6 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (cloudScript && cloudScript.parentNode) {
         cloudScript.parentNode.removeChild(cloudScript);
       }
+      if (typeof onComplete === "function") onComplete(false);
     };
     document.body.appendChild(cloudScript);
   }
@@ -1487,6 +1507,29 @@ document.addEventListener("DOMContentLoaded", () => {
     btnRunSql.addEventListener("click", () => {
       const query = sqlInput.value.trim();
       executeSql(query);
+    });
+  }
+
+  // Bind Google Sheets Direct Sync Button
+  const btnSyncCloudSheets = document.getElementById("btn-sync-cloud-sheets");
+  if (btnSyncCloudSheets) {
+    btnSyncCloudSheets.addEventListener("click", () => {
+      btnSyncCloudSheets.disabled = true;
+      btnSyncCloudSheets.innerHTML = `<i data-lucide="loader" class="spin-animation" style="width:14px;height:14px"></i> Syncing...`;
+      lucide.createIcons();
+
+      fetchCloudData((success) => {
+        btnSyncCloudSheets.disabled = false;
+        btnSyncCloudSheets.innerHTML = `<i data-lucide="refresh-cw" style="width:14px;height:14px"></i> Sync from Google Sheets`;
+        lucide.createIcons();
+
+        if (success) {
+          refreshAdminData();
+          alert("✓ Successfully fetched latest live data from Google Sheets!");
+        } else {
+          alert("Could not refresh from Google Sheets. Please check your network connection.");
+        }
+      });
     });
   }
 
