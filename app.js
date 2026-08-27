@@ -1843,24 +1843,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ================= CANDIDATES EXPORT & DOWNLOAD SYSTEM =================
-  // Helper to trigger clean CSV download with UTF-8 BOM for Microsoft Excel & Google Sheets
-  function triggerCsvDownload(csvString, filename) {
-    const blob = new Blob(["\uFEFF" + csvString], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", filename);
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(() => {
-      if (link.parentNode) link.parentNode.removeChild(link);
-      URL.revokeObjectURL(url);
-    }, 1000);
-  }
-
-  // Export candidate list department-wise (IT, AI&DS, CSBS) and event-wise
-  function downloadCandidatesCsv(deptFilter, eventFilter) {
+  // ================= CANDIDATES EXPORT & DOWNLOAD SYSTEM (PDF FORMAT) =================
+  // Helper to generate & download official candidate list as a formatted PDF
+  function downloadCandidatesPdf(deptFilter, eventFilter) {
     let list = [...registrationsDb];
 
     // Filter by Department (Strictly normalizes IT, AI&DS, CSBS)
@@ -1882,65 +1867,256 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const headers = [
-      "S.No",
-      "Official Receipt No",
-      "Participant Name",
-      "Register Number",
-      "Department",
-      "Year",
-      "Registered Event",
-      "Registration Status",
-      "Registration Timestamp"
-    ];
-
-    const rows = list.map((r, idx) => [
-      `"${idx + 1}"`,
-      `"${(r.receipt || '').replace(/"/g, '""')}"`,
-      `"${(r.name || '').replace(/"/g, '""')}"`,
-      `"${(r.registerNumber || '').replace(/"/g, '""')}"`,
-      `"${(r.department || '').replace(/"/g, '""')}"`,
-      `"${(r.year || '').replace(/"/g, '""')}"`,
-      `"${(r.event || '').replace(/"/g, '""')}"`,
-      `"${(r.status || 'Registered').replace(/"/g, '""')}"`,
-      `"${(r.timestamp || '').replace(/"/g, '""')}"`
-    ]);
-
-    const csvContent = [headers.join(","), ...rows.map(row => row.join(","))].join("\r\n");
+    const deptTitle = deptFilter === "ALL" ? "All Departments (IT, AI&DS, CSBS)" : deptFilter;
+    const evtTitle = eventFilter === "ALL" ? "All Events" : eventFilter;
+    const currentDate = new Date().toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
 
     let filename = "Triquetra_2026_Candidates";
     if (deptFilter && deptFilter !== "ALL") filename += `_${deptFilter.replace(/[^a-zA-Z0-9]/g, "")}`;
     if (eventFilter && eventFilter !== "ALL") filename += `_${eventFilter.replace(/[^a-zA-Z0-9]/g, "")}`;
-    filename += `_${new Date().toISOString().slice(0, 10)}.csv`;
+    filename += `_${new Date().toISOString().slice(0, 10)}.pdf`;
 
-    triggerCsvDownload(csvContent, filename);
+    // 1. Direct Native PDF Generation via jsPDF + AutoTable
+    if (window.jspdf && window.jspdf.jsPDF) {
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+          orientation: "portrait",
+          unit: "pt",
+          format: "a4"
+        });
+
+        // Top Royal Header Banner
+        doc.setFillColor(30, 64, 175); // Royal Sapphire (#1E40AF)
+        doc.rect(0, 0, 595, 78, "F");
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.text("TRIQUETRA 2026 - CANDIDATES LIST", 40, 32);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9.5);
+        doc.text("Department of IT, AI & DS and CSBS", 40, 49);
+        doc.text("Ganadipathy Tulsi's Jain Engineering College", 40, 64);
+
+        // Metadata block
+        doc.setTextColor(30, 41, 59);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.text(`Department: ${deptTitle}`, 40, 102);
+        doc.text(`Event: ${evtTitle}`, 320, 102);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(100, 116, 139);
+        doc.text(`Generated On: ${currentDate}`, 40, 118);
+        doc.text(`Total Candidates: ${list.length}`, 320, 118);
+
+        // Table Rows
+        const head = [["S.No", "Receipt No", "Participant Name", "Register No", "Dept", "Year", "Registered Event", "Status"]];
+        const body = list.map((r, idx) => [
+          idx + 1,
+          r.receipt || "-",
+          r.name || "-",
+          r.registerNumber || "-",
+          r.department || "-",
+          r.year || "-",
+          r.event || "-",
+          r.status || "Registered"
+        ]);
+
+        doc.autoTable({
+          head: head,
+          body: body,
+          startY: 132,
+          theme: "striped",
+          styles: {
+            font: "helvetica",
+            fontSize: 8.5,
+            cellPadding: 5.5,
+            textColor: [30, 41, 59],
+            lineColor: [226, 232, 240],
+            lineWidth: 0.5
+          },
+          headStyles: {
+            fillColor: [30, 64, 175],
+            textColor: [255, 255, 255],
+            fontStyle: "bold",
+            fontSize: 8.5
+          },
+          alternateRowStyles: {
+            fillColor: [248, 250, 253]
+          },
+          columnStyles: {
+            0: { cellWidth: 32, halign: "center" },
+            1: { cellWidth: 68, fontStyle: "bold", textColor: [30, 64, 175] },
+            2: { cellWidth: 105 },
+            3: { cellWidth: 80 },
+            4: { cellWidth: 50, halign: "center" },
+            5: { cellWidth: 35, halign: "center" },
+            6: { cellWidth: 90 },
+            7: { cellWidth: 55, halign: "center", textColor: [16, 185, 129] }
+          },
+          didDrawPage: function(data) {
+            const pageCount = doc.internal.getNumberOfPages();
+            doc.setFontSize(8);
+            doc.setTextColor(148, 163, 184);
+            doc.text("Triquetra 2026 Official Document | Ganadipathy Tulsi's Jain Engineering College", 40, 820);
+            doc.text(`Page ${data.pageNumber} of ${pageCount}`, 510, 820);
+          }
+        });
+
+        doc.save(filename);
+        return;
+      } catch (err) {
+        console.warn("[PDF Generation Exception, falling back to print-to-PDF]:", err);
+      }
+    }
+
+    // 2. High-Fidelity Print-to-PDF Fallback
+    printReportWindowFallback(list, deptTitle, evtTitle, currentDate);
   }
 
-  // Export current interactive SQL Query Results table
-  function downloadCurrentTableCsv() {
+  // Helper to export current SQL Query Results as PDF
+  function downloadCurrentTablePdf() {
     const table = document.getElementById("sql-results-table");
     if (!table) return;
 
     const rows = table.querySelectorAll("tr");
     if (rows.length === 0) {
-      alert("No data available in results table to export.");
+      alert("No data available in query results to export.");
       return;
     }
 
-    const csvRows = [];
-    rows.forEach(tr => {
-      const cells = tr.querySelectorAll("th, td");
-      const rowData = [];
-      cells.forEach(td => {
-        const text = (td.textContent || "").trim().replace(/"/g, '""');
-        rowData.push(`"${text}"`);
-      });
-      csvRows.push(rowData.join(","));
+    const currentDate = new Date().toLocaleDateString('en-IN', {
+      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true
     });
 
-    const csvContent = csvRows.join("\r\n");
-    const filename = `Triquetra_2026_Query_Export_${new Date().toISOString().slice(0, 10)}.csv`;
-    triggerCsvDownload(csvContent, filename);
+    if (window.jspdf && window.jspdf.jsPDF) {
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+
+        // Header Banner
+        doc.setFillColor(30, 64, 175);
+        doc.rect(0, 0, 595, 75, "F");
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(15);
+        doc.text("TRIQUETRA 2026 - QUERY RESULTS REPORT", 40, 32);
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.text("Department of IT, AI & DS and CSBS | Ganadipathy Tulsi's Jain Engineering College", 40, 49);
+        doc.text(`Generated On: ${currentDate}`, 40, 63);
+
+        doc.autoTable({
+          html: "#sql-results-table",
+          startY: 90,
+          theme: "striped",
+          styles: { font: "helvetica", fontSize: 8.5, cellPadding: 5.5, textColor: [30, 41, 59] },
+          headStyles: { fillColor: [30, 64, 175], textColor: [255, 255, 255], fontStyle: "bold" },
+          alternateRowStyles: { fillColor: [248, 250, 253] }
+        });
+
+        doc.save(`Triquetra_2026_Query_Report_${new Date().toISOString().slice(0, 10)}.pdf`);
+        return;
+      } catch (err) {
+        console.warn("[PDF Query Report fallback]:", err);
+      }
+    }
+
+    window.print();
+  }
+
+  // Printable window fallback (triggers browser print / Save-as-PDF)
+  function printReportWindowFallback(list, deptTitle, evtTitle, currentDate) {
+    const printWin = window.open("", "_blank", "width=850,height=900");
+    if (!printWin) {
+      alert("Please allow popups to download/print the PDF document.");
+      return;
+    }
+
+    let rowsHtml = "";
+    list.forEach((r, i) => {
+      rowsHtml += `
+        <tr style="background:${i % 2 === 1 ? '#F8FAFD' : '#FFFFFF'};">
+          <td style="text-align:center; padding:6px 8px; border-bottom:1px solid #E2E8F0;">${i + 1}</td>
+          <td style="font-weight:bold; color:#1E40AF; padding:6px 8px; border-bottom:1px solid #E2E8F0;">${r.receipt || '-'}</td>
+          <td style="padding:6px 8px; border-bottom:1px solid #E2E8F0;">${r.name || '-'}</td>
+          <td style="font-family:monospace; padding:6px 8px; border-bottom:1px solid #E2E8F0;">${r.registerNumber || '-'}</td>
+          <td style="text-align:center; padding:6px 8px; border-bottom:1px solid #E2E8F0;">${r.department || '-'}</td>
+          <td style="text-align:center; padding:6px 8px; border-bottom:1px solid #E2E8F0;">${r.year || '-'}</td>
+          <td style="padding:6px 8px; border-bottom:1px solid #E2E8F0;">${r.event || '-'}</td>
+          <td style="text-align:center; color:#10B981; font-weight:600; padding:6px 8px; border-bottom:1px solid #E2E8F0;">${r.status || 'Registered'}</td>
+        </tr>
+      `;
+    });
+
+    const docHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Triquetra 2026 Candidates List - ${deptTitle}</title>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; color: #1E293B; }
+          .header { background: #1E40AF; color: #FFFFFF; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+          .header h1 { margin: 0 0 6px; font-size: 20px; }
+          .header p { margin: 2px 0; font-size: 12px; opacity: 0.9; }
+          .meta { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 13px; background: #F1F5F9; padding: 12px; border-radius: 6px; }
+          table { width: 100%; border-collapse: collapse; font-size: 12px; }
+          th { background: #1E40AF; color: #FFFFFF; text-align: left; padding: 8px; font-size: 11px; text-transform: uppercase; }
+          @media print {
+            body { margin: 0; }
+            .no-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>TRIQUETRA 2026 - CANDIDATES LIST</h1>
+          <p>Department of IT, AI & DS and CSBS</p>
+          <p>Ganadipathy Tulsi's Jain Engineering College</p>
+        </div>
+        <div class="meta">
+          <div><strong>Department:</strong> ${deptTitle} | <strong>Event:</strong> ${evtTitle}</div>
+          <div><strong>Total Candidates:</strong> ${list.length} | <strong>Date:</strong> ${currentDate}</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th style="text-align:center;">S.No</th>
+              <th>Receipt No</th>
+              <th>Participant Name</th>
+              <th>Register No</th>
+              <th style="text-align:center;">Dept</th>
+              <th style="text-align:center;">Year</th>
+              <th>Event</th>
+              <th style="text-align:center;">Status</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </body>
+      </html>
+    `;
+
+    printWin.document.open();
+    printWin.document.write(docHtml);
+    printWin.document.close();
+    printWin.focus();
+    setTimeout(() => {
+      printWin.print();
+    }, 500);
   }
 
   // Populate dynamic event list in export dropdown (works for every event present and future)
@@ -1978,25 +2154,25 @@ document.addEventListener("DOMContentLoaded", () => {
     selectEl.value = currentVal;
   }
 
-  // Bind Candidates Export Buttons
+  // Bind Candidates Export Buttons (PDF Format)
   const btnExportIt = document.getElementById("btn-export-it");
   if (btnExportIt) {
-    btnExportIt.addEventListener("click", () => downloadCandidatesCsv("IT", "ALL"));
+    btnExportIt.addEventListener("click", () => downloadCandidatesPdf("IT", "ALL"));
   }
 
   const btnExportAids = document.getElementById("btn-export-aids");
   if (btnExportAids) {
-    btnExportAids.addEventListener("click", () => downloadCandidatesCsv("AI&DS", "ALL"));
+    btnExportAids.addEventListener("click", () => downloadCandidatesPdf("AI&DS", "ALL"));
   }
 
   const btnExportCsbs = document.getElementById("btn-export-csbs");
   if (btnExportCsbs) {
-    btnExportCsbs.addEventListener("click", () => downloadCandidatesCsv("CSBS", "ALL"));
+    btnExportCsbs.addEventListener("click", () => downloadCandidatesPdf("CSBS", "ALL"));
   }
 
   const btnExportAll = document.getElementById("btn-export-all");
   if (btnExportAll) {
-    btnExportAll.addEventListener("click", () => downloadCandidatesCsv("ALL", "ALL"));
+    btnExportAll.addEventListener("click", () => downloadCandidatesPdf("ALL", "ALL"));
   }
 
   const btnExportFiltered = document.getElementById("btn-export-filtered");
@@ -2004,13 +2180,13 @@ document.addEventListener("DOMContentLoaded", () => {
     btnExportFiltered.addEventListener("click", () => {
       const deptVal = document.getElementById("export-dept-filter") ? document.getElementById("export-dept-filter").value : "ALL";
       const eventVal = document.getElementById("export-event-filter") ? document.getElementById("export-event-filter").value : "ALL";
-      downloadCandidatesCsv(deptVal, eventVal);
+      downloadCandidatesPdf(deptVal, eventVal);
     });
   }
 
   const btnExportTable = document.getElementById("btn-export-table");
   if (btnExportTable) {
-    btnExportTable.addEventListener("click", () => downloadCurrentTableCsv());
+    btnExportTable.addEventListener("click", () => downloadCurrentTablePdf());
   }
 
   // Update / Add Event Form submit

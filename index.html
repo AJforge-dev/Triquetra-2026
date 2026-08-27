@@ -10,6 +10,10 @@
   
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- jsPDF & AutoTable for Native PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
 
@@ -506,19 +510,19 @@
               <!-- Download Candidates List Card -->
               <div class="sql-presets-card" style="margin-top: 1rem; border-color: #BFDBFE; background: #FFFFFF; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.05);">
                 <h4 style="font-size:0.88rem; font-weight:800; color:var(--text-dark); margin-bottom: 0.4rem; display:flex; align-items:center; gap:6px">
-                  <i data-lucide="download" style="width:16px;height:16px;color:var(--royal-sapphire)"></i> Download Candidates List
+                  <i data-lucide="file-text" style="width:16px;height:16px;color:var(--royal-sapphire)"></i> Download Candidates List (PDF)
                 </h4>
                 <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.45; margin-bottom: 0.85rem;">
-                  Export registered candidates list department-wise (IT, AI&amp;DS, CSBS) or event-wise into Excel / CSV format.
+                  Export registered candidates list department-wise (IT, AI&amp;DS, CSBS) or event-wise directly into official printable PDF documents.
                 </p>
 
                 <!-- 1-Click Department Exports -->
-                <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Quick Department Export</div>
+                <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Quick Department PDF Export</div>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom: 1rem;">
-                  <button type="button" class="export-btn" id="btn-export-it">📥 IT Dept</button>
-                  <button type="button" class="export-btn" id="btn-export-aids">📥 AI&amp;DS Dept</button>
-                  <button type="button" class="export-btn" id="btn-export-csbs">📥 CSBS Dept</button>
-                  <button type="button" class="export-btn export-btn-all" id="btn-export-all">📥 All Depts</button>
+                  <button type="button" class="export-btn" id="btn-export-it">📄 IT Dept (PDF)</button>
+                  <button type="button" class="export-btn" id="btn-export-aids">📄 AI&amp;DS Dept (PDF)</button>
+                  <button type="button" class="export-btn" id="btn-export-csbs">📄 CSBS Dept (PDF)</button>
+                  <button type="button" class="export-btn export-btn-all" id="btn-export-all">📄 All Depts (PDF)</button>
                 </div>
 
                 <!-- Custom Filter by Department & Event -->
@@ -547,7 +551,7 @@
                   </div>
 
                   <button type="button" class="cta-button" id="btn-export-filtered" style="padding:0.6rem; font-size:0.8rem; margin-top:2px;">
-                    <i data-lucide="download" style="width:14px;height:14px"></i> Download Filtered CSV
+                    <i data-lucide="file-text" style="width:14px;height:14px"></i> Download Candidates PDF
                   </button>
                 </div>
               </div>
@@ -589,7 +593,7 @@
                       <span id="sql-rows-count" style="font-size:0.75rem; color:var(--text-gray); background-color:var(--bg-light); padding:2px 8px; border-radius:4px">0 rows returned</span>
                     </div>
                     <button type="button" id="btn-export-table" class="export-btn export-btn-all" style="padding:4px 10px; font-size:0.72rem; display:inline-flex; align-items:center; gap:4px;">
-                      <i data-lucide="download" style="width:13px;height:13px"></i> Export Query (CSV)
+                      <i data-lucide="file-text" style="width:13px;height:13px"></i> Export Query (PDF)
                     </button>
                   </div>
                   
