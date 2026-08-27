@@ -178,18 +178,8 @@ function readMgmtSheet(ss) {
   var events = {};
   var schedule = {};
 
-  if (lastRow <= 1) {
-    var cachedCat = scriptProperties.getProperty("CATEGORIES_DATA");
-    var cachedEvt = scriptProperties.getProperty("EVENTS_DATA");
-    var cachedSch = scriptProperties.getProperty("SCHEDULE_DATA");
-    return {
-      categories: cachedCat ? JSON.parse(cachedCat) : null,
-      events: cachedEvt ? JSON.parse(cachedEvt) : null,
-      schedule: cachedSch ? JSON.parse(cachedSch) : null
-    };
-  }
-
-  var data = sheet.getRange(2, 1, lastRow - 1, 5).getValues();
+  if (lastRow > 1) {
+    var data = sheet.getRange(2, 1, lastRow - 1, 5).getValues();
   for (var i = 0; i < data.length; i++) {
     var section = String(data[i][0] || "").trim();
     var key = String(data[i][1] || "").trim();
@@ -226,6 +216,13 @@ function readMgmtSheet(ss) {
         icon: "calendar"
       });
     }
+  } else {
+    var cachedCat = scriptProperties.getProperty("CATEGORIES_DATA");
+    var cachedEvt = scriptProperties.getProperty("EVENTS_DATA");
+    var cachedSch = scriptProperties.getProperty("SCHEDULE_DATA");
+    if (cachedCat) { try { categories = JSON.parse(cachedCat); } catch (e) {} }
+    if (cachedEvt) { try { events = JSON.parse(cachedEvt); } catch (e) {} }
+    if (cachedSch) { try { schedule = JSON.parse(cachedSch); } catch (e) {} }
   }
 
   // Support reading registrations from "Sheet1", "Registrations", or the first sheet in the spreadsheet

@@ -1695,7 +1695,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ================= CANDIDATES EXPORT & DOWNLOAD SYSTEM (PDF FORMAT) =================
   // Helper to generate & download official candidate list as a formatted PDF
-  function downloadCandidatesPdf(deptFilter, eventFilter) {
+  async function downloadCandidatesPdf(deptFilter, eventFilter, triggerBtn) {
+    const originalHtml = triggerBtn ? triggerBtn.innerHTML : "";
+    if (triggerBtn) {
+      triggerBtn.disabled = true;
+      triggerBtn.innerHTML = `<i data-lucide="loader" class="spin-animation" style="width:13px;height:13px"></i> Fetching...`;
+      if (window.lucide) lucide.createIcons();
+    }
+
+    try {
+      // 1. Fetch live fresh registrations from Google Sheets before creating PDF
+      await new Promise(resolve => {
+        fetchCloudData(() => resolve());
+        setTimeout(resolve, 2000); // 2 second safety timeout
+      });
+    } catch (e) {
+      console.warn("Pre-export sync error:", e);
+    } finally {
+      if (triggerBtn) {
+        triggerBtn.disabled = false;
+        triggerBtn.innerHTML = originalHtml;
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    // Always reload fresh registrations from storage
+    registrationsDb = sanitizeRegistrations(loadStoredDb(STORAGE_KEYS.REGISTRATIONS, DEFAULT_REGISTRATIONS_DB));
+
     let list = [...registrationsDb];
 
     // Filter by Department (Strictly normalizes IT, AI&DS, CSBS)
@@ -2011,22 +2037,22 @@ document.addEventListener("DOMContentLoaded", () => {
   // Bind Candidates Export Buttons (PDF Format)
   const btnExportIt = document.getElementById("btn-export-it");
   if (btnExportIt) {
-    btnExportIt.addEventListener("click", () => downloadCandidatesPdf("IT", "ALL"));
+    btnExportIt.addEventListener("click", () => downloadCandidatesPdf("IT", "ALL", btnExportIt));
   }
 
   const btnExportAids = document.getElementById("btn-export-aids");
   if (btnExportAids) {
-    btnExportAids.addEventListener("click", () => downloadCandidatesPdf("AI&DS", "ALL"));
+    btnExportAids.addEventListener("click", () => downloadCandidatesPdf("AI&DS", "ALL", btnExportAids));
   }
 
   const btnExportCsbs = document.getElementById("btn-export-csbs");
   if (btnExportCsbs) {
-    btnExportCsbs.addEventListener("click", () => downloadCandidatesPdf("CSBS", "ALL"));
+    btnExportCsbs.addEventListener("click", () => downloadCandidatesPdf("CSBS", "ALL", btnExportCsbs));
   }
 
   const btnExportAll = document.getElementById("btn-export-all");
   if (btnExportAll) {
-    btnExportAll.addEventListener("click", () => downloadCandidatesPdf("ALL", "ALL"));
+    btnExportAll.addEventListener("click", () => downloadCandidatesPdf("ALL", "ALL", btnExportAll));
   }
 
   const btnExportFiltered = document.getElementById("btn-export-filtered");
@@ -2034,7 +2060,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnExportFiltered.addEventListener("click", () => {
       const deptVal = document.getElementById("export-dept-filter") ? document.getElementById("export-dept-filter").value : "ALL";
       const eventVal = document.getElementById("export-event-filter") ? document.getElementById("export-event-filter").value : "ALL";
-      downloadCandidatesPdf(deptVal, eventVal);
+      downloadCandidatesPdf(deptVal, eventVal, btnExportFiltered);
     });
   }
 
@@ -2691,4 +2717,31 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("✓ All event changes saved permanently to Google Sheets!");
     });
   }
+
+  // Live Cross-Tab & Background Candidate Sync
+  window.addEventListener("storage", (e) => {
+    if (e.key === STORAGE_KEYS.REGISTRATIONS) {
+      registrationsDb = sanitizeRegistrations(loadStoredDb(STORAGE_KEYS.REGISTRATIONS, DEFAULT_REGISTRATIONS_DB));
+      if (appState.isAdminAuthenticated) {
+        const sqlInput = document.getElementById("sql-query-input");
+        if (sqlInput && sqlInput.value) {
+          executeSql(sqlInput.value);
+        }
+      }
+    }
+  });
+
+  // Background Auto-Poll for Google Sheets Candidate Registrations
+  setInterval(() => {
+    if (appState.isAdminAuthenticated) {
+      fetchCloudData((success) => {
+        if (success) {
+          const sqlInput = document.getElementById("sql-query-input");
+          if (sqlInput && sqlInput.value) {
+            executeSql(sqlInput.value);
+          }
+        }
+      });
+    }
+  }, 15000);
 });
