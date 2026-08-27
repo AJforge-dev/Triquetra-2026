@@ -50,21 +50,34 @@ document.addEventListener("DOMContentLoaded", () => {
     categories: document.getElementById("admin-sec-categories")
   };
 
-  // LocalStorage Persistence Keys
+  // LocalStorage Persistence Keys (Version 3: Clean state with dummy records completely purged)
   const STORAGE_KEYS = {
-    EVENTS: "triquetra_events_db_v1",
-    CATEGORIES: "triquetra_categories_db_v1",
-    SCHEDULE: "triquetra_schedule_db_v1",
-    REGISTRATIONS: "triquetra_registrations_db_v1"
+    EVENTS: "triquetra_events_db_v3",
+    CATEGORIES: "triquetra_categories_db_v3",
+    SCHEDULE: "triquetra_schedule_db_v3",
+    REGISTRATIONS: "triquetra_registrations_db_v3"
   };
 
-  // Default Mock SQL Database state
-  const DEFAULT_REGISTRATIONS_DB = [
-    { id: 1, name: "Karan Sharma", registerNumber: "511122104015", department: "AI&DS", year: "III", event: "Tech Talk", receipt: "TQ26-1001", status: "Registered", timestamp: "27 Aug 2026, 08:30 PM" },
-    { id: 2, name: "Arthi Murali", registerNumber: "511122104003", department: "AI&DS", year: "III", event: "Tech Talk", receipt: "TQ26-1002", status: "Registered", timestamp: "27 Aug 2026, 08:45 PM" },
-    { id: 3, name: "Deepak Raj", registerNumber: "511121104008", department: "CSBS", year: "IV", event: "Cognify", receipt: "TQ26-1003", status: "Registered", timestamp: "27 Aug 2026, 09:00 PM" },
-    { id: 4, name: "Sneha V", registerNumber: "511123104022", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ26-1004", status: "Registered", timestamp: "27 Aug 2026, 09:15 PM" }
+  // Blacklist of obsolete dummy events to strictly exclude
+  const BLACKLISTED_DUMMY_EVENTS = [
+    "codecraze", "quizmaster", "robowar", "bughunt", "websprint",
+    "algorush", "admad", "corporateclash", "pitchperfect", "designsprint",
+    "postercraft", "brandforge", "aiideathon", "modelexpo", "techpaper",
+    "casestudy", "projectdisplay", "lenscraft", "memewar", "mememania"
   ];
+
+  // Purge obsolete localStorage keys from previous sessions
+  const obsoleteStorageKeys = [
+    "triquetra_events", "triquetra_categories", "triquetra_schedule", "triquetra_registrations",
+    "triquetra_events_db_v1", "triquetra_categories_db_v1", "triquetra_schedule_db_v1", "triquetra_registrations_db_v1",
+    "triquetra_events_db_v2", "triquetra_categories_db_v2", "triquetra_schedule_db_v2", "triquetra_registrations_db_v2"
+  ];
+  obsoleteStorageKeys.forEach(k => {
+    try { localStorage.removeItem(k); } catch (e) {}
+  });
+
+  // Default Mock SQL Database state (Clean - No dummy candidates like Karan Sharma or Arthi Murali)
+  const DEFAULT_REGISTRATIONS_DB = [];
 
   // Default Core Events Details Database (Synced with Google Sheets)
   const DEFAULT_EVENTS_DB = {
@@ -151,6 +164,28 @@ document.addEventListener("DOMContentLoaded", () => {
   let eventsDb = loadStoredDb(STORAGE_KEYS.EVENTS, DEFAULT_EVENTS_DB);
   let scheduleDb = loadStoredDb(STORAGE_KEYS.SCHEDULE, DEFAULT_SCHEDULE_DB);
   let categoriesDb = loadStoredDb(STORAGE_KEYS.CATEGORIES, DEFAULT_CATEGORIES_DB);
+
+  // Ensure Karan Sharma, Arthi Murali, TQ01, TQ02, and all dummy events are purged
+  registrationsDb = (registrationsDb || []).filter(r => {
+    if (!r) return false;
+    const name = (r.name || "").toLowerCase();
+    const evt = (r.event || "").trim().toLowerCase();
+    const rec = (r.receipt || "").toUpperCase();
+    if (name.includes("karan") || name.includes("arthi")) return false;
+    if (rec === "TQ01" || rec === "TQ02" || rec === "TQ-01" || rec === "TQ-02") return false;
+    if (BLACKLISTED_DUMMY_EVENTS.includes(evt)) return false;
+    return true;
+  });
+  persistRegistrationsDb();
+
+  BLACKLISTED_DUMMY_EVENTS.forEach(evtName => {
+    Object.keys(eventsDb).forEach(k => {
+      if (k.trim().toLowerCase() === evtName) {
+        delete eventsDb[k];
+      }
+    });
+  });
+  saveStoredDb(STORAGE_KEYS.EVENTS, eventsDb);
 
   // ================= GOOGLE CLOUD EVENT MANAGEMENT SYNC ENGINE =================
   function sendCloudAction(action, payload) {
@@ -502,17 +537,22 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!selectEl) return;
     
     selectEl.innerHTML = "";
-    Object.keys(eventsDb).forEach(key => {
+    const eventKeys = Object.keys(eventsDb).filter(key => {
+      const lower = key.trim().toLowerCase();
+      return !BLACKLISTED_DUMMY_EVENTS.includes(lower);
+    });
+
+    eventKeys.forEach(key => {
       const option = document.createElement("option");
       option.value = key;
-      option.textContent = `${eventsDb[key].name} (${eventsDb[key].category})`;
+      option.textContent = `${eventsDb[key].name} (${eventsDb[key].category || 'Event'})`;
       selectEl.appendChild(option);
     });
     
-    if (eventsDb[appState.registration.selectedEvent]) {
+    if (eventsDb[appState.registration.selectedEvent] && !BLACKLISTED_DUMMY_EVENTS.includes(appState.registration.selectedEvent.trim().toLowerCase())) {
       selectEl.value = appState.registration.selectedEvent;
     } else {
-      const firstKey = Object.keys(eventsDb)[0] || "";
+      const firstKey = eventKeys[0] || "Tech Talk";
       appState.registration.selectedEvent = firstKey;
       if (firstKey) selectEl.value = firstKey;
     }
@@ -930,7 +970,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (formFields.year) formFields.year.value = "";
     if (formFields.agree) formFields.agree.checked = false;
 
-    const defaultEvent = Object.keys(eventsDb)[0] || "CodeCraze";
+    const defaultEvent = Object.keys(eventsDb)[0] || "Tech Talk";
     appState.registration = {
       fullName: "",
       registerNumber: "",
@@ -998,7 +1038,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (paymentModal) {
         paymentModal.style.display = "flex";
 
-        const activeEventKey = appState.registration.selectedEvent || Object.keys(eventsDb)[0] || "CodeCraze";
+        const activeEventKey = appState.registration.selectedEvent || Object.keys(eventsDb)[0] || "Tech Talk";
         const eventName = eventsDb[activeEventKey] ? eventsDb[activeEventKey].name : activeEventKey;
 
         // Calculate next numerical ID
@@ -1568,20 +1608,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Render SQL Rows with XSS Protection
       const tbody = document.createElement("tbody");
-      filteredData.forEach(row => {
+      if (filteredData.length === 0) {
         const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${escapeHtml(row.id)}</td>
-          <td>${escapeHtml(row.name)}</td>
-          <td><span style="font-family:monospace; font-size:0.75rem;">${escapeHtml(row.registerNumber)}</span></td>
-          <td><span class="event-summary-tag">${escapeHtml(row.department)}</span></td>
-          <td>${escapeHtml(row.year)}</td>
-          <td><strong>${escapeHtml(row.event)}</strong></td>
-          <td><span style="font-family:monospace; font-size:0.75rem; color:var(--primary-teal);">${escapeHtml(row.receipt)}</span></td>
-          <td><span style="color:#10B981; font-weight:600; font-size:0.75rem;">${escapeHtml(row.status)}</span></td>
-        </tr>`;
+        tr.innerHTML = `<td colspan="8" style="text-align:center; padding:2rem; color:var(--text-gray);">No candidate registrations found. Newly registered participants will appear here in real-time.</td>`;
         tbody.appendChild(tr);
-      });
+      } else {
+        filteredData.forEach(row => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${escapeHtml(row.id)}</td>
+            <td>${escapeHtml(row.name)}</td>
+            <td><span style="font-family:monospace; font-size:0.75rem;">${escapeHtml(row.registerNumber)}</span></td>
+            <td><span class="event-summary-tag">${escapeHtml(row.department)}</span></td>
+            <td>${escapeHtml(row.year)}</td>
+            <td><strong>${escapeHtml(row.event)}</strong></td>
+            <td><span style="font-family:monospace; font-size:0.75rem; color:var(--primary-teal);">${escapeHtml(row.receipt)}</span></td>
+            <td><span style="color:#10B981; font-weight:600; font-size:0.75rem;">${escapeHtml(row.status)}</span></td>
+          </tr>`;
+          tbody.appendChild(tr);
+        });
+      }
       resultsTable.appendChild(tbody);
       
       resultsCount.textContent = `${filteredData.length} row(s) returned`;
@@ -1881,15 +1927,19 @@ document.addEventListener("DOMContentLoaded", () => {
       Object.keys(eventsDb).forEach(key => {
         const item = eventsDb[key];
         const name = (item && item.name) ? item.name : key;
-        if (name && !eventNames.includes(name)) {
+        const lower = name.trim().toLowerCase();
+        if (name && !BLACKLISTED_DUMMY_EVENTS.includes(lower) && !eventNames.includes(name)) {
           eventNames.push(name);
         }
       });
     }
 
     (registrationsDb || []).forEach(r => {
-      if (r && r.event && !eventNames.includes(r.event)) {
-        eventNames.push(r.event);
+      if (r && r.event) {
+        const lower = r.event.trim().toLowerCase();
+        if (!BLACKLISTED_DUMMY_EVENTS.includes(lower) && !eventNames.includes(r.event)) {
+          eventNames.push(r.event);
+        }
       }
     });
 
