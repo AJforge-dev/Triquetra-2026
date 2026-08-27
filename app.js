@@ -780,6 +780,10 @@ document.addEventListener("DOMContentLoaded", () => {
       appState.registration.selectedEvent = firstKey;
       if (firstKey) selectEl.value = firstKey;
     }
+
+    if (typeof populateExportEventDropdown === "function") {
+      populateExportEventDropdown();
+    }
   }
 
   // Render registration event card summary info
@@ -1673,6 +1677,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Populate event edit form category dropdown options
     populateCategoryOptions();
 
+    // Populate candidates export event filter dropdown (works dynamically for all events)
+    populateExportEventDropdown();
+
     // 2. Populate schedule admin table
     refreshAdminScheduleTable();
 
@@ -1699,8 +1706,10 @@ document.addEventListener("DOMContentLoaded", () => {
   sqlPresets.forEach(preset => {
     preset.addEventListener("click", () => {
       const queryText = preset.getAttribute("data-sql");
-      if (sqlInput) sqlInput.value = queryText;
-      executeSql(queryText);
+      if (queryText) {
+        if (sqlInput) sqlInput.value = queryText;
+        executeSql(queryText);
+      }
     });
   });
 
@@ -1832,6 +1841,176 @@ document.addEventListener("DOMContentLoaded", () => {
       errorBox.style.display = "block";
       errorBox.innerHTML = `<strong>SQL Syntax Error:</strong> Could not parse statement. Check formatting. (${escapeHtml(e.message)})`;
     }
+  }
+
+  // ================= CANDIDATES EXPORT & DOWNLOAD SYSTEM =================
+  // Helper to trigger clean CSV download with UTF-8 BOM for Microsoft Excel & Google Sheets
+  function triggerCsvDownload(csvString, filename) {
+    const blob = new Blob(["\uFEFF" + csvString], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      if (link.parentNode) link.parentNode.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 1000);
+  }
+
+  // Export candidate list department-wise (IT, AI&DS, CSBS) and event-wise
+  function downloadCandidatesCsv(deptFilter, eventFilter) {
+    let list = [...registrationsDb];
+
+    // Filter by Department (Strictly normalizes IT, AI&DS, CSBS)
+    if (deptFilter && deptFilter !== "ALL") {
+      const cleanDept = deptFilter.replace(/[\s&]+/g, "").toUpperCase();
+      list = list.filter(r => (r.department || "").replace(/[\s&]+/g, "").toUpperCase() === cleanDept);
+    }
+
+    // Filter by Event (Dynamically works for every existing and future event)
+    if (eventFilter && eventFilter !== "ALL") {
+      const cleanEvt = eventFilter.trim().toLowerCase();
+      list = list.filter(r => (r.event || "").trim().toLowerCase() === cleanEvt);
+    }
+
+    if (list.length === 0) {
+      const deptLabel = deptFilter !== "ALL" ? deptFilter : "All Departments";
+      const evtLabel = eventFilter !== "ALL" ? eventFilter : "All Events";
+      alert(`No registered candidates found matching "${deptLabel}" and "${evtLabel}".`);
+      return;
+    }
+
+    const headers = [
+      "S.No",
+      "Official Receipt No",
+      "Participant Name",
+      "Register Number",
+      "Department",
+      "Year",
+      "Registered Event",
+      "Registration Status",
+      "Registration Timestamp"
+    ];
+
+    const rows = list.map((r, idx) => [
+      `"${idx + 1}"`,
+      `"${(r.receipt || '').replace(/"/g, '""')}"`,
+      `"${(r.name || '').replace(/"/g, '""')}"`,
+      `"${(r.registerNumber || '').replace(/"/g, '""')}"`,
+      `"${(r.department || '').replace(/"/g, '""')}"`,
+      `"${(r.year || '').replace(/"/g, '""')}"`,
+      `"${(r.event || '').replace(/"/g, '""')}"`,
+      `"${(r.status || 'Registered').replace(/"/g, '""')}"`,
+      `"${(r.timestamp || '').replace(/"/g, '""')}"`
+    ]);
+
+    const csvContent = [headers.join(","), ...rows.map(row => row.join(","))].join("\r\n");
+
+    let filename = "Triquetra_2026_Candidates";
+    if (deptFilter && deptFilter !== "ALL") filename += `_${deptFilter.replace(/[^a-zA-Z0-9]/g, "")}`;
+    if (eventFilter && eventFilter !== "ALL") filename += `_${eventFilter.replace(/[^a-zA-Z0-9]/g, "")}`;
+    filename += `_${new Date().toISOString().slice(0, 10)}.csv`;
+
+    triggerCsvDownload(csvContent, filename);
+  }
+
+  // Export current interactive SQL Query Results table
+  function downloadCurrentTableCsv() {
+    const table = document.getElementById("sql-results-table");
+    if (!table) return;
+
+    const rows = table.querySelectorAll("tr");
+    if (rows.length === 0) {
+      alert("No data available in results table to export.");
+      return;
+    }
+
+    const csvRows = [];
+    rows.forEach(tr => {
+      const cells = tr.querySelectorAll("th, td");
+      const rowData = [];
+      cells.forEach(td => {
+        const text = (td.textContent || "").trim().replace(/"/g, '""');
+        rowData.push(`"${text}"`);
+      });
+      csvRows.push(rowData.join(","));
+    });
+
+    const csvContent = csvRows.join("\r\n");
+    const filename = `Triquetra_2026_Query_Export_${new Date().toISOString().slice(0, 10)}.csv`;
+    triggerCsvDownload(csvContent, filename);
+  }
+
+  // Populate dynamic event list in export dropdown (works for every event present and future)
+  function populateExportEventDropdown() {
+    const selectEl = document.getElementById("export-event-filter");
+    if (!selectEl) return;
+
+    const currentVal = selectEl.value || "ALL";
+    selectEl.innerHTML = '<option value="ALL">All Events</option>';
+
+    const eventNames = [];
+    if (eventsDb) {
+      Object.keys(eventsDb).forEach(key => {
+        const item = eventsDb[key];
+        const name = (item && item.name) ? item.name : key;
+        if (name && !eventNames.includes(name)) {
+          eventNames.push(name);
+        }
+      });
+    }
+
+    (registrationsDb || []).forEach(r => {
+      if (r && r.event && !eventNames.includes(r.event)) {
+        eventNames.push(r.event);
+      }
+    });
+
+    eventNames.sort().forEach(name => {
+      const opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = name;
+      selectEl.appendChild(opt);
+    });
+
+    selectEl.value = currentVal;
+  }
+
+  // Bind Candidates Export Buttons
+  const btnExportIt = document.getElementById("btn-export-it");
+  if (btnExportIt) {
+    btnExportIt.addEventListener("click", () => downloadCandidatesCsv("IT", "ALL"));
+  }
+
+  const btnExportAids = document.getElementById("btn-export-aids");
+  if (btnExportAids) {
+    btnExportAids.addEventListener("click", () => downloadCandidatesCsv("AI&DS", "ALL"));
+  }
+
+  const btnExportCsbs = document.getElementById("btn-export-csbs");
+  if (btnExportCsbs) {
+    btnExportCsbs.addEventListener("click", () => downloadCandidatesCsv("CSBS", "ALL"));
+  }
+
+  const btnExportAll = document.getElementById("btn-export-all");
+  if (btnExportAll) {
+    btnExportAll.addEventListener("click", () => downloadCandidatesCsv("ALL", "ALL"));
+  }
+
+  const btnExportFiltered = document.getElementById("btn-export-filtered");
+  if (btnExportFiltered) {
+    btnExportFiltered.addEventListener("click", () => {
+      const deptVal = document.getElementById("export-dept-filter") ? document.getElementById("export-dept-filter").value : "ALL";
+      const eventVal = document.getElementById("export-event-filter") ? document.getElementById("export-event-filter").value : "ALL";
+      downloadCandidatesCsv(deptVal, eventVal);
+    });
+  }
+
+  const btnExportTable = document.getElementById("btn-export-table");
+  if (btnExportTable) {
+    btnExportTable.addEventListener("click", () => downloadCurrentTableCsv());
   }
 
   // Update / Add Event Form submit

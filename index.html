@@ -503,6 +503,55 @@
                 </div>
               </div>
 
+              <!-- Download Candidates List Card -->
+              <div class="sql-presets-card" style="margin-top: 1rem; border-color: #BFDBFE; background: #FFFFFF; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.05);">
+                <h4 style="font-size:0.88rem; font-weight:800; color:var(--text-dark); margin-bottom: 0.4rem; display:flex; align-items:center; gap:6px">
+                  <i data-lucide="download" style="width:16px;height:16px;color:var(--royal-sapphire)"></i> Download Candidates List
+                </h4>
+                <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.45; margin-bottom: 0.85rem;">
+                  Export registered candidates list department-wise (IT, AI&amp;DS, CSBS) or event-wise into Excel / CSV format.
+                </p>
+
+                <!-- 1-Click Department Exports -->
+                <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Quick Department Export</div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom: 1rem;">
+                  <button type="button" class="export-btn" id="btn-export-it">📥 IT Dept</button>
+                  <button type="button" class="export-btn" id="btn-export-aids">📥 AI&amp;DS Dept</button>
+                  <button type="button" class="export-btn" id="btn-export-csbs">📥 CSBS Dept</button>
+                  <button type="button" class="export-btn export-btn-all" id="btn-export-all">📥 All Depts</button>
+                </div>
+
+                <!-- Custom Filter by Department & Event -->
+                <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Filter by Event &amp; Department</div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                  <div>
+                    <label style="font-size:0.72rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:3px;">Department</label>
+                    <div class="dropdown-icon-wrapper">
+                      <select id="export-dept-filter" class="form-input select" style="padding:0.48rem 0.75rem; font-size:0.78rem;">
+                        <option value="ALL">All Departments (IT, AI&amp;DS, CSBS)</option>
+                        <option value="IT">IT (Information Technology)</option>
+                        <option value="AI&DS">AI&amp;DS (Artificial Intelligence)</option>
+                        <option value="CSBS">CSBS (Computer Science &amp; Business)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style="font-size:0.72rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:3px;">Event (Auto-updates for future events)</label>
+                    <div class="dropdown-icon-wrapper">
+                      <select id="export-event-filter" class="form-input select" style="padding:0.48rem 0.75rem; font-size:0.78rem;">
+                        <option value="ALL">All Events</option>
+                        <!-- Dynamically populated from eventsDb -->
+                      </select>
+                    </div>
+                  </div>
+
+                  <button type="button" class="cta-button" id="btn-export-filtered" style="padding:0.6rem; font-size:0.8rem; margin-top:2px;">
+                    <i data-lucide="download" style="width:14px;height:14px"></i> Download Filtered CSV
+                  </button>
+                </div>
+              </div>
+
               <!-- Google Sheets Link Card -->
               <div class="sql-presets-card" style="margin-top: 1rem; border-color: rgba(16, 185, 129, 0.2); background-color: rgba(16, 185, 129, 0.03);">
                 <h4 style="font-size:0.85rem; font-weight:700; color:#10B981; margin-bottom: 0.5rem; display:flex; align-items:center; gap:4px">
@@ -534,9 +583,14 @@
 
                 <!-- Query Outputs -->
                 <div class="sql-output-area">
-                  <div class="sql-output-header">
-                    <h5 style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:var(--text-dark)">QUERY RESULTS</h5>
-                    <span id="sql-rows-count" style="font-size:0.75rem; color:var(--text-gray); background-color:var(--bg-light); padding:2px 8px; border-radius:4px">0 rows returned</span>
+                  <div class="sql-output-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <div>
+                      <h5 style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:var(--text-dark); margin:0;">QUERY RESULTS</h5>
+                      <span id="sql-rows-count" style="font-size:0.75rem; color:var(--text-gray); background-color:var(--bg-light); padding:2px 8px; border-radius:4px">0 rows returned</span>
+                    </div>
+                    <button type="button" id="btn-export-table" class="export-btn export-btn-all" style="padding:4px 10px; font-size:0.72rem; display:inline-flex; align-items:center; gap:4px;">
+                      <i data-lucide="download" style="width:13px;height:13px"></i> Export Query (CSV)
+                    </button>
                   </div>
                   
                   <div class="sql-table-wrapper">

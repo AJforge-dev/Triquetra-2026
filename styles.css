@@ -1735,9 +1735,41 @@ body::before {
 }
 
 .sql-preset:hover {
-  border-color: var(--primary-teal);
-  background-color: var(--primary-teal-light);
-  color: var(--primary-teal);
+  border-color: var(--royal-sapphire);
+  background-color: #EFF6FF;
+  color: var(--royal-sapphire);
+}
+
+.export-btn {
+  background-color: #F8FAFD;
+  border: 1.5px solid #DBEAFE;
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--royal-sapphire);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.export-btn:hover {
+  background-color: #EFF6FF;
+  border-color: #93C5FD;
+  color: var(--royal-bright);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.12);
+}
+
+.export-btn-all {
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+  color: var(--royal-sapphire);
+  font-weight: 800;
 }
 
 .sql-console-card {
