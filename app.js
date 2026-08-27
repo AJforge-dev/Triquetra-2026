@@ -648,6 +648,11 @@ document.addEventListener("DOMContentLoaded", () => {
         headerTitle.textContent = "TRIQUETRA";
       }
     }
+
+    // Refresh icons on screen navigation
+    if (typeof lucide !== "undefined" && lucide.createIcons) {
+      lucide.createIcons();
+    }
   }
 
   // Bind Bottom Nav Tabs
@@ -867,7 +872,7 @@ document.addEventListener("DOMContentLoaded", () => {
         aboutEl.textContent = data.about || `${data.name} is one of the premier events at Triquetra 2026. Review the rules and format, prepare your tools, and register early to secure your spot.`;
       }
 
-      // Rules List
+      // Rules List - Structured & Numbered Premium Format
       const rulesList = document.getElementById("detail-rules-list");
       if (rulesList) {
         rulesList.innerHTML = "";
@@ -880,14 +885,21 @@ document.addEventListener("DOMContentLoaded", () => {
         if (rulesArr.length === 0) {
           rulesArr = [
             "Participants must bring valid college identification cards.",
-            "Decision of the judges and faculty coordinators will be final.",
+            "Decision of the judges and faculty coordinators will be final and binding.",
             "Any malpractice or violation of conduct will lead to immediate disqualification."
           ];
         }
-        rulesArr.forEach(rule => {
-          const li = document.createElement("li");
-          li.textContent = rule;
-          rulesList.appendChild(li);
+        rulesArr.forEach((rule, idx) => {
+          const ruleNum = String(idx + 1).padStart(2, "0");
+          const item = document.createElement("div");
+          item.className = "rule-item";
+          item.innerHTML = `
+            <div class="rule-num-badge">${ruleNum}</div>
+            <div class="rule-content">
+              <p class="rule-text">${escapeHtml(rule)}</p>
+            </div>
+          `;
+          rulesList.appendChild(item);
         });
       }
 
@@ -945,7 +957,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const aboutEl = document.getElementById("detail-about");
       if (aboutEl) aboutEl.textContent = "Check back soon or add events through the administrator console.";
       const rulesList = document.getElementById("detail-rules-list");
-      if (rulesList) rulesList.innerHTML = "<li>No rules specified.</li>";
+      if (rulesList) rulesList.innerHTML = "<div class='rule-item'><div class='rule-num-badge'>--</div><div class='rule-content'><p class='rule-text'>No rules specified for this event.</p></div></div>";
       const infoGrid = document.getElementById("detail-info-grid");
       if (infoGrid) infoGrid.innerHTML = "";
     }

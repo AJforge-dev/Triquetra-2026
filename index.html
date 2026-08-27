@@ -157,11 +157,20 @@
               </div>
 
               <!-- Rules Section -->
-              <div class="section-card">
-                <h3 class="section-title">Rules</h3>
-                <ul class="rules-list" id="detail-rules-list">
+              <div class="section-card rules-card-wrapper">
+                <div class="rules-card-header">
+                  <div class="rules-title-group">
+                    <div class="rules-header-icon"><i data-lucide="shield-check"></i></div>
+                    <div>
+                      <h3 class="section-title" style="margin-bottom:2px;">Event Rules &amp; Guidelines</h3>
+                      <p class="rules-subtitle">Official criteria and participation conduct</p>
+                    </div>
+                  </div>
+                  <span class="rules-policy-badge"><i data-lucide="award"></i> Official</span>
+                </div>
+                <div class="rules-list-container" id="detail-rules-list">
                   <!-- Inner HTML rendered dynamically -->
-                </ul>
+                </div>
               </div>
 
               <!-- Action Register Button -->
@@ -871,23 +880,23 @@
     <!-- Sticky Bottom Navigation Tabs -->
     <nav class="app-bottom-nav">
       <button class="nav-tab active" id="tab-home">
-        <i data-lucide="home" class="tab-icon"></i>
+        <span class="tab-icon-wrapper"><i data-lucide="home" class="tab-icon"></i></span>
         <span class="tab-label">Home</span>
       </button>
       <button class="nav-tab" id="tab-events">
-        <i data-lucide="grid" class="tab-icon"></i>
+        <span class="tab-icon-wrapper"><i data-lucide="grid" class="tab-icon"></i></span>
         <span class="tab-label">Events</span>
       </button>
       <button class="nav-tab" id="tab-schedule">
-        <i data-lucide="calendar" class="tab-icon"></i>
+        <span class="tab-icon-wrapper"><i data-lucide="calendar" class="tab-icon"></i></span>
         <span class="tab-label">Schedule</span>
       </button>
       <button class="nav-tab" id="tab-register">
-        <i data-lucide="edit-3" class="tab-icon"></i>
+        <span class="tab-icon-wrapper"><i data-lucide="edit-3" class="tab-icon"></i></span>
         <span class="tab-label">Register</span>
       </button>
       <button class="nav-tab" id="tab-contact">
-        <i data-lucide="help-circle" class="tab-icon"></i>
+        <span class="tab-icon-wrapper"><i data-lucide="help-circle" class="tab-icon"></i></span>
         <span class="tab-label">Contact</span>
       </button>
     </nav>
