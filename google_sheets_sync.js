@@ -92,7 +92,8 @@ function doGet(e) {
 
     // Action 5: Registration Fallback
     if (params.name || params.registerNumber || params.event) {
-      var regSheet = ss.getSheetByName("Registrations") || ss.insertSheet("Registrations");
+      var regSheet = ss.getSheetByName("Sheet1") || ss.getSheetByName("Registrations") || ss.getSheets()[0];
+      if (!regSheet) regSheet = ss.insertSheet("Sheet1");
       if (regSheet.getLastRow() === 0) {
         regSheet.appendRow(["ID", "Participant Name", "Register Number", "Department", "Year", "Registered Event", "Receipt ID", "Registration Status", "Timestamp"]);
       }
@@ -227,23 +228,26 @@ function readMgmtSheet(ss) {
     }
   }
 
-  var regSheet = ss.getSheetByName("Registrations");
+  // Support reading registrations from "Sheet1", "Registrations", or the first sheet in the spreadsheet
+  var regSheet = ss.getSheetByName("Sheet1") || ss.getSheetByName("Registrations") || ss.getSheets()[0];
   var registrations = [];
   if (regSheet && regSheet.getLastRow() > 1) {
-    var regData = regSheet.getRange(2, 1, regSheet.getLastRow() - 1, 9).getValues();
+    var numRows = regSheet.getLastRow() - 1;
+    var numCols = Math.max(regSheet.getLastColumn(), 9);
+    var regData = regSheet.getRange(2, 1, numRows, numCols).getValues();
     for (var r = 0; r < regData.length; r++) {
       var rRow = regData[r];
       if (rRow[1] || rRow[2]) {
         registrations.push({
           id: rRow[0] || (r + 1),
-          name: String(rRow[1] || ""),
-          registerNumber: String(rRow[2] || ""),
-          department: String(rRow[3] || ""),
-          year: String(rRow[4] || ""),
-          event: String(rRow[5] || ""),
-          receipt: String(rRow[6] || ""),
-          status: String(rRow[7] || "Registered"),
-          timestamp: String(rRow[8] || "")
+          name: String(rRow[1] || "").trim(),
+          registerNumber: String(rRow[2] || "").trim(),
+          department: String(rRow[3] || "").trim(),
+          year: String(rRow[4] || "").trim(),
+          event: String(rRow[5] || "Tech Talk").trim(),
+          receipt: String(rRow[6] || "").trim(),
+          status: String(rRow[7] || "Registered").trim(),
+          timestamp: String(rRow[8] || "").trim()
         });
       }
     }

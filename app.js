@@ -11,12 +11,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Google Sheets integration configurations
-  // 1. Student Registration Web App URL (Old/Original Settings)
-  const REGISTRATION_SHEET_URL = "https://script.google.com/macros/s/AKfycbziLjxRfWxV3J2yTiN177B241LwBXnTexvpFErpfBSydWrQWrCsbRoBv-drvAjdh7Oexg/exec";
+  // 1. Live Google Sheets Web App URL (Provided by user)
+  const REGISTRATION_SHEET_URL = "https://script.google.com/macros/s/AKfycbwn1zDZVMlg1ayNKtfIo9aSdv4-VH1O1LEDEY5PGzbWVwBBZmoyJ0to46-QLNnPxyWxNg/exec";
 
-  // 2. Dedicated Event Management Web App URL (Schedules, Event Names, Categories from Google Sheets)
-  const EVENT_MGMT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby1LjaGIgQhQxhvAwLjX-04dB7JdXb3A1FwuhYs46bE41hKPJ6ngObyibVmLgMYthB2/exec";
-  const GOOGLE_SHEET_DRIVE_URL = "https://docs.google.com/spreadsheets";
+  // 2. Dedicated Event Management Web App URL (Schedules, Event Names, Categories, Registrations)
+  const EVENT_MGMT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwn1zDZVMlg1ayNKtfIo9aSdv4-VH1O1LEDEY5PGzbWVwBBZmoyJ0to46-QLNnPxyWxNg/exec";
+  const GOOGLE_SHEET_DRIVE_URL = "https://docs.google.com/spreadsheets/d/1t9oij0Ptf4Onr8e4K9v-t3GiuIY2na162HfjoOMkc-k/edit";
 
   // Initialize Lucide Icons
   lucide.createIcons();
@@ -50,12 +50,12 @@ document.addEventListener("DOMContentLoaded", () => {
     categories: document.getElementById("admin-sec-categories")
   };
 
-  // LocalStorage Persistence Keys (Version 3: Clean state with dummy records completely purged)
+  // LocalStorage Persistence Keys (Version 4: Live Data with Real Google Sheet Candidates)
   const STORAGE_KEYS = {
-    EVENTS: "triquetra_events_db_v3",
-    CATEGORIES: "triquetra_categories_db_v3",
-    SCHEDULE: "triquetra_schedule_db_v3",
-    REGISTRATIONS: "triquetra_registrations_db_v3"
+    EVENTS: "triquetra_events_db_v4",
+    CATEGORIES: "triquetra_categories_db_v4",
+    SCHEDULE: "triquetra_schedule_db_v4",
+    REGISTRATIONS: "triquetra_registrations_db_v4"
   };
 
   // Blacklist of obsolete dummy events to strictly exclude
@@ -70,14 +70,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const obsoleteStorageKeys = [
     "triquetra_events", "triquetra_categories", "triquetra_schedule", "triquetra_registrations",
     "triquetra_events_db_v1", "triquetra_categories_db_v1", "triquetra_schedule_db_v1", "triquetra_registrations_db_v1",
-    "triquetra_events_db_v2", "triquetra_categories_db_v2", "triquetra_schedule_db_v2", "triquetra_registrations_db_v2"
+    "triquetra_events_db_v2", "triquetra_categories_db_v2", "triquetra_schedule_db_v2", "triquetra_registrations_db_v2",
+    "triquetra_events_db_v3", "triquetra_categories_db_v3", "triquetra_schedule_db_v3", "triquetra_registrations_db_v3"
   ];
   obsoleteStorageKeys.forEach(k => {
     try { localStorage.removeItem(k); } catch (e) {}
   });
 
-  // Default Mock SQL Database state (Clean - No dummy candidates like Karan Sharma or Arthi Murali)
-  const DEFAULT_REGISTRATIONS_DB = [];
+  // Default Real Registrations Database loaded directly from user's Google Sheet (Symposium -AI&DS / Sheet1)
+  const DEFAULT_REGISTRATIONS_DB = [
+    { id: 1, name: "Monika K", registerNumber: "510823205029", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 19:46" },
+    { id: 2, name: "Nivetha S", registerNumber: "510823205032", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 19:49" },
+    { id: 3, name: "Dharshini M", registerNumber: "510825243006", department: "AI&DS", year: "II", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 19:53" },
+    { id: 4, name: "HEMADHARSHINI S", registerNumber: "510824205025", department: "IT", year: "III", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 20:05" },
+    { id: 5, name: "Shreya D", registerNumber: "510823205054", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 20:09" },
+    { id: 6, name: "RAJESHWARI K", registerNumber: "510825205054", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ06", status: "Registered", timestamp: "8/27/2026 20:32" },
+    { id: 7, name: "RAMYA V", registerNumber: "510825205057", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ06", status: "Registered", timestamp: "8/27/2026 20:32" },
+    { id: 8, name: "Ajaykumar J", registerNumber: "510823243011", department: "AI&DS", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 20:54" },
+    { id: 9, name: "Thanisha S", registerNumber: "510825205080", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ26-1005", status: "Registered", timestamp: "8/27/2026 21:27" },
+    { id: 10, name: "Preethika", registerNumber: "510824243034", department: "AI&DS", year: "III", event: "Tech Talk", receipt: "TQ26-1005", status: "Registered", timestamp: "8/27/2026 21:28" }
+  ];
 
   // Default Core Events Details Database (Synced with Google Sheets)
   const DEFAULT_EVENTS_DB = {
