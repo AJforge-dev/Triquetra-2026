@@ -60,10 +60,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Default Mock SQL Database state
   const DEFAULT_REGISTRATIONS_DB = [
-    { id: 1, name: "Karan Sharma", registerNumber: "511122104015", department: "AI&DS", year: "III", event: "CodeCraze", receipt: "TQ01", status: "Registered" },
-    { id: 2, name: "Arthi Murali", registerNumber: "511122104003", department: "AI&DS", year: "III", event: "CodeCraze", receipt: "TQ02", status: "Registered" },
-    { id: 3, name: "Deepak Raj", registerNumber: "511121104008", department: "CSE", year: "IV", event: "QuizMaster", receipt: "TQ03", status: "Registered" },
-    { id: 4, name: "Sneha V", registerNumber: "511123104022", department: "IT", year: "II", event: "RoboWar", receipt: "TQ04", status: "Registered" }
+    { id: 1, name: "Karan Sharma", registerNumber: "511122104015", department: "AI&DS", year: "III", event: "CodeCraze", receipt: "TQ26-1001", status: "Registered" },
+    { id: 2, name: "Arthi Murali", registerNumber: "511122104003", department: "AI&DS", year: "III", event: "CodeCraze", receipt: "TQ26-1002", status: "Registered" },
+    { id: 3, name: "Deepak Raj", registerNumber: "511121104008", department: "CSBS", year: "IV", event: "WebSprint", receipt: "TQ26-1003", status: "Registered" },
+    { id: 4, name: "Sneha V", registerNumber: "511123104022", department: "IT", year: "II", event: "BugHunt", receipt: "TQ26-1004", status: "Registered" }
   ];
 
   // Default Core Events Details Database
@@ -642,6 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
         headerTitle.textContent = "REGISTER";
       } else if (screenId === "confirmation") {
         headerTitle.textContent = "CONFIRMED";
+        renderConfirmationDetails();
       } else if (screenId === "admin" || screenId === "adminLogin") {
         headerTitle.textContent = "ADMIN PANEL";
       } else {
@@ -1236,9 +1237,16 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Generate Registration ID (Sequential starting from TQ01)
-      const nextNum = registrationsDb.length + 1;
-      const receiptId = `TQ${nextNum.toString().padStart(2, '0')}`;
+      // Generate Unique Registration Receipt ID for Triquetra 2026
+      const receiptId = generateReceiptNumber();
+      const formattedTimestamp = new Date().toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
 
       // Start Payment Simulation
       const paymentModal = document.getElementById("payment-modal");
@@ -1248,24 +1256,31 @@ document.addEventListener("DOMContentLoaded", () => {
         const activeEventKey = appState.registration.selectedEvent || Object.keys(eventsDb)[0] || "CodeCraze";
         const eventName = eventsDb[activeEventKey] ? eventsDb[activeEventKey].name : activeEventKey;
 
+        // Calculate next numerical ID
+        const nextId = (registrationsDb && registrationsDb.length > 0)
+          ? Math.max(...registrationsDb.map(r => parseInt(r.id, 10) || 0)) + 1
+          : 1;
+
         // Create new Database record
         const newRecord = {
-          id: registrationsDb.length + 1,
+          id: nextId,
           name: fullName,
           registerNumber: regNum,
           department: dept,
           year: year,
           event: eventName,
           receipt: receiptId,
+          timestamp: formattedTimestamp,
           status: "Registered"
         };
 
-        // Set dynamic registration summary for Confirmation Screen
-        document.getElementById("conf-val-id").textContent = receiptId;
-        document.getElementById("conf-val-name").textContent = fullName;
-        document.getElementById("conf-val-reg-num").textContent = regNum;
-        document.getElementById("conf-val-dept").textContent = `${dept} (${year} Year)`;
-        document.getElementById("conf-val-event").textContent = eventName;
+        // Cache last registration so page reload never clears receipt
+        try {
+          localStorage.setItem("tq26_last_registration", JSON.stringify(newRecord));
+        } catch (e) {}
+
+        // Set dynamic registration summary for Confirmation Screen immediately
+        renderConfirmationDetails(newRecord);
 
         // Simulate Gateway Delay
         setTimeout(() => {
@@ -1297,6 +1312,67 @@ document.addEventListener("DOMContentLoaded", () => {
           navigateTo("confirmation");
         }, 1800);
       }
+    });
+  }
+
+  // Dedicated generator for standardized, sequential, and unique Symposium Receipt Numbers
+  function generateReceiptNumber() {
+    let highest = 1000;
+    (registrationsDb || []).forEach(r => {
+      if (r && r.receipt) {
+        const m = String(r.receipt).match(/\d+/g);
+        if (m && m.length > 0) {
+          const num = parseInt(m[m.length - 1], 10);
+          if (num > highest) highest = num;
+        }
+      }
+    });
+
+    const storedCounter = parseInt(localStorage.getItem("tq26_receipt_counter") || "0", 10);
+    if (storedCounter > highest) {
+      highest = storedCounter;
+    }
+
+    const nextSeq = highest + 1;
+    localStorage.setItem("tq26_receipt_counter", nextSeq.toString());
+    return `TQ26-${nextSeq}`;
+  }
+
+  // Restore and render confirmation screen details dynamically from database/storage
+  function renderConfirmationDetails(record) {
+    let rec = record;
+    if (!rec) {
+      try {
+        rec = JSON.parse(localStorage.getItem("tq26_last_registration") || "null");
+      } catch (e) {
+        rec = null;
+      }
+    }
+    if (!rec && registrationsDb && registrationsDb.length > 0) {
+      rec = registrationsDb[registrationsDb.length - 1];
+    }
+    if (rec) {
+      const idEl = document.getElementById("conf-val-id");
+      const nameEl = document.getElementById("conf-val-name");
+      const regEl = document.getElementById("conf-val-reg-num");
+      const deptEl = document.getElementById("conf-val-dept");
+      const eventEl = document.getElementById("conf-val-event");
+      const timeEl = document.getElementById("conf-val-time");
+
+      if (idEl) idEl.textContent = rec.receipt || "TQ26-1001";
+      if (nameEl) nameEl.textContent = rec.name || "-";
+      if (regEl) regEl.textContent = rec.registerNumber || "-";
+      if (deptEl) deptEl.textContent = `${rec.department || '-'} (${rec.year || '-'} Year)`;
+      if (eventEl) eventEl.textContent = rec.event || "-";
+      if (timeEl) timeEl.textContent = rec.timestamp || new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+    }
+  }
+
+  // Print / Save Receipt Button Action
+  const btnPrintReceipt = document.getElementById("btn-print-receipt");
+  if (btnPrintReceipt) {
+    btnPrintReceipt.addEventListener("click", () => {
+      window.print();
     });
   }
 

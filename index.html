@@ -337,39 +337,48 @@
 
             <!-- Receipt Card Details -->
             <div class="conf-card">
-              <div style="font-size:0.85rem; font-weight:800; border-bottom:1px solid var(--bg-light); padding-bottom: 8px; margin-bottom: 8px; display:flex; justify-content:space-between; align-items:center;">
-                <span>REGISTRATION ID</span>
-                <span style="color:var(--primary-teal);" id="conf-val-id">TQ-01</span>
+              <div style="font-size:0.9rem; font-weight:800; border-bottom:1px solid #E2E8F0; padding-bottom: 10px; margin-bottom: 10px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="color:var(--text-dark); letter-spacing:0.5px;">OFFICIAL RECEIPT NO</span>
+                <span style="color:var(--royal-sapphire); font-weight:900; font-size:1.1rem; letter-spacing:0.5px;" id="conf-val-id">TQ26-1001</span>
               </div>
               
               <div class="conf-detail-row">
                 <span class="conf-detail-label">Participant</span>
-                <span class="conf-detail-value" id="conf-val-name">Amit Kumar</span>
+                <span class="conf-detail-value" id="conf-val-name">-</span>
               </div>
               <div class="conf-detail-row">
                 <span class="conf-detail-label">Register Number</span>
                 <span class="conf-detail-value" id="conf-val-reg-num">-</span>
               </div>
               <div class="conf-detail-row">
-                <span class="conf-detail-label">Class</span>
-                <span class="conf-detail-value" id="conf-val-dept">AI & DS (III Year)</span>
+                <span class="conf-detail-label">Department &amp; Year</span>
+                <span class="conf-detail-value" id="conf-val-dept">-</span>
               </div>
               <div class="conf-detail-row">
                 <span class="conf-detail-label">Registered Event</span>
-                <span class="conf-detail-value" id="conf-val-event" style="color:var(--primary-teal);">CodeCraze</span>
+                <span class="conf-detail-value" id="conf-val-event" style="color:var(--royal-sapphire); font-weight:800;">-</span>
+              </div>
+              <div class="conf-detail-row">
+                <span class="conf-detail-label">Registered On</span>
+                <span class="conf-detail-value" id="conf-val-time">-</span>
               </div>
               <div class="conf-detail-row">
                 <span class="conf-detail-label">Status</span>
-                <span class="conf-detail-value" style="color:#10B981; display:flex; align-items:center; gap:2px">
-                  <i data-lucide="shield-check" style="width:14px;height:14px"></i> Registered
+                <span class="conf-detail-value" style="color:#10B981; display:flex; align-items:center; gap:4px; font-weight:800;">
+                  <i data-lucide="shield-check" style="width:15px;height:15px"></i> Confirmed &amp; Registered
                 </span>
               </div>
             </div>
 
-            <!-- Back to Home CTA -->
-            <button class="cta-button" id="btn-back-to-home">
-              <i data-lucide="home" style="width: 18px; height: 18px"></i> Back to Home
-            </button>
+            <!-- Receipt Actions -->
+            <div style="display:flex; flex-direction:column; gap:0.65rem; width:100%; max-width:320px; margin:0 auto;">
+              <button class="cta-button" id="btn-print-receipt" style="background:var(--card-white); color:var(--royal-sapphire); border:1.5px solid #BFDBFE; box-shadow:0 2px 8px rgba(37,99,235,0.08);">
+                <i data-lucide="printer" style="width:17px;height:17px"></i> Save / Print Receipt
+              </button>
+              <button class="cta-button" id="btn-back-to-home">
+                <i data-lucide="home" style="width:17px;height:17px"></i> Back to Home
+              </button>
+            </div>
 
           </div>
         </div>
