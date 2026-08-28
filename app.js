@@ -1757,7 +1757,47 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ================= CANDIDATES EXPORT & DOWNLOAD SYSTEM (PDF FORMAT) =================
-  // Helper to generate & download official candidate list as a formatted PDF
+  // Helper to load logo as Base64 data URL for PDF generation
+  let cachedLogoBase64 = null;
+  function loadLogoBase64() {
+    if (cachedLogoBase64) return Promise.resolve(cachedLogoBase64);
+    return new Promise((resolve) => {
+      // 1. Try DOM logo element if available
+      const domImg = document.querySelector('img.app-n-logo') || document.querySelector('img[src*="logo"]');
+      if (domImg && domImg.complete && domImg.naturalWidth > 0) {
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = domImg.naturalWidth || 180;
+          canvas.height = domImg.naturalHeight || 180;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(domImg, 0, 0);
+          cachedLogoBase64 = canvas.toDataURL("image/png");
+          return resolve(cachedLogoBase64);
+        } catch (e) {}
+      }
+
+      // 2. Load fresh image from logo.png
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = function() {
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.naturalWidth || 180;
+          canvas.height = img.naturalHeight || 180;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          cachedLogoBase64 = canvas.toDataURL("image/png");
+          resolve(cachedLogoBase64);
+        } catch (e) {
+          resolve(null);
+        }
+      };
+      img.onerror = () => resolve(null);
+      img.src = "logo.png";
+    });
+  }
+
+  // Helper to generate & download official candidate list as a formatted PDF with Logo
   async function downloadCandidatesPdf(deptFilter, eventFilter, triggerBtn) {
     const originalHtml = triggerBtn ? triggerBtn.innerHTML : "";
     if (triggerBtn) {
@@ -1846,30 +1886,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Top Royal Header Banner
         doc.setFillColor(30, 64, 175); // Royal Sapphire (#1E40AF)
-        doc.rect(0, 0, 595, 78, "F");
+        doc.rect(0, 0, 595, 82, "F");
+
+        // Embed Triquetra Logo in Header Banner
+        const logoData = await loadLogoBase64();
+        if (logoData) {
+          try {
+            doc.setFillColor(255, 255, 255);
+            doc.roundedRect(515, 12, 58, 58, 6, 6, "F");
+            doc.addImage(logoData, "PNG", 519, 16, 50, 50);
+          } catch (imgErr) {
+            console.warn("Could not attach logo to candidates PDF:", imgErr);
+          }
+        }
 
         doc.setTextColor(255, 255, 255);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(16);
-        doc.text("TRIQUETRA 2026 - CANDIDATES LIST", 40, 32);
+        doc.text("TRIQUETRA 2026", 40, 32);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text("OFFICIAL CANDIDATES ROSTER", 40, 48);
 
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(9.5);
-        doc.text("Department of IT, AI & DS and CSBS", 40, 49);
-        doc.text("Ganadipathy Tulsi's Jain Engineering College", 40, 64);
+        doc.setFontSize(8.5);
+        doc.text("Department of IT, AI & DS and CSBS | Ganadipathy Tulsi's Jain Engineering College", 40, 65);
 
         // Metadata block
         doc.setTextColor(30, 41, 59);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(10);
-        doc.text(`Department: ${deptTitle}`, 40, 102);
-        doc.text(`Event: ${evtTitle}`, 320, 102);
+        doc.text(`Department: ${deptTitle}`, 40, 104);
+        doc.text(`Event: ${evtTitle}`, 320, 104);
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
         doc.setTextColor(100, 116, 139);
-        doc.text(`Generated On: ${currentDate}`, 40, 118);
-        doc.text(`Total Candidates: ${list.length}`, 320, 118);
+        doc.text(`Generated On: ${currentDate}`, 40, 120);
+        doc.text(`Total Candidates: ${list.length}`, 320, 120);
 
         // Table Rows
         const head = [["S.No", "Receipt No", "Participant Name", "Register No", "Dept", "Year", "Registered Event", "Status"]];
@@ -1887,7 +1942,7 @@ document.addEventListener("DOMContentLoaded", () => {
         doc.autoTable({
           head: head,
           body: body,
-          startY: 132,
+          startY: 134,
           theme: "striped",
           styles: {
             font: "helvetica",
@@ -1936,8 +1991,8 @@ document.addEventListener("DOMContentLoaded", () => {
     printReportWindowFallback(list, deptTitle, evtTitle, currentDate);
   }
 
-  // Helper to export current SQL Query Results as PDF
-  function downloadCurrentTablePdf() {
+  // Helper to export current SQL Query Results as PDF with Logo
+  async function downloadCurrentTablePdf() {
     const table = document.getElementById("sql-results-table");
     if (!table) return;
 
@@ -1958,7 +2013,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Header Banner
         doc.setFillColor(30, 64, 175);
-        doc.rect(0, 0, 595, 75, "F");
+        doc.rect(0, 0, 595, 80, "F");
+
+        // Embed Triquetra Logo
+        const logoData = await loadLogoBase64();
+        if (logoData) {
+          try {
+            doc.setFillColor(255, 255, 255);
+            doc.roundedRect(518, 12, 56, 56, 6, 6, "F");
+            doc.addImage(logoData, "PNG", 521, 15, 50, 50);
+          } catch (imgErr) {}
+        }
 
         doc.setTextColor(255, 255, 255);
         doc.setFont("helvetica", "bold");
@@ -1966,13 +2031,13 @@ document.addEventListener("DOMContentLoaded", () => {
         doc.text("TRIQUETRA 2026 - QUERY RESULTS REPORT", 40, 32);
 
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(9);
-        doc.text("Department of IT, AI & DS and CSBS | Ganadipathy Tulsi's Jain Engineering College", 40, 49);
-        doc.text(`Generated On: ${currentDate}`, 40, 63);
+        doc.setFontSize(8.5);
+        doc.text("Department of IT, AI & DS and CSBS | Ganadipathy Tulsi's Jain Engineering College", 40, 50);
+        doc.text(`Generated On: ${currentDate}`, 40, 65);
 
         doc.autoTable({
           html: "#sql-results-table",
-          startY: 90,
+          startY: 96,
           theme: "striped",
           styles: { font: "helvetica", fontSize: 8.5, cellPadding: 5.5, textColor: [30, 41, 59] },
           headStyles: { fillColor: [30, 64, 175], textColor: [255, 255, 255], fontStyle: "bold" },
@@ -2020,9 +2085,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <title>Triquetra 2026 Candidates List - ${deptTitle}</title>
         <style>
           body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; color: #1E293B; }
-          .header { background: #1E40AF; color: #FFFFFF; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+          .header { background: #1E40AF; color: #FFFFFF; padding: 20px; border-radius: 8px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center; }
           .header h1 { margin: 0 0 6px; font-size: 20px; }
           .header p { margin: 2px 0; font-size: 12px; opacity: 0.9; }
+          .header img { height: 56px; width: 56px; object-fit: contain; background: white; border-radius: 6px; padding: 3px; }
           .meta { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 13px; background: #F1F5F9; padding: 12px; border-radius: 6px; }
           table { width: 100%; border-collapse: collapse; font-size: 12px; }
           th { background: #1E40AF; color: #FFFFFF; text-align: left; padding: 8px; font-size: 11px; text-transform: uppercase; }
@@ -2034,9 +2100,12 @@ document.addEventListener("DOMContentLoaded", () => {
       </head>
       <body>
         <div class="header">
-          <h1>TRIQUETRA 2026 - CANDIDATES LIST</h1>
-          <p>Department of IT, AI & DS and CSBS</p>
-          <p>Ganadipathy Tulsi's Jain Engineering College</p>
+          <div>
+            <h1>TRIQUETRA 2026 - CANDIDATES LIST</h1>
+            <p>Department of IT, AI &amp; DS and CSBS</p>
+            <p>Ganadipathy Tulsi's Jain Engineering College</p>
+          </div>
+          <img src="logo.png" alt="Triquetra Logo" />
         </div>
         <div class="meta">
           <div><strong>Department:</strong> ${deptTitle} | <strong>Event:</strong> ${evtTitle}</div>
