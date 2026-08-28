@@ -50,12 +50,12 @@ document.addEventListener("DOMContentLoaded", () => {
     categories: document.getElementById("admin-sec-categories")
   };
 
-  // LocalStorage Persistence Keys (Version 5: Live Google Sheets Auto-Sync with Real Candidates)
+  // LocalStorage Persistence Keys (Version 6: Live Google Sheets Auto-Sync with Deduplication)
   const STORAGE_KEYS = {
-    EVENTS: "triquetra_events_db_v5",
-    CATEGORIES: "triquetra_categories_db_v5",
-    SCHEDULE: "triquetra_schedule_db_v5",
-    REGISTRATIONS: "triquetra_registrations_db_v5"
+    EVENTS: "triquetra_events_db_v6",
+    CATEGORIES: "triquetra_categories_db_v6",
+    SCHEDULE: "triquetra_schedule_db_v6",
+    REGISTRATIONS: "triquetra_registrations_db_v6"
   };
 
   // Blacklist of obsolete dummy events to strictly exclude
@@ -72,25 +72,45 @@ document.addEventListener("DOMContentLoaded", () => {
     "triquetra_events_db_v1", "triquetra_categories_db_v1", "triquetra_schedule_db_v1", "triquetra_registrations_db_v1",
     "triquetra_events_db_v2", "triquetra_categories_db_v2", "triquetra_schedule_db_v2", "triquetra_registrations_db_v2",
     "triquetra_events_db_v3", "triquetra_categories_db_v3", "triquetra_schedule_db_v3", "triquetra_registrations_db_v3",
-    "triquetra_events_db_v4", "triquetra_categories_db_v4", "triquetra_schedule_db_v4", "triquetra_registrations_db_v4"
+    "triquetra_events_db_v4", "triquetra_categories_db_v4", "triquetra_schedule_db_v4", "triquetra_registrations_db_v4",
+    "triquetra_events_db_v5", "triquetra_categories_db_v5", "triquetra_schedule_db_v5", "triquetra_registrations_db_v5"
   ];
   obsoleteStorageKeys.forEach(k => {
     try { localStorage.removeItem(k); } catch (e) {}
   });
 
-  // Default Real Registrations Database loaded directly from user's Google Sheet (Symposium -AI&DS / Sheet1)
+  // Default Real Registrations Database loaded directly from Google Sheet (30 candidates across IT, AI&DS, CSBS)
   const DEFAULT_REGISTRATIONS_DB = [
-    { id: 1, name: "Monika K", registerNumber: "510823205029", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 19:46" },
-    { id: 2, name: "Nivetha S", registerNumber: "510823205032", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 19:49" },
-    { id: 3, name: "Dharshini M", registerNumber: "510825243006", department: "AI&DS", year: "II", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 19:53" },
-    { id: 4, name: "HEMADHARSHINI S", registerNumber: "510824205025", department: "IT", year: "III", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 20:05" },
-    { id: 5, name: "Shreya D", registerNumber: "510823205054", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 20:09" },
-    { id: 6, name: "RAJESHWARI K", registerNumber: "510825205054", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ06", status: "Registered", timestamp: "8/27/2026 20:32" },
-    { id: 7, name: "RAMYA V", registerNumber: "510825205057", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ06", status: "Registered", timestamp: "8/27/2026 20:32" },
-    { id: 8, name: "Ajaykumar J", registerNumber: "510823243011", department: "AI&DS", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "8/27/2026 20:54" },
-    { id: 9, name: "Thanisha S", registerNumber: "510825205080", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ26-1005", status: "Registered", timestamp: "8/27/2026 21:27" },
-    { id: 10, name: "Preethika", registerNumber: "510824243034", department: "AI&DS", year: "III", event: "Tech Talk", receipt: "TQ26-1005", status: "Registered", timestamp: "8/27/2026 21:28" },
-    { id: 11, name: "Pooja k", registerNumber: "510825243036", department: "AI&DS", year: "II", event: "Tech Talk", receipt: "TQ26-1006", status: "Registered", timestamp: "8/27/2026 22:00" }
+    { id: 1, name: "Monika K", registerNumber: "510823205029", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "Thu Aug 27 2026 19:46:27" },
+    { id: 2, name: "Nivetha S", registerNumber: "510823205032", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "Thu Aug 27 2026 19:49:29" },
+    { id: 3, name: "Dharshini M", registerNumber: "510825243006", department: "AI&DS", year: "II", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "Thu Aug 27 2026 19:53:13" },
+    { id: 4, name: "HEMADHARSHINI S", registerNumber: "510824205025", department: "IT", year: "III", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "Thu Aug 27 2026 20:05:21" },
+    { id: 5, name: "Shreya D", registerNumber: "510823205054", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "Thu Aug 27 2026 20:09:05" },
+    { id: 6, name: "RAJESHWARI K", registerNumber: "510825205054", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ06", status: "Registered", timestamp: "Thu Aug 27 2026 20:32:02" },
+    { id: 7, name: "RAMYA V", registerNumber: "510825205057", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ06", status: "Registered", timestamp: "Thu Aug 27 2026 20:32:41" },
+    { id: 8, name: "Ajaykumar J", registerNumber: "510823243011", department: "AI&DS", year: "IV", event: "Tech Talk", receipt: "TQ05", status: "Registered", timestamp: "Thu Aug 27 2026 20:54:31" },
+    { id: 9, name: "Thanisha S", registerNumber: "510825205080", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ26-1005", status: "Registered", timestamp: "Thu Aug 27 2026 21:27:19" },
+    { id: 10, name: "Preethika", registerNumber: "510824243034", department: "AI&DS", year: "III", event: "Tech Talk", receipt: "TQ26-1005", status: "Registered", timestamp: "Thu Aug 27 2026 21:28:32" },
+    { id: 11, name: "Pooja k", registerNumber: "510825243036", department: "AI&DS", year: "II", event: "Tech Talk", receipt: "TQ26-1006", status: "Registered", timestamp: "Thu Aug 27 2026 22:00:43" },
+    { id: 12, name: "Rithika G N", registerNumber: "510825205061", department: "IT", year: "II", event: "Tech Talk", receipt: "TQ26-1007", status: "Registered", timestamp: "28/8/2026, 6:36:40 am" },
+    { id: 13, name: "Nathem F", registerNumber: "510823205031", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ26-1008", status: "Registered", timestamp: "28/8/2026, 7:17:33 am" },
+    { id: 14, name: "Ranjani. M", registerNumber: "510824205068", department: "IT", year: "III", event: "Tech Talk", receipt: "TQ26-1009", status: "Registered", timestamp: "28/8/2026, 7:28:29 am" },
+    { id: 15, name: "Swetha P", registerNumber: "510823205056", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ26-1010", status: "Registered", timestamp: "28/8/2026, 8:37:49 am" },
+    { id: 16, name: "Sandhiya J", registerNumber: "510824205071", department: "IT", year: "III", event: "Tech Talk", receipt: "TQ26-1011", status: "Registered", timestamp: "28/8/2026, 8:59:59 am" },
+    { id: 17, name: "Ashmitha V R", registerNumber: "510823205003", department: "IT", year: "IV", event: "Tech Talk", receipt: "TQ26-1012", status: "Registered", timestamp: "28/8/2026, 9:14:46 am" },
+    { id: 18, name: "Midhuna", registerNumber: "510825244031", department: "CSBS", year: "II", event: "Tech Talk", receipt: "TQ26-1013", status: "Registered", timestamp: "28/8/2026, 9:16:19 am" },
+    { id: 19, name: "MAHALAKSHMI V", registerNumber: "510825244012", department: "CSBS", year: "II", event: "Tech Talk", receipt: "TQ26-1012", status: "Registered", timestamp: "28/8/2026, 9:16:20 am" },
+    { id: 20, name: "Smitha V", registerNumber: "510824244020", department: "CSBS", year: "III", event: "Tech Talk", receipt: "TQ26-1013", status: "Registered", timestamp: "28/8/2026, 9:16:30 am" },
+    { id: 21, name: "Monisha p", registerNumber: "510825244015", department: "CSBS", year: "II", event: "Tech Talk", receipt: "TQ26-1014", status: "Registered", timestamp: "28/8/2026, 9:17:57 am" },
+    { id: 22, name: "Lathika R", registerNumber: "510823244013", department: "CSBS", year: "IV", event: "Tech Talk", receipt: "TQ26-1013", status: "Registered", timestamp: "28/8/2026, 9:18:51 am" },
+    { id: 23, name: "Loga Keerthiga R", registerNumber: "510823244014", department: "CSBS", year: "IV", event: "Tech Talk", receipt: "TQ26-1015", status: "Registered", timestamp: "28/8/2026, 10:07:05 am" },
+    { id: 24, name: "Mukesh P", registerNumber: "510823243031", department: "AI&DS", year: "IV", event: "Tech Talk", receipt: "TQ26-1016", status: "Registered", timestamp: "28/8/2026, 2:04:56 pm" },
+    { id: 25, name: "SARAVANAN M", registerNumber: "510823243303", department: "AI&DS", year: "IV", event: "Tech Talk", receipt: "TQ26-1017", status: "Registered", timestamp: "28/8/2026, 2:06:28 pm" },
+    { id: 26, name: "Ramalakshmi S", registerNumber: "510823243046", department: "AI&DS", year: "IV", event: "Tech Talk", receipt: "TQ26-1018", status: "Registered", timestamp: "28/8/2026, 2:08:21 pm" },
+    { id: 27, name: "JAYASRI T", registerNumber: "510823243018", department: "AI&DS", year: "IV", event: "Tech Talk", receipt: "TQ26-1019", status: "Registered", timestamp: "28/8/2026, 2:09:16 pm" },
+    { id: 28, name: "RAMYA A", registerNumber: "510823243047", department: "AI&DS", year: "IV", event: "Tech Talk", receipt: "TQ26-1020", status: "Registered", timestamp: "28/8/2026, 2:11:32 pm" },
+    { id: 29, name: "VINITHA S", registerNumber: "510823243060", department: "AI&DS", year: "IV", event: "Tech Talk", receipt: "TQ26-1021", status: "Registered", timestamp: "28/8/2026, 2:14:24 pm" },
+    { id: 30, name: "Sornam J", registerNumber: "510824243045", department: "AI&DS", year: "III", event: "Tech Talk", receipt: "TQ26-1022", status: "Registered", timestamp: "28/8/2026, 2:33:14 pm" }
   ];
 
   // Default Core Events Details Database (Synced with Google Sheets)
@@ -325,13 +345,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (cloudData.registrations && Array.isArray(cloudData.registrations)) {
           const cleanCloudRegs = sanitizeRegistrations(cloudData.registrations);
+          const seenUniqueKeys = new Set();
+          const cleanList = [];
+
+          // 1. Process all authoritative rows from Google Sheets
           cleanCloudRegs.forEach(cloudReg => {
-            const exists = registrationsDb.some(r => (r.receipt && r.receipt === cloudReg.receipt) || (r.registerNumber === cloudReg.registerNumber && r.event === cloudReg.event));
-            if (!exists) {
-              registrationsDb.push(cloudReg);
+            const reg = String(cloudReg.registerNumber || "").trim().toUpperCase();
+            const evt = String(cloudReg.event || "Tech Talk").trim().toLowerCase();
+            const name = String(cloudReg.name || "").trim().toLowerCase();
+            const key = reg ? `${reg}_${evt}` : `${name}_${evt}`;
+
+            if (!seenUniqueKeys.has(key)) {
+              seenUniqueKeys.add(key);
+              cleanList.push({
+                ...cloudReg,
+                id: cleanList.length + 1
+              });
             }
           });
-          registrationsDb = sanitizeRegistrations(registrationsDb);
+
+          // 2. Also preserve any locally submitted registration that hasn't synced yet
+          (registrationsDb || []).forEach(localReg => {
+            const reg = String(localReg.registerNumber || "").trim().toUpperCase();
+            const evt = String(localReg.event || "Tech Talk").trim().toLowerCase();
+            const name = String(localReg.name || "").trim().toLowerCase();
+            const key = reg ? `${reg}_${evt}` : `${name}_${evt}`;
+
+            if (!seenUniqueKeys.has(key)) {
+              seenUniqueKeys.add(key);
+              cleanList.push({
+                ...localReg,
+                id: cleanList.length + 1
+              });
+            }
+          });
+
+          registrationsDb = cleanList;
           persistRegistrationsDb();
           hasUpdates = true;
         }
@@ -1582,6 +1631,18 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       let filteredData = [...registrationsDb];
       
+      // Deduplicate rows for clean SQL terminal output
+      const seenSqlKeys = new Set();
+      filteredData = filteredData.filter(row => {
+        const reg = String(row.registerNumber || "").trim().toUpperCase();
+        const evt = String(row.event || "Tech Talk").trim().toLowerCase();
+        const name = String(row.name || "").trim().toLowerCase();
+        const key = reg ? `${reg}_${evt}` : `${name}_${evt}`;
+        if (seenSqlKeys.has(key)) return false;
+        seenSqlKeys.add(key);
+        return true;
+      });
+      
       // Basic SELECT parsing
       if (cleanQuery.includes("where")) {
         const whereClause = cleanQuery.split("where")[1].trim();
@@ -1737,6 +1798,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const cleanEvt = eventFilter.trim().toLowerCase();
       list = list.filter(r => (r.event || "").trim().toLowerCase() === cleanEvt);
     }
+
+    // Strict deduplication for clean, non-repeated PDF export
+    const seenPdfKeys = new Set();
+    list = list.filter(r => {
+      const reg = String(r.registerNumber || "").trim().toUpperCase();
+      const evt = String(r.event || "Tech Talk").trim().toLowerCase();
+      const name = String(r.name || "").trim().toLowerCase();
+      const key = reg ? `${reg}_${evt}` : `${name}_${evt}`;
+      if (seenPdfKeys.has(key)) return false;
+      seenPdfKeys.add(key);
+      return true;
+    });
 
     if (list.length === 0) {
       const deptLabel = deptFilter !== "ALL" ? deptFilter : "All Departments";

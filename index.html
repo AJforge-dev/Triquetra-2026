@@ -10,10 +10,6 @@
   
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- jsPDF & AutoTable for Native PDF Generation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
 
@@ -28,9 +24,9 @@
       </div>
       <div class="app-header-right">
         <!-- Shield Lock Icon for Admin Console -->
-        <button class="app-admin-btn" id="btn-admin-portal" title="Admin Portal Dashboard">
-          <i data-lucide="shield-check"></i>
-          <span class="admin-btn-text">Admin</span>
+        <button class="app-admin-btn" id="btn-admin-portal" title="Admin Portal Dashboard" style="display:flex; align-items:center; gap:6px; padding: 6px 12px; border-radius: 20px; border: 1.5px solid var(--primary-teal); background: var(--primary-teal-light); color: var(--primary-teal); font-weight: 700; font-size: 0.75rem; cursor:pointer;">
+          <i data-lucide="shield-check" style="width:16px;height:16px"></i>
+          <span>Admin Portal</span>
         </button>
       </div>
     </header>
@@ -139,9 +135,9 @@
           <div class="detail-layout-grid">
             <!-- Left Info Column -->
             <div class="detail-left-col">
-              <h2 class="detail-title" id="detail-title">Tech Talk</h2>
+              <h2 class="detail-title" id="detail-title">CodeCraze</h2>
               <p class="detail-desc" id="detail-desc">
-                Think Fast. Speak Smart. Make an Impact. Tech Talk — Where ideas meet confidence and communication.
+                Put your coding skills to the test in this ultimate speed-programming challenge.
               </p>
 
               <!-- About Paragraph -->
@@ -199,8 +195,9 @@
 
             <!-- Date Pills Row -->
             <div class="date-tabs-container">
-              <div class="date-pill active">27-08-2026</div>
-              <div class="date-pill">28-08-2026</div>
+              <div class="date-pill active">23 May 2026</div>
+              <div class="date-pill">24 May 2026</div>
+              <div class="date-pill">25 May 2026</div>
             </div>
 
             <!-- Timeline vertical layout -->
@@ -340,48 +337,39 @@
 
             <!-- Receipt Card Details -->
             <div class="conf-card">
-              <div style="font-size:0.9rem; font-weight:800; border-bottom:1px solid #E2E8F0; padding-bottom: 10px; margin-bottom: 10px; display:flex; justify-content:space-between; align-items:center;">
-                <span style="color:var(--text-dark); letter-spacing:0.5px;">OFFICIAL RECEIPT NO</span>
-                <span style="color:var(--royal-sapphire); font-weight:900; font-size:1.1rem; letter-spacing:0.5px;" id="conf-val-id">TQ26-1001</span>
+              <div style="font-size:0.85rem; font-weight:800; border-bottom:1px solid var(--bg-light); padding-bottom: 8px; margin-bottom: 8px; display:flex; justify-content:space-between; align-items:center;">
+                <span>REGISTRATION ID</span>
+                <span style="color:var(--primary-teal);" id="conf-val-id">TQ-01</span>
               </div>
               
               <div class="conf-detail-row">
                 <span class="conf-detail-label">Participant</span>
-                <span class="conf-detail-value" id="conf-val-name">-</span>
+                <span class="conf-detail-value" id="conf-val-name">Amit Kumar</span>
               </div>
               <div class="conf-detail-row">
                 <span class="conf-detail-label">Register Number</span>
                 <span class="conf-detail-value" id="conf-val-reg-num">-</span>
               </div>
               <div class="conf-detail-row">
-                <span class="conf-detail-label">Department &amp; Year</span>
-                <span class="conf-detail-value" id="conf-val-dept">-</span>
+                <span class="conf-detail-label">Class</span>
+                <span class="conf-detail-value" id="conf-val-dept">AI & DS (III Year)</span>
               </div>
               <div class="conf-detail-row">
                 <span class="conf-detail-label">Registered Event</span>
-                <span class="conf-detail-value" id="conf-val-event" style="color:var(--royal-sapphire); font-weight:800;">-</span>
-              </div>
-              <div class="conf-detail-row">
-                <span class="conf-detail-label">Registered On</span>
-                <span class="conf-detail-value" id="conf-val-time">-</span>
+                <span class="conf-detail-value" id="conf-val-event" style="color:var(--primary-teal);">CodeCraze</span>
               </div>
               <div class="conf-detail-row">
                 <span class="conf-detail-label">Status</span>
-                <span class="conf-detail-value" style="color:#10B981; display:flex; align-items:center; gap:4px; font-weight:800;">
-                  <i data-lucide="shield-check" style="width:15px;height:15px"></i> Confirmed &amp; Registered
+                <span class="conf-detail-value" style="color:#10B981; display:flex; align-items:center; gap:2px">
+                  <i data-lucide="shield-check" style="width:14px;height:14px"></i> Registered
                 </span>
               </div>
             </div>
 
-            <!-- Receipt Actions -->
-            <div style="display:flex; flex-direction:column; gap:0.65rem; width:100%; max-width:320px; margin:0 auto;">
-              <button class="cta-button" id="btn-print-receipt" style="background:var(--card-white); color:var(--royal-sapphire); border:1.5px solid #BFDBFE; box-shadow:0 2px 8px rgba(37,99,235,0.08);">
-                <i data-lucide="printer" style="width:17px;height:17px"></i> Save / Print Receipt
-              </button>
-              <button class="cta-button" id="btn-back-to-home">
-                <i data-lucide="home" style="width:17px;height:17px"></i> Back to Home
-              </button>
-            </div>
+            <!-- Back to Home CTA -->
+            <button class="cta-button" id="btn-back-to-home">
+              <i data-lucide="home" style="width: 18px; height: 18px"></i> Back to Home
+            </button>
 
           </div>
         </div>
@@ -401,24 +389,26 @@
             <div class="contact-card">
               <div class="contact-title">Organizing Department</div>
               <p style="font-size:0.85rem; color:var(--text-gray); line-height: 1.5;">
-                Department of IT,AI &amp; DS and CSBS<br>
+                Department of Artificial Intelligence & Data Science,<br>
                 Ganadipathy Tulsi's Jain Engineering College
               </p>
             </div>
 
             <div class="contact-card">
-              <div class="contact-title">Student Coordinators</div>
-              <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; padding: 7px 0; border-bottom: 1px solid var(--border-color);">
-                <span style="font-weight:600; color:var(--text-dark)">Kamalesh K (AI &amp; DS)</span>
-                <a href="tel:+916384214459" style="color:var(--royal-sapphire); font-weight:700; text-decoration:none;">+91 63842 14459</a>
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; padding: 7px 0; border-bottom: 1px solid var(--border-color);">
-                <span style="font-weight:600; color:var(--text-dark)">Sanjay (CSBS)</span>
-                <a href="tel:+919092294965" style="color:var(--royal-sapphire); font-weight:700; text-decoration:none;">+91 90922 94965</a>
-              </div>
-              <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; padding: 7px 0; margin-top: 2px;">
-                <span style="font-weight:600; color:var(--text-dark)">Monisha P (IT)</span>
-                <span></span>
+              <div class="contact-title">AI&DS Lab</div>
+              <p style="font-size:0.85rem; color:var(--text-gray); line-height: 1.5;">
+                GTEC
+              </p>
+              <p style="font-size:0.8rem; color:var(--text-light); margin-top:0.75rem; display:flex; align-items:center; gap:4px">
+                <i data-lucide="map-pin" style="width:14px;height:14px"></i> BHAGWAN PARASWANATH BLOCK
+              </p>
+            </div>
+
+            <div class="contact-card">
+              <div class="contact-title">Student Coordinator</div>
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem; padding: 6px 0;">
+                <span style="font-weight:600; color:var(--text-dark)">Kamalesh S (AI & DS)</span>
+                <span style="color:var(--text-gray)">+91 63842 14459</span>
               </div>
             </div>
 
@@ -506,55 +496,6 @@
                 </div>
               </div>
 
-              <!-- Download Candidates List Card -->
-              <div class="sql-presets-card" style="margin-top: 1rem; border-color: #BFDBFE; background: #FFFFFF; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.05);">
-                <h4 style="font-size:0.88rem; font-weight:800; color:var(--text-dark); margin-bottom: 0.4rem; display:flex; align-items:center; gap:6px">
-                  <i data-lucide="file-text" style="width:16px;height:16px;color:var(--royal-sapphire)"></i> Download Candidates List (PDF)
-                </h4>
-                <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.45; margin-bottom: 0.85rem;">
-                  Export registered candidates list department-wise (IT, AI&amp;DS, CSBS) or event-wise directly into official printable PDF documents.
-                </p>
-
-                <!-- 1-Click Department Exports -->
-                <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Quick Department PDF Export</div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom: 1rem;">
-                  <button type="button" class="export-btn" id="btn-export-it">📄 IT Dept (PDF)</button>
-                  <button type="button" class="export-btn" id="btn-export-aids">📄 AI&amp;DS Dept (PDF)</button>
-                  <button type="button" class="export-btn" id="btn-export-csbs">📄 CSBS Dept (PDF)</button>
-                  <button type="button" class="export-btn export-btn-all" id="btn-export-all">📄 All Depts (PDF)</button>
-                </div>
-
-                <!-- Custom Filter by Department & Event -->
-                <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Filter by Event &amp; Department</div>
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                  <div>
-                    <label style="font-size:0.72rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:3px;">Department</label>
-                    <div class="dropdown-icon-wrapper">
-                      <select id="export-dept-filter" class="form-input select" style="padding:0.48rem 0.75rem; font-size:0.78rem;">
-                        <option value="ALL">All Departments (IT, AI&amp;DS, CSBS)</option>
-                        <option value="IT">IT (Information Technology)</option>
-                        <option value="AI&DS">AI&amp;DS (Artificial Intelligence)</option>
-                        <option value="CSBS">CSBS (Computer Science &amp; Business)</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label style="font-size:0.72rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:3px;">Event (Auto-updates for future events)</label>
-                    <div class="dropdown-icon-wrapper">
-                      <select id="export-event-filter" class="form-input select" style="padding:0.48rem 0.75rem; font-size:0.78rem;">
-                        <option value="ALL">All Events</option>
-                        <!-- Dynamically populated from eventsDb -->
-                      </select>
-                    </div>
-                  </div>
-
-                  <button type="button" class="cta-button" id="btn-export-filtered" style="padding:0.6rem; font-size:0.8rem; margin-top:2px;">
-                    <i data-lucide="file-text" style="width:14px;height:14px"></i> Download Candidates PDF
-                  </button>
-                </div>
-              </div>
-
               <!-- Google Sheets Link Card -->
               <div class="sql-presets-card" style="margin-top: 1rem; border-color: rgba(16, 185, 129, 0.2); background-color: rgba(16, 185, 129, 0.03);">
                 <h4 style="font-size:0.85rem; font-weight:700; color:#10B981; margin-bottom: 0.5rem; display:flex; align-items:center; gap:4px">
@@ -580,25 +521,15 @@
 
                 <div class="sql-error-box" id="sql-error-box"></div>
 
-                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:1rem;">
-                  <button class="cta-button" id="btn-run-sql" style="max-width: 180px; padding: 0.75rem 1rem; font-size: 0.85rem;">
-                    Run SQL Query <i data-lucide="play" style="width:14px;height:14px"></i>
-                  </button>
-                  <button type="button" class="cta-button" id="btn-sync-cloud-sheets" style="max-width: 230px; padding: 0.75rem 1rem; font-size: 0.85rem; background: #0D9488;">
-                    <i data-lucide="refresh-cw" style="width:14px;height:14px"></i> Sync from Google Sheets
-                  </button>
-                </div>
+                <button class="cta-button" id="btn-run-sql" style="max-width: 180px; padding: 0.75rem 1rem; font-size: 0.85rem;">
+                  Run SQL Query <i data-lucide="play" style="width:14px;height:14px"></i>
+                </button>
 
                 <!-- Query Outputs -->
                 <div class="sql-output-area">
-                  <div class="sql-output-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                    <div>
-                      <h5 style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:var(--text-dark); margin:0;">QUERY RESULTS</h5>
-                      <span id="sql-rows-count" style="font-size:0.75rem; color:var(--text-gray); background-color:var(--bg-light); padding:2px 8px; border-radius:4px">0 rows returned</span>
-                    </div>
-                    <button type="button" id="btn-export-table" class="export-btn export-btn-all" style="padding:4px 10px; font-size:0.72rem; display:inline-flex; align-items:center; gap:4px;">
-                      <i data-lucide="file-text" style="width:13px;height:13px"></i> Export Query (PDF)
-                    </button>
+                  <div class="sql-output-header">
+                    <h5 style="font-size:0.8rem; font-weight:800; text-transform:uppercase; color:var(--text-dark)">QUERY RESULTS</h5>
+                    <span id="sql-rows-count" style="font-size:0.75rem; color:var(--text-gray); background-color:var(--bg-light); padding:2px 8px; border-radius:4px">0 rows returned</span>
                   </div>
                   
                   <div class="sql-table-wrapper">
@@ -624,7 +555,7 @@
                   
                   <div class="form-group">
                     <label class="form-label" for="admin-evt-name">Event Title</label>
-                    <input type="text" id="admin-evt-name" class="form-input" placeholder="e.g. Tech Talk" required>
+                    <input type="text" id="admin-evt-name" class="form-input" placeholder="e.g. CodeCraze" required>
                   </div>
 
                   <div class="form-row">
@@ -973,6 +904,6 @@
   </div>
 
   <!-- JS Scripts -->
-  <script src="app.js?v=20260827_2245"></script>
+  <script src="app.js?v=20260828_1445"></script>
 </body>
 </html>
