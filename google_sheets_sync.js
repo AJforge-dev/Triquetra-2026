@@ -53,7 +53,7 @@ function doGet(e) {
     }
 
     // 5. Action: Registration submission via GET query params
-    if (params.name || params.registerNumber || params.event) {
+    if (action === "register" || action === "save_registration" || params.name || params.registerNumber || params.event) {
       return handleDataSync(params, callback);
     }
 
@@ -217,6 +217,8 @@ function handleDataSync(data, callback) {
     status,
     formattedTime
   ]);
+
+  SpreadsheetApp.flush();
 
   return createJsonResponse({
     status: "success",

@@ -1074,11 +1074,15 @@ document.addEventListener("DOMContentLoaded", () => {
     formFields.btnPay.addEventListener("click", (e) => {
       e.preventDefault();
 
-      // Form validation & security sanitization
-      const fullName = (appState.registration.fullName || "").trim();
-      const regNum = (appState.registration.registerNumber || "").trim();
-      const dept = (appState.registration.dept || "").trim();
-      const year = (appState.registration.year || "").trim();
+      // Form validation & security sanitization (Autofill safe)
+      const fullName = (appState.registration.fullName || (formFields.name ? formFields.name.value : "")).trim();
+      const regNum = (appState.registration.registerNumber || (formFields.registerNumber ? formFields.registerNumber.value : "")).trim();
+      const dept = (appState.registration.dept || (formFields.dept ? formFields.dept.value : "")).trim();
+      const year = (appState.registration.year || (formFields.year ? formFields.year.value : "")).trim();
+      const agree = (appState.registration.agreeRules || (formFields.agree ? formFields.agree.checked : false));
+      const regEventEl = document.getElementById("reg-event-select");
+      const activeEventKey = appState.registration.selectedEvent || (regEventEl ? regEventEl.value : "") || Object.keys(eventsDb)[0] || "Tech Talk";
+      const eventName = eventsDb[activeEventKey] ? eventsDb[activeEventKey].name : activeEventKey;
 
       if (!fullName || fullName.length < 2) {
         alert("Please enter a valid Full Name (at least 2 characters).");
@@ -1100,7 +1104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Please select your Year.");
         return;
       }
-      if (!appState.registration.agreeRules) {
+      if (!agree) {
         alert("You must agree to the event rules and guidelines to participate.");
         return;
       }
@@ -1116,74 +1120,106 @@ document.addEventListener("DOMContentLoaded", () => {
         hour12: true
       });
 
+      // Calculate next numerical ID
+      const nextId = (registrationsDb && registrationsDb.length > 0)
+        ? Math.max(...registrationsDb.map(r => parseInt(r.id, 10) || 0)) + 1
+        : 1;
+
+      // Create new Database record
+      const newRecord = {
+        id: nextId,
+        name: fullName,
+        registerNumber: regNum,
+        department: dept,
+        year: year,
+        event: eventName,
+        receipt: receiptId,
+        timestamp: formattedTimestamp,
+        status: "Registered"
+      };
+
+      // Push to database and persist to localStorage
+      registrationsDb.push(newRecord);
+      persistRegistrationsDb();
+
+      // Cache last registration so page reload never clears receipt
+      try {
+        localStorage.setItem("tq26_last_registration", JSON.stringify(newRecord));
+      } catch (e) {}
+
+      // Set dynamic registration summary for Confirmation Screen immediately
+      renderConfirmationDetails(newRecord);
+
       // Start Payment Simulation
       const paymentModal = document.getElementById("payment-modal");
       if (paymentModal) {
         paymentModal.style.display = "flex";
 
-        const activeEventKey = appState.registration.selectedEvent || Object.keys(eventsDb)[0] || "Tech Talk";
-        const eventName = eventsDb[activeEventKey] ? eventsDb[activeEventKey].name : activeEventKey;
+        // Multi-Channel Bulletproof Google Sheets Sync
+        if (REGISTRATION_SHEET_URL && REGISTRATION_SHEET_URL !== "YOUR_DEPLOYED_WEB_APP_URL_HERE") {
+          const queryParams = new URLSearchParams({
+            action: "register",
+            id: String(newRecord.id),
+            name: newRecord.name,
+            fullName: newRecord.name,
+            registerNumber: newRecord.registerNumber,
+            regNum: newRecord.registerNumber,
+            department: newRecord.department,
+            dept: newRecord.department,
+            year: newRecord.year,
+            event: newRecord.event,
+            selectedEvent: newRecord.event,
+            receipt: newRecord.receipt,
+            receiptId: newRecord.receipt,
+            status: newRecord.status,
+            timestamp: newRecord.timestamp
+          });
 
-        // Calculate next numerical ID
-        const nextId = (registrationsDb && registrationsDb.length > 0)
-          ? Math.max(...registrationsDb.map(r => parseInt(r.id, 10) || 0)) + 1
-          : 1;
+          const syncUrl = `${REGISTRATION_SHEET_URL}?${queryParams.toString()}`;
 
-        // Create new Database record
-        const newRecord = {
-          id: nextId,
-          name: fullName,
-          registerNumber: regNum,
-          department: dept,
-          year: year,
-          event: eventName,
-          receipt: receiptId,
-          timestamp: formattedTimestamp,
-          status: "Registered"
-        };
+          // Channel 1: fetch with keepalive: true
+          try {
+            fetch(syncUrl, {
+              method: "GET",
+              mode: "no-cors",
+              keepalive: true,
+              cache: "no-cache"
+            }).then(() => {
+              console.log("Registration synced via fetch channel.");
+            }).catch(e => console.warn("Fetch channel sync attempt:", e));
+          } catch (e) {}
 
-        // Cache last registration so page reload never clears receipt
-        try {
-          localStorage.setItem("tq26_last_registration", JSON.stringify(newRecord));
-        } catch (e) {}
+          // Channel 2: Image background beacon
+          try {
+            const pingImg = new Image();
+            pingImg.src = `${syncUrl}&_img=${Date.now()}`;
+          } catch (e) {}
 
-        // Set dynamic registration summary for Confirmation Screen immediately
-        renderConfirmationDetails(newRecord);
+          // Channel 3: Script tag beacon
+          try {
+            const scriptBeacon = document.createElement("script");
+            scriptBeacon.src = `${syncUrl}&_script=${Date.now()}`;
+            scriptBeacon.async = true;
+            document.body.appendChild(scriptBeacon);
+            setTimeout(() => {
+              try { document.body.removeChild(scriptBeacon); } catch (err) {}
+            }, 4000);
+          } catch (e) {}
+
+          // Channel 4: Secondary Web App URL fallback if configured
+          if (EVENT_MGMT_SCRIPT_URL && EVENT_MGMT_SCRIPT_URL !== REGISTRATION_SHEET_URL) {
+            try {
+              fetch(`${EVENT_MGMT_SCRIPT_URL}?${queryParams.toString()}`, {
+                method: "GET",
+                mode: "no-cors",
+                keepalive: true
+              }).catch(() => {});
+            } catch (e) {}
+          }
+        }
 
         // Simulate Gateway Delay
         setTimeout(() => {
-          // Push to database and persist to localStorage
-          registrationsDb.push(newRecord);
-          persistRegistrationsDb();
-          
-          // Google Sheets sync integration trigger (Using GET query parameters to prevent body drops on redirect)
-          if (REGISTRATION_SHEET_URL && REGISTRATION_SHEET_URL !== "YOUR_DEPLOYED_WEB_APP_URL_HERE") {
-            const queryParams = new URLSearchParams({
-              id: newRecord.id,
-              name: newRecord.name,
-              registerNumber: newRecord.registerNumber,
-              department: newRecord.department,
-              year: newRecord.year,
-              event: newRecord.event,
-              receipt: newRecord.receipt,
-              receiptId: newRecord.receipt,
-              status: newRecord.status
-            });
-            fetch(`${REGISTRATION_SHEET_URL}?${queryParams.toString()}`, {
-              method: "GET",
-              mode: "no-cors"
-            })
-            .then(() => console.log("Student registration synced to Google Sheets successfully."))
-            .catch(err => console.error("Student registration sync failed:", err));
-
-            if (EVENT_MGMT_SCRIPT_URL && EVENT_MGMT_SCRIPT_URL !== REGISTRATION_SHEET_URL) {
-              fetch(`${EVENT_MGMT_SCRIPT_URL}?${queryParams.toString()}`, {
-                method: "GET",
-                mode: "no-cors"
-              }).catch(() => {});
-            }
-          }
-
           paymentModal.style.display = "none";
           navigateTo("confirmation");
         }, 1800);
