@@ -1442,11 +1442,14 @@ document.addEventListener("DOMContentLoaded", () => {
         <td><span class="event-summary-tag">${escapeHtml(evt.category)}</span></td>
         <td><span style="font-size:0.75rem;">${escapeHtml(evt.date)} • ${escapeHtml(evt.venue)}</span></td>
         <td>
-          <div style="display:flex; gap: 8px;">
-            <button class="btn-evt-edit" data-key="${escapeHtml(key)}" style="background:none; border:none; color:var(--primary-teal); cursor:pointer; font-weight:700">
+          <div style="display:flex; gap: 6px; align-items:center; flex-wrap:wrap;">
+            <button type="button" class="btn-evt-export-pdf export-btn" data-event="${escapeHtml(evt.name)}" style="padding: 3px 8px; font-size: 0.72rem; display:inline-flex; align-items:center; gap:4px;">
+              <i data-lucide="file-text" style="width:11px;height:11px"></i> Export PDF
+            </button>
+            <button class="btn-evt-edit" data-key="${escapeHtml(key)}" style="background:none; border:none; color:var(--primary-teal); cursor:pointer; font-weight:700; font-size:0.75rem;">
               Edit
             </button>
-            <button class="btn-evt-delete" data-key="${escapeHtml(key)}" style="background:none; border:none; color:#EF4444; cursor:pointer; font-weight:700">
+            <button class="btn-evt-delete" data-key="${escapeHtml(key)}" style="background:none; border:none; color:#EF4444; cursor:pointer; font-weight:700; font-size:0.75rem;">
               Delete
             </button>
           </div>
@@ -1455,7 +1458,18 @@ document.addEventListener("DOMContentLoaded", () => {
       listBody.appendChild(tr);
     });
 
-    lucide.createIcons();
+    if (window.lucide) lucide.createIcons();
+
+    // Bind Export PDF buttons
+    const exportPdfBtns = listBody.querySelectorAll(".btn-evt-export-pdf");
+    exportPdfBtns.forEach(btn => {
+      btn.onclick = () => {
+        const evtName = btn.getAttribute("data-event");
+        if (evtName) {
+          downloadCandidatesPdf("ALL", evtName, btn);
+        }
+      };
+    });
 
     // Checkbox selection listener
     function updateEvtSelectedUI() {
@@ -1869,9 +1883,15 @@ document.addEventListener("DOMContentLoaded", () => {
       hour12: true
     });
 
-    let filename = "Triquetra_2026_Candidates";
-    if (deptFilter && deptFilter !== "ALL") filename += `_${deptFilter.replace(/[^a-zA-Z0-9]/g, "")}`;
-    if (eventFilter && eventFilter !== "ALL") filename += `_${eventFilter.replace(/[^a-zA-Z0-9]/g, "")}`;
+    let filename = "Triquetra_2026";
+    if (eventFilter && eventFilter !== "ALL") {
+      filename += `_${eventFilter.replace(/[^a-zA-Z0-9]/g, "_")}_Participation_List`;
+    } else {
+      filename += "_Candidates_Roster";
+    }
+    if (deptFilter && deptFilter !== "ALL") {
+      filename += `_${deptFilter.replace(/[^a-zA-Z0-9]/g, "")}`;
+    }
     filename += `_${new Date().toISOString().slice(0, 10)}.pdf`;
 
     // 1. Direct Native PDF Generation via jsPDF + AutoTable
@@ -1903,15 +1923,19 @@ document.addEventListener("DOMContentLoaded", () => {
         doc.setTextColor(255, 255, 255);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(16);
-        doc.text("TRIQUETRA 2026", 40, 32);
+        doc.text("TRIQUETRA 2026", 40, 30);
 
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(11);
-        doc.text("OFFICIAL CANDIDATES ROSTER", 40, 48);
+        doc.setFontSize(10.5);
+        if (eventFilter && eventFilter !== "ALL") {
+          doc.text(`EVENT PARTICIPATION LIST: ${eventFilter.toUpperCase()}`, 40, 47);
+        } else {
+          doc.text("OFFICIAL CANDIDATES ROSTER", 40, 47);
+        }
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8.5);
-        doc.text("Department of IT, AI & DS and CSBS | Ganadipathy Tulsi's Jain Engineering College", 40, 65);
+        doc.text("Department of IT, AI & DS and CSBS | Ganadipathy Tulsi's Jain Engineering College", 40, 64);
 
         // Metadata block
         doc.setTextColor(30, 41, 59);
@@ -1924,7 +1948,7 @@ document.addEventListener("DOMContentLoaded", () => {
         doc.setFontSize(9);
         doc.setTextColor(100, 116, 139);
         doc.text(`Generated On: ${currentDate}`, 40, 120);
-        doc.text(`Total Candidates: ${list.length}`, 320, 120);
+        doc.text(`Total Registered: ${list.length} Candidate(s)`, 320, 120);
 
         // Table Rows
         const head = [["S.No", "Receipt No", "Participant Name", "Register No", "Dept", "Year", "Registered Event", "Status"]];
@@ -2082,7 +2106,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Triquetra 2026 Candidates List - ${deptTitle}</title>
+        <title>Triquetra 2026 Participation List - ${deptTitle}</title>
         <style>
           body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; color: #1E293B; }
           .header { background: #1E40AF; color: #FFFFFF; padding: 20px; border-radius: 8px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center; }
@@ -2101,7 +2125,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <body>
         <div class="header">
           <div>
-            <h1>TRIQUETRA 2026 - CANDIDATES LIST</h1>
+            <h1>TRIQUETRA 2026 - PARTICIPATION LIST</h1>
             <p>Department of IT, AI &amp; DS and CSBS</p>
             <p>Ganadipathy Tulsi's Jain Engineering College</p>
           </div>
@@ -2139,15 +2163,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 500);
   }
 
-  // Populate dynamic event list in export dropdown (works for every event present and future)
+  // Populate dynamic event list in export dropdown & 1-click quick event export buttons
   function populateExportEventDropdown() {
     const selectEl = document.getElementById("export-event-filter");
+    const quickContainer = document.getElementById("quick-event-export-buttons");
     if (!selectEl) return;
 
     const currentVal = selectEl.value || "ALL";
-    selectEl.innerHTML = '<option value="ALL">All Events</option>';
+    selectEl.innerHTML = '<option value="ALL">All Events (Complete Roster)</option>';
 
+    const eventCounts = {};
     const eventNames = [];
+
     if (eventsDb) {
       Object.keys(eventsDb).forEach(key => {
         const item = eventsDb[key];
@@ -2162,20 +2189,47 @@ document.addEventListener("DOMContentLoaded", () => {
     (registrationsDb || []).forEach(r => {
       if (r && r.event) {
         const lower = r.event.trim().toLowerCase();
-        if (!BLACKLISTED_DUMMY_EVENTS.includes(lower) && !eventNames.includes(r.event)) {
-          eventNames.push(r.event);
+        if (!BLACKLISTED_DUMMY_EVENTS.includes(lower)) {
+          if (!eventNames.includes(r.event)) {
+            eventNames.push(r.event);
+          }
+          eventCounts[r.event] = (eventCounts[r.event] || 0) + 1;
         }
       }
     });
 
     eventNames.sort().forEach(name => {
+      const count = eventCounts[name] || 0;
       const opt = document.createElement("option");
       opt.value = name;
-      opt.textContent = name;
+      opt.textContent = `${name} (${count} registered)`;
       selectEl.appendChild(opt);
     });
 
     selectEl.value = currentVal;
+
+    // Render Quick 1-Click Event Export Badges
+    if (quickContainer) {
+      quickContainer.innerHTML = "";
+      if (eventNames.length === 0) {
+        quickContainer.innerHTML = `<span style="font-size:0.75rem; color:var(--text-gray);">No events loaded</span>`;
+      } else {
+        eventNames.forEach(name => {
+          const count = eventCounts[name] || 0;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "export-btn";
+          btn.style.padding = "5px 9px";
+          btn.style.fontSize = "0.75rem";
+          btn.style.display = "inline-flex";
+          btn.style.alignItems = "center";
+          btn.style.gap = "5px";
+          btn.innerHTML = `📄 ${escapeHtml(name)} <span style="background:var(--royal-sapphire); color:white; padding:1px 6px; border-radius:10px; font-size:0.68rem; font-weight:800">${count}</span>`;
+          btn.addEventListener("click", () => downloadCandidatesPdf("ALL", name, btn));
+          quickContainer.appendChild(btn);
+        });
+      }
+    }
   }
 
   // Bind Candidates Export Buttons (PDF Format)

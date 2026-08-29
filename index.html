@@ -482,27 +482,34 @@
                 
                 <!-- Download Candidates List Card (PDF Format with Direct Live Sync) -->
                 <div class="sql-presets-card" style="border-color: #BFDBFE; background: #FFFFFF; box-shadow: 0 4px 18px rgba(37, 99, 235, 0.06); margin-bottom: 1.25rem;">
-                  <h4 style="font-size:0.92rem; font-weight:800; color:var(--text-dark); margin-bottom: 0.4rem; display:flex; align-items:center; gap:8px">
-                    <i data-lucide="file-text" style="width:18px;height:18px;color:var(--royal-sapphire)"></i> Download Candidates List (PDF)
+                  <h4 style="font-size:0.92rem; font-weight:800; color:var(--text-dark); margin-bottom: 0.35rem; display:flex; align-items:center; gap:8px">
+                    <i data-lucide="file-text" style="width:18px;height:18px;color:var(--royal-sapphire)"></i> Event Participation PDF Export
                   </h4>
                   <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.45; margin-bottom: 0.85rem;">
-                    Export registered candidates list department-wise (IT, AI&amp;DS, CSBS) or event-wise directly into official printable PDF documents.
+                    Select an event and department to download the live participation roster directly as an official PDF.
                   </p>
 
-                  <!-- 1-Click Department Exports -->
-                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Quick Department PDF Export</div>
-                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom: 1rem;">
-                    <button type="button" class="export-btn" id="btn-export-it">📄 IT Dept (PDF)</button>
-                    <button type="button" class="export-btn" id="btn-export-aids">📄 AI&amp;DS Dept (PDF)</button>
-                    <button type="button" class="export-btn" id="btn-export-csbs">📄 CSBS Dept (PDF)</button>
-                    <button type="button" class="export-btn export-btn-all" id="btn-export-all">📄 All Depts (PDF)</button>
+                  <!-- 1-Click Quick Event Exports (Populated dynamically with participant counts) -->
+                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">1-Click Quick Event Export</div>
+                  <div id="quick-event-export-buttons" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom: 1rem;">
+                    <!-- Dynamically populated -->
                   </div>
 
-                  <!-- Custom Filter by Department & Event -->
-                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Filter by Event &amp; Department</div>
-                  <div style="display:flex; flex-direction:column; gap:8px;">
+                  <!-- Selection of Event & Department -->
+                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Custom Event &amp; Department Export</div>
+                  <div style="display:flex; flex-direction:column; gap:8px; margin-bottom: 1.15rem;">
                     <div>
-                      <label style="font-size:0.72rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:3px;">Department</label>
+                      <label style="font-size:0.72rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:3px;">Select Event</label>
+                      <div class="dropdown-icon-wrapper">
+                        <select id="export-event-filter" class="form-input select" style="padding:0.52rem 0.8rem; font-size:0.8rem; font-weight:600;">
+                          <option value="ALL">All Events (Complete Roster)</option>
+                          <!-- Dynamically populated with events & live counts -->
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style="font-size:0.72rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:3px;">Department (Optional Filter)</label>
                       <div class="dropdown-icon-wrapper">
                         <select id="export-dept-filter" class="form-input select" style="padding:0.48rem 0.75rem; font-size:0.78rem;">
                           <option value="ALL">All Departments (IT, AI&amp;DS, CSBS)</option>
@@ -513,19 +520,18 @@
                       </div>
                     </div>
 
-                    <div>
-                      <label style="font-size:0.72rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:3px;">Event (Auto-updates for future events)</label>
-                      <div class="dropdown-icon-wrapper">
-                        <select id="export-event-filter" class="form-input select" style="padding:0.48rem 0.75rem; font-size:0.78rem;">
-                          <option value="ALL">All Events</option>
-                          <!-- Dynamically populated -->
-                        </select>
-                      </div>
-                    </div>
-
-                    <button type="button" class="cta-button" id="btn-export-filtered" style="padding:0.65rem; font-size:0.82rem; margin-top:2px;">
-                      <i data-lucide="file-text" style="width:14px;height:14px"></i> Download Candidates PDF
+                    <button type="button" class="cta-button" id="btn-export-filtered" style="padding:0.7rem; font-size:0.84rem; font-weight:700; margin-top:2px;">
+                      <i data-lucide="download" style="width:15px;height:15px"></i> Download Event Participation PDF
                     </button>
+                  </div>
+
+                  <!-- 1-Click Department Exports -->
+                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Quick Department PDF Export</div>
+                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+                    <button type="button" class="export-btn" id="btn-export-it">📄 IT Dept (PDF)</button>
+                    <button type="button" class="export-btn" id="btn-export-aids">📄 AI&amp;DS Dept (PDF)</button>
+                    <button type="button" class="export-btn" id="btn-export-csbs">📄 CSBS Dept (PDF)</button>
+                    <button type="button" class="export-btn export-btn-all" id="btn-export-all">📄 All Depts (PDF)</button>
                   </div>
                 </div>
 
@@ -970,6 +976,6 @@
   </div>
 
   <!-- JS Scripts -->
-  <script src="app.js?v=20260828_1450"></script>
+  <script src="app.js?v=20260829_1120"></script>
 </body>
 </html>
