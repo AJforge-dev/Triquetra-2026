@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       date: "28-08-2026",
       time: "3:00PM to 4:30PM",
       venue: "AI & DS - AI&DS Lab, IT - IT Lab, CSBS - CSBS Lab",
-      teamSize: "Individual",
+      teamSize: "Solo (Individual)",
       fee: "Free",
       desc: "Think Fast. Speak Smart. Make an Impact. Tech Talk — Where ideas meet confidence and communication.",
       about: "Tech Talk is an individual presentation event designed to test participants’ ability to think quickly, analyze unfamiliar topics, and communicate their ideas effectively. Participants will receive a topic randomly on the spot, prepare within a limited time, and present their views before the judges. The event emphasizes knowledge, logical thinking, clarity, confidence, and effective communication.",
@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
       date: "27-08-2026",
       time: "3:00PM - 4:30PM",
       venue: "AI&DS Lab",
-      teamSize: "Individual",
+      teamSize: "Solo (Individual)",
       fee: "Free",
       desc: "Put your analytical problem-solving and cognitive intelligence to the test in this technical challenge.",
       about: "Cognify challenges participants across algorithmic problem-solving, cognitive reasoning, and fast-paced technological aptitude rounds.",
@@ -651,6 +651,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = eventsDb[activeEvent];
     const formCard = document.querySelector(".event-summary-card .event-summary-info");
     if (formCard && data) {
+      const isSolo = /^solo|^indiv/i.test((data.teamSize || "Solo").trim());
+      const teamIcon = isSolo ? "user" : "users";
+      const teamLabel = isSolo ? "Solo (Individual)" : (data.teamSize || "Solo (Individual)");
+
       formCard.innerHTML = `
         <div class="event-summary-title-row">
           <span class="event-summary-title">${escapeHtml(data.name)}</span>
@@ -660,7 +664,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="event-summary-spec-item"><i data-lucide="calendar"></i><span>${escapeHtml(data.date)}</span></div>
           <div class="event-summary-spec-item"><i data-lucide="map-pin"></i><span>${escapeHtml(data.venue)}</span></div>
           <div class="event-summary-spec-item"><i data-lucide="clock"></i><span>${escapeHtml(data.time)}</span></div>
-          <div class="event-summary-spec-item"><i data-lucide="users"></i><span>${escapeHtml(data.teamSize)}</span></div>
+          <div class="event-summary-spec-item"><i data-lucide="${teamIcon}"></i><span>${escapeHtml(teamLabel)}</span></div>
         </div>
       `;
     }
@@ -796,10 +800,10 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
           </div>
           <div class="info-item">
-            <div class="info-item-icon"><i data-lucide="users"></i></div>
+            <div class="info-item-icon"><i data-lucide="${/^solo|^indiv/i.test((data.teamSize || 'Solo').trim()) ? 'user' : 'users'}"></i></div>
             <div class="info-item-text">
-              <span class="info-item-label">Team Size</span>
-              <span class="info-item-value">${escapeHtml(data.teamSize || '1 Member')}</span>
+              <span class="info-item-label">Participation Type</span>
+              <span class="info-item-value">${escapeHtml(/^solo|^indiv/i.test((data.teamSize || 'Solo').trim()) ? 'Solo (Individual)' : (data.teamSize || 'Solo (Individual)'))}</span>
             </div>
           </div>
         `;
@@ -1365,7 +1369,44 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("admin-evt-date").value = evt.date;
     document.getElementById("admin-evt-time").value = evt.time;
     document.getElementById("admin-evt-venue").value = evt.venue;
-    document.getElementById("admin-evt-team").value = evt.teamSize;
+    
+    // Participation Type (Solo / Team) handler
+    const teamSelect = document.getElementById("admin-evt-team");
+    const teamCustomInput = document.getElementById("admin-evt-team-custom");
+    const currentTeamSize = evt.teamSize || "Solo (Individual)";
+
+    if (teamSelect) {
+      const isSolo = /^solo|^indiv/i.test(currentTeamSize.trim());
+      if (isSolo) {
+        teamSelect.value = "Solo (Individual)";
+        if (teamCustomInput) {
+          teamCustomInput.style.display = "none";
+          teamCustomInput.value = "";
+        }
+      } else {
+        let matched = false;
+        for (let i = 0; i < teamSelect.options.length; i++) {
+          if (teamSelect.options[i].value.toLowerCase() === currentTeamSize.toLowerCase()) {
+            teamSelect.selectedIndex = i;
+            matched = true;
+            break;
+          }
+        }
+        if (matched) {
+          if (teamCustomInput) {
+            teamCustomInput.style.display = "none";
+            teamCustomInput.value = "";
+          }
+        } else {
+          teamSelect.value = "Custom";
+          if (teamCustomInput) {
+            teamCustomInput.style.display = "block";
+            teamCustomInput.value = currentTeamSize;
+          }
+        }
+      }
+    }
+
     document.getElementById("admin-evt-fee").value = evt.fee;
 
     const descEl = document.getElementById("admin-evt-desc");
@@ -1415,7 +1456,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("admin-evt-date").value = "";
     document.getElementById("admin-evt-time").value = "";
     document.getElementById("admin-evt-venue").value = "";
-    document.getElementById("admin-evt-team").value = "";
+    
+    const teamSelect = document.getElementById("admin-evt-team");
+    const teamCustomInput = document.getElementById("admin-evt-team-custom");
+    if (teamSelect) teamSelect.value = "Solo (Individual)";
+    if (teamCustomInput) {
+      teamCustomInput.style.display = "none";
+      teamCustomInput.value = "";
+    }
+
     document.getElementById("admin-evt-fee").value = "Free";
 
     const descEl = document.getElementById("admin-evt-desc");
@@ -2315,13 +2364,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const rulesRaw = document.getElementById("admin-evt-rules") ? document.getElementById("admin-evt-rules").value.trim() : "";
       const rulesArr = rulesRaw ? rulesRaw.split("\n").map(r => r.trim()).filter(Boolean) : [];
 
+      const teamSelectVal = document.getElementById("admin-evt-team") ? document.getElementById("admin-evt-team").value : "Solo (Individual)";
+      const teamCustomVal = document.getElementById("admin-evt-team-custom") ? document.getElementById("admin-evt-team-custom").value.trim() : "";
+      const finalTeamSize = (teamSelectVal === "Custom") ? (teamCustomVal || "Team (Custom)") : teamSelectVal;
+
       const updated = {
         name: evtName,
         category: document.getElementById("admin-evt-category").value,
         date: document.getElementById("admin-evt-date").value.trim(),
         time: document.getElementById("admin-evt-time").value.trim(),
         venue: document.getElementById("admin-evt-venue").value.trim(),
-        teamSize: document.getElementById("admin-evt-team").value.trim(),
+        teamSize: finalTeamSize,
         fee: document.getElementById("admin-evt-fee").value.trim(),
         desc: descVal || `Participate in ${evtName} and showcase your technical and creative skills.`,
         about: aboutVal || `${evtName} is an official event at Triquetra 2026. Review rules, prepare your tools, and register early.`,
@@ -2365,6 +2418,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
       alert(isEdit ? `Event "${evtName}" updated successfully!` : `New event "${evtName}" created successfully!`);
       resetEventForm();
+    });
+  }
+
+  // Participation Type (Solo / Team) dynamic toggle listener
+  const adminEvtTeamSelect = document.getElementById("admin-evt-team");
+  const adminEvtTeamCustom = document.getElementById("admin-evt-team-custom");
+  if (adminEvtTeamSelect && adminEvtTeamCustom) {
+    adminEvtTeamSelect.addEventListener("change", () => {
+      if (adminEvtTeamSelect.value === "Custom") {
+        adminEvtTeamCustom.style.display = "block";
+        adminEvtTeamCustom.focus();
+      } else {
+        adminEvtTeamCustom.style.display = "none";
+      }
     });
   }
 

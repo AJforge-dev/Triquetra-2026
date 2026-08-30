@@ -222,7 +222,12 @@
               
               <!-- Left Column: User fields -->
               <div class="form-left-col">
-                <div class="form-section-title">Participant Details</div>
+                <div class="form-section-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                  <span>Participant Details</span>
+                  <span style="font-size:0.72rem; font-weight:700; background:#EFF6FF; color:var(--royal-sapphire); border:1px solid #BFDBFE; padding:2px 10px; border-radius:12px; display:inline-flex; align-items:center; gap:4px;">
+                    <i data-lucide="user" style="width:12px;height:12px"></i> Solo (Individual) Registration
+                  </span>
+                </div>
                 
                 <div class="form-group">
                   <label class="form-label" for="reg-name">Full Name</label>
@@ -662,8 +667,18 @@
                       <input type="text" id="admin-evt-venue" class="form-input" placeholder="e.g. Computer Lab 3" required>
                     </div>
                     <div class="form-group">
-                      <label class="form-label" for="admin-evt-team">Team Size</label>
-                      <input type="text" id="admin-evt-team" class="form-input" placeholder="e.g. 1-3 Members" required>
+                      <label class="form-label" for="admin-evt-team">Participation Type (Solo / Team)</label>
+                      <div class="dropdown-icon-wrapper">
+                        <select id="admin-evt-team" class="form-input select" required>
+                          <option value="Solo (Individual)">Solo (Individual)</option>
+                          <option value="Team (2 Members)">Team (2 Members)</option>
+                          <option value="Team (3 Members)">Team (3 Members)</option>
+                          <option value="Team (2-4 Members)">Team (2-4 Members)</option>
+                          <option value="Team (4 Members)">Team (4 Members)</option>
+                          <option value="Custom">Custom Participation Type...</option>
+                        </select>
+                      </div>
+                      <input type="text" id="admin-evt-team-custom" class="form-input" style="display:none; margin-top:6px;" placeholder="e.g. 1-2 Members">
                     </div>
                   </div>
 
@@ -976,6 +991,6 @@
   </div>
 
   <!-- JS Scripts -->
-  <script src="app.js?v=20260829_1205"></script>
+  <script src="app.js?v=20260830_1835"></script>
 </body>
 </html>
