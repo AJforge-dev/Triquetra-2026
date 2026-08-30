@@ -190,7 +190,7 @@ function getAllRegistrations(ss) {
         registerNumber: regCombined,
         department: String(row[5] || "").trim(),
         year: String(row[6] || "").trim(),
-        event: String(row[7] || "Tech Talk").trim(),
+        event: String(row[7] || "").trim(),
         receipt: String(row[8] || "").trim(),
         timestamp: String(row[9] || "").trim(),
         status: "Registered"
@@ -313,24 +313,22 @@ function processRegistrationQueue() {
 
     var sheet = ss.getSheetByName("Sheet1") || ss.getSheetByName("Registrations") || ss.getActiveSheet() || ss.getSheets()[0];
 
-    // Ensure Headers with separate columns for Participant 1 and 2
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        "ID", 
-        "Participant 1 Name", 
-        "Participant 1 Register Number", 
-        "Participant 2 Name", 
-        "Participant 2 Register Number", 
-        "Department", 
-        "Year", 
-        "Registered Event", 
-        "Receipt ID", 
-        "Timestamp",
-        "Signature",
-        "Mark"
-      ]);
-      sheet.getRange("A1:L1").setFontWeight("bold").setBackground("#1A6B6B").setFontColor("#FFFFFF");
-    }
+    // Force write the headers exactly as requested to Row 1
+    sheet.getRange(1, 1, 1, 12).setValues([[
+      "ID", 
+      "Participant 1 Name", 
+      "Participant 1 Register Number", 
+      "Participant 2 Name", 
+      "Participant 2 Register Number", 
+      "Department", 
+      "Year", 
+      "Registered Event", 
+      "Receipt ID", 
+      "Timestamp",
+      "Signature (Manual)",
+      "Mark (Manual)"
+    ]]);
+    sheet.getRange("A1:L1").setFontWeight("bold").setBackground("#1A6B6B").setFontColor("#FFFFFF");
 
     var queue = getRegistrationQueue();
     if (queue.length === 0) {
