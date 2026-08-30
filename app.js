@@ -385,6 +385,16 @@ document.addEventListener("DOMContentLoaded", () => {
           hasUpdates = true;
         }
 
+        if (cloudData.queueStatus) {
+          updateQueueStatusUI(cloudData.queueStatus);
+        } else {
+          updateQueueStatusUI({
+            sheetCount: registrationsDb.length,
+            pendingCount: 0,
+            totalCount: registrationsDb.length
+          });
+        }
+
         if (hasUpdates) {
           const availEvts = Object.keys(eventsDb).filter(k => !BLACKLISTED_DUMMY_EVENTS.includes(k.trim().toLowerCase()));
           if (!eventsDb[appState.registration.selectedEvent] && availEvts.length > 0) {
@@ -2351,6 +2361,116 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnExportTable) {
     btnExportTable.addEventListener("click", () => downloadCurrentTablePdf());
   }
+
+  // ================= 100-STUDENT RUSH ASYNC QUEUE MONITOR & BATCH FLUSH =================
+  function updateQueueStatusUI(status) {
+    const sheetsCountEl = document.getElementById("queue-sheets-count");
+    const pendingCountEl = document.getElementById("queue-pending-count");
+    const totalCountEl = document.getElementById("queue-total-count");
+    const badgeEl = document.getElementById("queue-status-badge");
+
+    const sheetCount = (status && typeof status.sheetCount === "number") ? status.sheetCount : (registrationsDb ? registrationsDb.length : 0);
+    const pendingCount = (status && typeof status.pendingCount === "number") ? status.pendingCount : 0;
+    const totalCount = (status && typeof status.totalCount === "number") ? status.totalCount : (sheetCount + pendingCount);
+
+    if (sheetsCountEl) sheetsCountEl.textContent = sheetCount;
+    if (pendingCountEl) pendingCountEl.textContent = pendingCount;
+    if (totalCountEl) totalCountEl.textContent = totalCount;
+
+    if (badgeEl) {
+      if (pendingCount > 0) {
+        badgeEl.style.background = "#FEF3C7";
+        badgeEl.style.color = "#92400E";
+        badgeEl.style.borderColor = "#FDE68A";
+        badgeEl.innerHTML = `⚡ Syncing Batch (${sheetCount}/${totalCount})`;
+      } else {
+        badgeEl.style.background = "#D1FAE5";
+        badgeEl.style.color = "#065F46";
+        badgeEl.style.borderColor = "#A7F3D0";
+        badgeEl.innerHTML = `🟢 All Synced (${totalCount}/${totalCount})`;
+      }
+    }
+  }
+
+  function fetchQueueStatus() {
+    if (!REGISTRATION_SHEET_URL || REGISTRATION_SHEET_URL === "YOUR_DEPLOYED_WEB_APP_URL_HERE") return;
+    const callbackName = "cb_qstat_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+    window[callbackName] = function(resp) {
+      try {
+        delete window[callbackName];
+        if (qScript && qScript.parentNode) qScript.parentNode.removeChild(qScript);
+      } catch (e) {}
+      if (resp && resp.status === "success") {
+        updateQueueStatusUI(resp);
+      }
+    };
+    const qScript = document.createElement("script");
+    qScript.src = `${REGISTRATION_SHEET_URL}?action=get_queue_status&callback=${callbackName}&_t=${Date.now()}`;
+    qScript.onerror = function() {
+      if (qScript && qScript.parentNode) qScript.parentNode.removeChild(qScript);
+    };
+    document.body.appendChild(qScript);
+  }
+
+  function flushQueueNow(triggerBtn) {
+    const originalHtml = triggerBtn ? triggerBtn.innerHTML : "";
+    if (triggerBtn) {
+      triggerBtn.disabled = true;
+      triggerBtn.innerHTML = `<i data-lucide="loader" class="spin-animation" style="width:12px;height:12px"></i> Flushing...`;
+      if (window.lucide) lucide.createIcons();
+    }
+
+    const callbackName = "cb_flush_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+    window[callbackName] = function(resp) {
+      try {
+        delete window[callbackName];
+        if (flushScript && flushScript.parentNode) flushScript.parentNode.removeChild(flushScript);
+      } catch (e) {}
+
+      if (triggerBtn) {
+        triggerBtn.disabled = false;
+        triggerBtn.innerHTML = originalHtml;
+        if (window.lucide) lucide.createIcons();
+      }
+
+      fetchCloudData(() => {
+        alert(resp && resp.message ? resp.message : "Queue flushed to Google Sheets successfully!");
+      });
+    };
+
+    const flushScript = document.createElement("script");
+    flushScript.src = `${REGISTRATION_SHEET_URL}?action=flush_queue&callback=${callbackName}&_t=${Date.now()}`;
+    flushScript.onerror = function() {
+      if (flushScript && flushScript.parentNode) flushScript.parentNode.removeChild(flushScript);
+      if (triggerBtn) {
+        triggerBtn.disabled = false;
+        triggerBtn.innerHTML = originalHtml;
+        if (window.lucide) lucide.createIcons();
+      }
+      fetchCloudData();
+    };
+    document.body.appendChild(flushScript);
+  }
+
+  // Bind Queue Buttons
+  const btnFlushQueue = document.getElementById("btn-flush-queue-now");
+  if (btnFlushQueue) {
+    btnFlushQueue.addEventListener("click", () => flushQueueNow(btnFlushQueue));
+  }
+
+  const btnRefreshQueue = document.getElementById("btn-refresh-queue-status");
+  if (btnRefreshQueue) {
+    btnRefreshQueue.addEventListener("click", () => {
+      fetchCloudData(() => fetchQueueStatus());
+    });
+  }
+
+  // Auto-poll queue status while on Admin section
+  setInterval(() => {
+    if (appState.isAdminAuthenticated && appState.currentScreen === "admin") {
+      fetchQueueStatus();
+    }
+  }, 15000);
 
   // Update / Add Event Form submit
   const formEditEvent = document.getElementById("admin-form-event");

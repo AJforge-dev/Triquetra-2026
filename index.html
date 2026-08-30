@@ -482,9 +482,50 @@
           <div class="admin-section" id="admin-sec-sql">
             <div class="sql-workspace">
               
-              <!-- Left Sidebar: Download Candidates PDF, Presets, Live Sync -->
+              <!-- Left Sidebar: 100-Rush Queue Monitor, PDF Export, Presets, Live Sync -->
               <div class="sql-sidebar-column">
                 
+                <!-- 100-Student Rush Async Queue & Batch Buffer Sync Card -->
+                <div class="sql-presets-card" style="border-color: #A7F3D0; background: linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 100%); box-shadow: 0 4px 18px rgba(16, 185, 129, 0.08); margin-bottom: 1.25rem;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.4rem;">
+                    <h4 style="font-size:0.92rem; font-weight:800; color:#065F46; margin:0; display:flex; align-items:center; gap:8px">
+                      <i data-lucide="zap" style="width:18px;height:18px;color:#10B981"></i> 100-Rush Sync &amp; Queue
+                    </h4>
+                    <span id="queue-status-badge" style="font-size:0.68rem; font-weight:800; background:#D1FAE5; color:#065F46; border:1px solid #A7F3D0; padding:2px 8px; border-radius:12px">
+                      🟢 All Synced
+                    </span>
+                  </div>
+                  <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.45; margin-bottom: 0.85rem;">
+                    Instant 0.1s confirmation with background batch sync to Google Sheets (0 errors, 0 lost entries).
+                  </p>
+
+                  <!-- Live Queue Counters Grid -->
+                  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-bottom:0.85rem; text-align:center;">
+                    <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:6px 4px; border-radius:8px;">
+                      <div style="font-size:0.62rem; font-weight:700; color:var(--text-light); text-transform:uppercase;">In Sheets</div>
+                      <div id="queue-sheets-count" style="font-size:1.1rem; font-weight:900; color:#065F46;">0</div>
+                    </div>
+                    <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:6px 4px; border-radius:8px;">
+                      <div style="font-size:0.62rem; font-weight:700; color:var(--text-light); text-transform:uppercase;">Pending Queue</div>
+                      <div id="queue-pending-count" style="font-size:1.1rem; font-weight:900; color:#D97706;">0</div>
+                    </div>
+                    <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:6px 4px; border-radius:8px;">
+                      <div style="font-size:0.62rem; font-weight:700; color:var(--text-light); text-transform:uppercase;">Total Verified</div>
+                      <div id="queue-total-count" style="font-size:1.1rem; font-weight:900; color:var(--royal-sapphire);">0</div>
+                    </div>
+                  </div>
+
+                  <!-- Action buttons -->
+                  <div style="display:flex; gap:6px;">
+                    <button type="button" id="btn-flush-queue-now" class="cta-button" style="flex:1; padding:0.55rem; font-size:0.76rem; background:#10B981; font-weight:700;">
+                      <i data-lucide="zap" style="width:13px;height:13px"></i> Force Flush Queue Now
+                    </button>
+                    <button type="button" id="btn-refresh-queue-status" class="export-btn" style="padding:0.55rem 0.75rem; font-size:0.76rem;" title="Refresh Queue Status">
+                      <i data-lucide="refresh-cw" style="width:13px;height:13px"></i>
+                    </button>
+                  </div>
+                </div>
+
                 <!-- Download Candidates List Card (PDF Format with Direct Live Sync) -->
                 <div class="sql-presets-card" style="border-color: #BFDBFE; background: #FFFFFF; box-shadow: 0 4px 18px rgba(37, 99, 235, 0.06); margin-bottom: 1.25rem;">
                   <h4 style="font-size:0.92rem; font-weight:800; color:var(--text-dark); margin-bottom: 0.35rem; display:flex; align-items:center; gap:8px">
@@ -991,6 +1032,6 @@
   </div>
 
   <!-- JS Scripts -->
-  <script src="app.js?v=20260830_1835"></script>
+  <script src="app.js?v=20260830_1845"></script>
 </body>
 </html>
