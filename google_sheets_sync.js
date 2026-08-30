@@ -163,26 +163,37 @@ function getAllRegistrations(ss) {
   var lastRow = sheet.getLastRow();
   if (lastRow <= 1) return [];
 
-  var lastCol = Math.max(sheet.getLastColumn(), 9);
+  var lastCol = Math.max(sheet.getLastColumn(), 12);
   var data = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
   var registrations = [];
 
   for (var i = 0; i < data.length; i++) {
     var row = data[i];
-    var name = String(row[1] || "").trim();
-    var regNum = String(row[2] || "").trim();
+    var p1Name = String(row[1] || "").trim();
+    var p1Reg = String(row[2] || "").trim();
+    var p2Name = String(row[3] || "").trim();
+    var p2Reg = String(row[4] || "").trim();
 
-    if (name || regNum) {
+    var nameCombined = p1Name;
+    if (p2Name) nameCombined += ", " + p2Name;
+    var regCombined = p1Reg;
+    if (p2Reg) regCombined += ", " + p2Reg;
+
+    if (p1Name || p1Reg) {
       registrations.push({
         id: row[0] ? String(row[0]).trim() : String(i + 1),
-        name: name,
-        registerNumber: regNum,
-        department: String(row[3] || "").trim(),
-        year: String(row[4] || "").trim(),
-        event: String(row[5] || "Tech Talk").trim(),
-        receipt: String(row[6] || "").trim(),
-        status: String(row[7] || "Registered").trim(),
-        timestamp: String(row[8] || "").trim()
+        name: nameCombined,
+        p1Name: p1Name,
+        p1Reg: p1Reg,
+        p2Name: p2Name,
+        p2Reg: p2Reg,
+        registerNumber: regCombined,
+        department: String(row[5] || "").trim(),
+        year: String(row[6] || "").trim(),
+        event: String(row[7] || "Tech Talk").trim(),
+        receipt: String(row[8] || "").trim(),
+        timestamp: String(row[9] || "").trim(),
+        status: "Registered"
       });
     }
   }
@@ -198,31 +209,41 @@ function getAllRegistrations(ss) {
 function handleDataSync(data, callback) {
   var formattedTime = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
 
-  var primaryName = sanitizeForSpreadsheet(data.name || data.fullName || data.participant1Name || "");
-  var primaryReg = sanitizeForSpreadsheet(data.registerNumber || data.regNum || data.participant1Reg || "");
+  var p1Name = sanitizeForSpreadsheet(data.p1Name || data.participant1Name || data.name || data.fullName || "");
+  var p1Reg = sanitizeForSpreadsheet(data.p1Reg || data.participant1Reg || data.registerNumber || data.regNum || "");
+  var p2Name = sanitizeForSpreadsheet(data.p2Name || data.participant2Name || data.member2Name || "");
+  var p2Reg = sanitizeForSpreadsheet(data.p2Reg || data.participant2Reg || data.member2Reg || "");
 
-  // Collect 2nd participant if passed
-  var p2Name = sanitizeForSpreadsheet(data.participant2Name || data.member2Name || "");
-  var p2Reg = sanitizeForSpreadsheet(data.participant2Reg || data.member2Reg || "");
+  // If a combined list was passed without p2Name/p2Reg being explicitly separated
+  if (!p2Name && p1Name.indexOf(", ") > -1) {
+    var parts = p1Name.split(", ");
+    p1Name = parts[0];
+    p2Name = parts[1] || "";
+  }
+  if (!p2Reg && p1Reg.indexOf(", ") > -1) {
+    var parts = p1Reg.split(", ");
+    p1Reg = parts[0];
+    p2Reg = parts[1] || "";
+  }
 
-  var namesList = [primaryName];
-  if (p2Name && primaryName.indexOf(p2Name) === -1) namesList.push(p2Name);
-
-  var regsList = [primaryReg];
-  if (p2Reg && primaryReg.indexOf(p2Reg) === -1) regsList.push(p2Reg);
-
-  var finalFullName = namesList.filter(Boolean).join(", ");
-  var finalRegNum = regsList.filter(Boolean).join(", ");
+  var nameCombined = p1Name;
+  if (p2Name) nameCombined += ", " + p2Name;
+  var regCombined = p1Reg;
+  if (p2Reg) regCombined += ", " + p2Reg;
 
   var record = {
     id: sanitizeForSpreadsheet(data.id || ""),
-    name: finalFullName,
-    registerNumber: finalRegNum,
+    name: nameCombined,
+    p1Name: p1Name,
+    p1Reg: p1Reg,
+    p2Name: p2Name,
+    p2Reg: p2Reg,
+    registerNumber: regCombined,
     department: sanitizeForSpreadsheet(data.department || data.dept || ""),
     year: sanitizeForSpreadsheet(data.year || ""),
     event: sanitizeForSpreadsheet(data.event || data.selectedEvent || "Tech Talk"),
     receipt: sanitizeForSpreadsheet(data.receipt || data.receiptId || ""),
-    status: sanitizeForSpreadsheet(data.status || "Registered"),
+    status: "Registered",
     timestamp: formattedTime
   };
 
@@ -233,7 +254,7 @@ function handleDataSync(data, callback) {
   try {
     processRegistrationQueue();
   } catch (err) {
-    // If lock is held by another concurrent student request, it's safely queued in ScriptProperties!
+    // Queued safely in ScriptProperties
   }
 
   return createJsonResponse({
@@ -264,7 +285,7 @@ function addToRegistrationQueue(record) {
     // Check if receipt already in queue to avoid duplicates
     var exists = queue.some(function(item) {
       return (item.receipt && item.receipt === record.receipt) || 
-             (item.registerNumber === record.registerNumber && item.event === record.event);
+             (item.p1Reg === record.p1Reg && item.event === record.event);
     });
     if (!exists) {
       queue.push(record);
@@ -292,13 +313,23 @@ function processRegistrationQueue() {
 
     var sheet = ss.getSheetByName("Sheet1") || ss.getSheetByName("Registrations") || ss.getActiveSheet() || ss.getSheets()[0];
 
-    // Ensure Headers
+    // Ensure Headers with separate columns for Participant 1 and 2
     if (sheet.getLastRow() === 0) {
       sheet.appendRow([
-        "ID", "Participant Name", "Register Number", "Department", "Year", 
-        "Registered Event", "Receipt ID", "Registration Status", "Timestamp"
+        "ID", 
+        "Participant 1 Name", 
+        "Participant 1 Register Number", 
+        "Participant 2 Name", 
+        "Participant 2 Register Number", 
+        "Department", 
+        "Year", 
+        "Registered Event", 
+        "Receipt ID", 
+        "Timestamp",
+        "Signature",
+        "Mark"
       ]);
-      sheet.getRange("A1:I1").setFontWeight("bold").setBackground("#1A6B6B").setFontColor("#FFFFFF");
+      sheet.getRange("A1:L1").setFontWeight("bold").setBackground("#1A6B6B").setFontColor("#FFFFFF");
     }
 
     var queue = getRegistrationQueue();
@@ -324,16 +355,35 @@ function processRegistrationQueue() {
       var key = (item.receipt || "") + "_" + (item.registerNumber || "") + "_" + (item.event || "");
       if (!existingKeys[key] && !existingKeys[item.receipt]) {
         var rowId = item.id || String(sheet.getLastRow() + rowsToWrite.length);
+        
+        var p1Name = item.p1Name || item.name || "";
+        var p1Reg = item.p1Reg || item.registerNumber || "";
+        var p2Name = item.p2Name || "";
+        var p2Reg = item.p2Reg || "";
+
+        // Fallback split if needed
+        if (!p2Name && p1Name.indexOf(", ") > -1) {
+          var parts = p1Name.split(", ");
+          p1Name = parts[0];
+          p2Name = parts[1] || "";
+        }
+        if (!p2Reg && p1Reg.indexOf(", ") > -1) {
+          var parts = p1Reg.split(", ");
+          p1Reg = parts[0];
+          p2Reg = parts[1] || "";
+        }
+
         rowsToWrite.push([
           rowId,
-          item.name,
-          item.registerNumber,
-          item.department,
-          item.year,
-          item.event,
-          item.receipt,
-          item.status || "Registered",
-          item.timestamp
+          p1Name,
+          p1Reg,
+          p2Name,
+          p2Reg,
+          item.department || "",
+          item.year || "",
+          item.event || "",
+          item.receipt || "",
+          item.timestamp || ""
         ]);
         existingKeys[key] = true;
         if (item.receipt) existingKeys[item.receipt] = true;
@@ -341,10 +391,10 @@ function processRegistrationQueue() {
       processedReceipts[item.receipt || key] = true;
     }
 
-    // Bulk write in 1 single API call
+    // Bulk write in 1 single API call (writes up to Column J - Timestamp)
     if (rowsToWrite.length > 0) {
       var startRow = sheet.getLastRow() + 1;
-      sheet.getRange(startRow, 1, rowsToWrite.length, 9).setValues(rowsToWrite);
+      sheet.getRange(startRow, 1, rowsToWrite.length, 10).setValues(rowsToWrite);
       SpreadsheetApp.flush();
     }
 
@@ -369,7 +419,6 @@ function processRegistrationQueue() {
  * 1-Click Trigger Setup: Wakes up every 1 minute to process the queue automatically
  */
 function setupAutomaticQueueTrigger() {
-  // Clear existing triggers
   var triggers = ScriptApp.getProjectTriggers();
   for (var i = 0; i < triggers.length; i++) {
     if (triggers[i].getHandlerFunction() === "processRegistrationQueue") {
@@ -377,7 +426,6 @@ function setupAutomaticQueueTrigger() {
     }
   }
 
-  // Create 1-minute recurring background trigger
   ScriptApp.newTrigger("processRegistrationQueue")
     .timeBased()
     .everyMinutes(1)

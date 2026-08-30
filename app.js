@@ -2153,7 +2153,7 @@ document.addEventListener("DOMContentLoaded", () => {
         doc.text(`Total Registered: ${list.length} Candidate(s)`, 320, 120);
 
         // Table Rows
-        const head = [["S.No", "Receipt No", "Participant Name", "Register No", "Dept", "Year", "Registered Event", "Status"]];
+        const head = [["S.No", "Receipt No", "Participant Name", "Register No", "Dept", "Year", "Registered Event"]];
         const body = list.map((r, idx) => [
           idx + 1,
           r.receipt || "-",
@@ -2161,8 +2161,7 @@ document.addEventListener("DOMContentLoaded", () => {
           r.registerNumber || "-",
           r.department || "-",
           r.year || "-",
-          r.event || "-",
-          r.status || "Registered"
+          r.event || "-"
         ]);
 
         doc.autoTable({
@@ -2190,12 +2189,11 @@ document.addEventListener("DOMContentLoaded", () => {
           columnStyles: {
             0: { cellWidth: 32, halign: "center" },
             1: { cellWidth: 68, fontStyle: "bold", textColor: [30, 64, 175] },
-            2: { cellWidth: 105 },
-            3: { cellWidth: 80 },
+            2: { cellWidth: 125 },
+            3: { cellWidth: 95 },
             4: { cellWidth: 50, halign: "center" },
             5: { cellWidth: 35, halign: "center" },
-            6: { cellWidth: 90 },
-            7: { cellWidth: 55, halign: "center", textColor: [16, 185, 129] }
+            6: { cellWidth: 110 }
           },
           didDrawPage: function(data) {
             const pageCount = doc.internal.getNumberOfPages();
@@ -2299,7 +2297,6 @@ document.addEventListener("DOMContentLoaded", () => {
           <td style="text-align:center; padding:6px 8px; border-bottom:1px solid #E2E8F0;">${r.department || '-'}</td>
           <td style="text-align:center; padding:6px 8px; border-bottom:1px solid #E2E8F0;">${r.year || '-'}</td>
           <td style="padding:6px 8px; border-bottom:1px solid #E2E8F0;">${r.event || '-'}</td>
-          <td style="text-align:center; color:#10B981; font-weight:600; padding:6px 8px; border-bottom:1px solid #E2E8F0;">${r.status || 'Registered'}</td>
         </tr>
       `;
     });
@@ -2347,7 +2344,6 @@ document.addEventListener("DOMContentLoaded", () => {
               <th style="text-align:center;">Dept</th>
               <th style="text-align:center;">Year</th>
               <th>Event</th>
-              <th style="text-align:center;">Status</th>
             </tr>
           </thead>
           <tbody>${rowsHtml}</tbody>
