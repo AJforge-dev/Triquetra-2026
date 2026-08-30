@@ -2568,6 +2568,64 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Bind Delete Registration Button
+  const btnDeleteReg = document.getElementById("btn-delete-registration");
+  const inputDeleteReceipt = document.getElementById("admin-delete-receipt");
+  if (btnDeleteReg && inputDeleteReceipt) {
+    btnDeleteReg.addEventListener("click", () => {
+      const receipt = inputDeleteReceipt.value.trim();
+      if (!receipt) {
+        alert("Please enter a valid Receipt ID (e.g. TQ26-1094).");
+        return;
+      }
+      if (!confirm(`Are you sure you want to permanently delete registration with Receipt ID: ${receipt}?`)) {
+        return;
+      }
+
+      btnDeleteReg.disabled = true;
+      btnDeleteReg.textContent = "Deleting...";
+
+      const callbackName = "cb_" + Math.random().toString(36).substring(2, 9);
+      window[callbackName] = function(resp) {
+        btnDeleteReg.disabled = false;
+        btnDeleteReg.textContent = "Delete";
+        inputDeleteReceipt.value = "";
+        
+        if (resp && resp.status === "success") {
+          alert(`Success: ${resp.message}`);
+          
+          // Clear local cache & refresh
+          localStorage.removeItem("tq26_registrations_db");
+          fetchCloudData(() => {
+            fetchQueueStatus();
+            // Re-run SQL query to refresh terminal display
+            const sqlIn = document.getElementById("sql-query-input");
+            if (sqlIn && sqlIn.value.trim()) {
+              executeSql(sqlIn.value.trim());
+            } else {
+              executeSql("SELECT * FROM registrations;");
+            }
+          });
+        } else {
+          alert(`Error deleting registration: ${resp ? resp.message : "Unknown error"}`);
+        }
+        delete window[callbackName];
+      };
+
+      const syncUrl = `${REGISTRATION_SHEET_URL}?action=delete_registration&receipt=${encodeURIComponent(receipt)}&callback=${callbackName}`;
+      const deleteScript = document.createElement("script");
+      deleteScript.src = syncUrl;
+      deleteScript.onload = () => deleteScript.remove();
+      deleteScript.onerror = () => {
+        btnDeleteReg.disabled = false;
+        btnDeleteReg.textContent = "Delete";
+        alert("Connection error. Could not connect to Google Apps Script.");
+        delete window[callbackName];
+      };
+      document.body.appendChild(deleteScript);
+    });
+  }
+
   // Auto-poll queue status while on Admin section
   setInterval(() => {
     if (appState.isAdminAuthenticated && appState.currentScreen === "admin") {

@@ -81,7 +81,12 @@ function doGet(e) {
       return createJsonResponse({ status: "success", message: "Schedule saved to Cloud." }, callback);
     }
 
-    // 7. Action: 100-Student Rush Registration Submission (Lock-Free Instant 0.1s Confirmation)
+    // 7. Action: Delete Registration
+    if (action === "delete_registration" && params.receipt) {
+      return createJsonResponse(deleteRegistrationFromSheet(ss, params.receipt), callback);
+    }
+
+    // 8. Action: 100-Student Rush Registration Submission (Lock-Free Instant 0.1s Confirmation)
     if (action === "register" || action === "save_registration" || params.name || params.registerNumber || params.event) {
       return handleDataSync(params, callback);
     }
@@ -430,6 +435,44 @@ function setupAutomaticQueueTrigger() {
     .create();
 
   console.log("Automatic 1-Minute Background Registration Queue Trigger is active!");
+}
+
+function deleteRegistrationFromSheet(ss, receipt) {
+  var sheet = ss.getSheetByName("Sheet1") || ss.getSheetByName("Registrations") || ss.getActiveSheet() || ss.getSheets()[0];
+  if (!sheet) return { status: "error", message: "Sheet not found." };
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow <= 1) return { status: "success", message: "Sheet is empty." };
+
+  var data = sheet.getRange(2, 9, lastRow - 1, 1).getValues(); // Receipt ID is in Column I (9)
+  var deletedCount = 0;
+
+  for (var i = data.length - 1; i >= 0; i--) {
+    var rowReceipt = String(data[i][0]).trim();
+    if (rowReceipt === receipt.trim()) {
+      sheet.deleteRow(i + 2);
+      deletedCount++;
+    }
+  }
+
+  var rawQueue = scriptProperties.getProperty("REGISTRATION_QUEUE");
+  if (rawQueue) {
+    try {
+      var queue = JSON.parse(rawQueue) || [];
+      var filteredQueue = queue.filter(function(item) {
+        return String(item.receipt).trim() !== receipt.trim();
+      });
+      if (queue.length !== filteredQueue.length) {
+        scriptProperties.setProperty("REGISTRATION_QUEUE", JSON.stringify(filteredQueue));
+      }
+    } catch (e) {}
+  }
+
+  return {
+    status: "success",
+    deletedCount: deletedCount,
+    message: "Deleted " + deletedCount + " registration(s) with Receipt ID: " + receipt
+  };
 }
 
 function sanitizeForSpreadsheet(val) {
