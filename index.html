@@ -229,23 +229,42 @@
                   </span>
                 </div>
                 
+                <!-- Participation Mode Dropdown (Solo or Duo) -->
+                <div class="form-group" style="margin-bottom: 0.85rem;">
+                  <label class="form-label" for="reg-mode-select" style="font-weight:700;">Participation Mode</label>
+                  <div class="dropdown-icon-wrapper">
+                    <select id="reg-mode-select" class="form-input select" style="font-weight:600;">
+                      <option value="Solo">Solo (1 Participant)</option>
+                      <option value="Duo">Duo (2 Participants)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Participant 1 Details -->
                 <div class="form-group">
                   <label class="form-label" id="label-reg-name" for="reg-name">Full Name</label>
-                  <input type="text" id="reg-name" class="form-input" placeholder="Enter full name" required>
+                  <input type="text" id="reg-name" class="form-input" placeholder="Enter your full name" required>
                 </div>
 
                 <div class="form-group">
                   <label class="form-label" id="label-reg-num" for="reg-num">Register Number</label>
-                  <input type="text" id="reg-num" class="form-input" placeholder="Enter register number" required>
+                  <input type="text" id="reg-num" class="form-input" placeholder="Enter your register number" required>
                 </div>
 
-                <!-- Dynamic Additional Team Members Section -->
-                <div id="team-members-wrapper" style="display:none; margin-bottom:1rem; padding:10px 12px; background:#F8FAFC; border:1px dashed #CBD5E1; border-radius:8px;">
-                  <div style="font-size:0.75rem; font-weight:800; color:var(--royal-sapphire); margin-bottom:8px; display:flex; align-items:center; gap:5px;">
-                    <i data-lucide="users" style="width:14px;height:14px"></i> Team Member Details
+                <!-- Participant 2 Details (Duo Mode) -->
+                <div id="duo-participant-wrapper" style="display:none; margin-bottom:1rem; padding:12px; background:#F8FAFC; border:1.5px dashed #93C5FD; border-radius:10px;">
+                  <div style="font-size:0.78rem; font-weight:800; color:var(--royal-sapphire); margin-bottom:8px; display:flex; align-items:center; gap:5px;">
+                    <i data-lucide="user-plus" style="width:15px;height:15px"></i> Participant 2 Details (Duo)
                   </div>
-                  <div id="team-members-fields" style="display:flex; flex-direction:column; gap:8px;">
-                    <!-- Dynamically generated based on event team size -->
+                  
+                  <div class="form-group" style="margin-bottom:0.6rem;">
+                    <label class="form-label" for="reg-p2-name" style="font-size:0.75rem; font-weight:700;">Participant 2 Full Name</label>
+                    <input type="text" id="reg-p2-name" class="form-input" placeholder="Enter 2nd participant full name" style="padding:0.5rem 0.75rem; font-size:0.82rem;">
+                  </div>
+
+                  <div class="form-group" style="margin-bottom:0;">
+                    <label class="form-label" for="reg-p2-num" style="font-size:0.75rem; font-weight:700;">Participant 2 Register Number</label>
+                    <input type="text" id="reg-p2-num" class="form-input" placeholder="Enter 2nd participant register number" style="padding:0.5rem 0.75rem; font-size:0.82rem;">
                   </div>
                 </div>
 
@@ -1042,6 +1061,6 @@
   </div>
 
   <!-- JS Scripts -->
-  <script src="app.js?v=20260830_1850"></script>
+  <script src="app.js?v=20260830_1855"></script>
 </body>
 </html>

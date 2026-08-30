@@ -198,26 +198,18 @@ function getAllRegistrations(ss) {
 function handleDataSync(data, callback) {
   var formattedTime = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
 
-  var primaryName = sanitizeForSpreadsheet(data.name || data.fullName || "");
-  var primaryReg = sanitizeForSpreadsheet(data.registerNumber || data.regNum || "");
+  var primaryName = sanitizeForSpreadsheet(data.name || data.fullName || data.participant1Name || "");
+  var primaryReg = sanitizeForSpreadsheet(data.registerNumber || data.regNum || data.participant1Reg || "");
 
-  // Collect individual team members if passed separately
-  var m2Name = sanitizeForSpreadsheet(data.member2Name || "");
-  var m2Reg = sanitizeForSpreadsheet(data.member2Reg || "");
-  var m3Name = sanitizeForSpreadsheet(data.member3Name || "");
-  var m3Reg = sanitizeForSpreadsheet(data.member3Reg || "");
-  var m4Name = sanitizeForSpreadsheet(data.member4Name || "");
-  var m4Reg = sanitizeForSpreadsheet(data.member4Reg || "");
+  // Collect 2nd participant if passed
+  var p2Name = sanitizeForSpreadsheet(data.participant2Name || data.member2Name || "");
+  var p2Reg = sanitizeForSpreadsheet(data.participant2Reg || data.member2Reg || "");
 
   var namesList = [primaryName];
-  if (m2Name && primaryName.indexOf(m2Name) === -1) namesList.push(m2Name);
-  if (m3Name && primaryName.indexOf(m3Name) === -1) namesList.push(m3Name);
-  if (m4Name && primaryName.indexOf(m4Name) === -1) namesList.push(m4Name);
+  if (p2Name && primaryName.indexOf(p2Name) === -1) namesList.push(p2Name);
 
   var regsList = [primaryReg];
-  if (m2Reg && primaryReg.indexOf(m2Reg) === -1) regsList.push(m2Reg);
-  if (m3Reg && primaryReg.indexOf(m3Reg) === -1) regsList.push(m3Reg);
-  if (m4Reg && primaryReg.indexOf(m4Reg) === -1) regsList.push(m4Reg);
+  if (p2Reg && primaryReg.indexOf(p2Reg) === -1) regsList.push(p2Reg);
 
   var finalFullName = namesList.filter(Boolean).join(", ");
   var finalRegNum = regsList.filter(Boolean).join(", ");
