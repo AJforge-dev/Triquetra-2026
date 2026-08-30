@@ -685,7 +685,87 @@ document.addEventListener("DOMContentLoaded", () => {
       feeAmount.textContent = data.fee || "Free";
     }
 
+    // Dynamically update registration form fields (Solo vs Team)
+    updateRegistrationFormForTeamSize(data);
+
     lucide.createIcons();
+  }
+
+  // Dynamic Registration Form Customizer (Solo vs Multi-Member Team)
+  function updateRegistrationFormForTeamSize(eventData) {
+    const isSolo = !eventData || /^solo|^indiv/i.test((eventData.teamSize || "Solo").trim());
+    const teamWrapper = document.getElementById("team-members-wrapper");
+    const teamFields = document.getElementById("team-members-fields");
+    const nameLabel = document.getElementById("label-reg-name");
+    const numLabel = document.getElementById("label-reg-num");
+    const typeBadge = document.getElementById("reg-form-type-badge");
+    const nameInput = document.getElementById("reg-name");
+    const numInput = document.getElementById("reg-num");
+
+    if (isSolo) {
+      if (teamWrapper) teamWrapper.style.display = "none";
+      if (nameLabel) nameLabel.textContent = "Full Name";
+      if (numLabel) numLabel.textContent = "Register Number";
+      if (nameInput) nameInput.placeholder = "Enter your full name";
+      if (numInput) numInput.placeholder = "Enter your register number";
+
+      if (typeBadge) {
+        typeBadge.style.background = "#EFF6FF";
+        typeBadge.style.color = "var(--royal-sapphire)";
+        typeBadge.style.borderColor = "#BFDBFE";
+        typeBadge.innerHTML = `<i data-lucide="user" style="width:12px;height:12px"></i> Solo Registration`;
+      }
+    } else {
+      if (teamWrapper) teamWrapper.style.display = "block";
+      if (nameLabel) nameLabel.textContent = "Team Leader / Member 1 Name";
+      if (numLabel) numLabel.textContent = "Member 1 Register Number";
+      if (nameInput) nameInput.placeholder = "Enter team leader name";
+      if (numInput) numInput.placeholder = "Enter team leader reg no.";
+
+      const teamSizeStr = eventData.teamSize || "Team";
+      if (typeBadge) {
+        typeBadge.style.background = "#FEF3C7";
+        typeBadge.style.color = "#92400E";
+        typeBadge.style.borderColor = "#FDE68A";
+        typeBadge.innerHTML = `<i data-lucide="users" style="width:12px;height:12px"></i> Team Registration (${escapeHtml(teamSizeStr)})`;
+      }
+
+      // Determine additional members based on team size string
+      let additionalMembers = 1;
+      if (/4/.test(teamSizeStr)) {
+        additionalMembers = 3;
+      } else if (/3/.test(teamSizeStr)) {
+        additionalMembers = 2;
+      } else if (/2/.test(teamSizeStr)) {
+        additionalMembers = 1;
+      } else {
+        additionalMembers = 2;
+      }
+
+      if (teamFields) {
+        let fieldsHtml = "";
+        for (let m = 2; m <= additionalMembers + 1; m++) {
+          const isRequired = m === 2 ? "required" : "";
+          const reqLabel = m === 2 ? " (Required)" : " (Optional)";
+          fieldsHtml += `
+            <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:8px 10px; border-radius:6px;">
+              <div style="font-size:0.72rem; font-weight:700; color:#334155; margin-bottom:4px;">Team Member ${m}${reqLabel}</div>
+              <div class="form-row" style="margin-bottom:0; gap:8px;">
+                <div class="form-group" style="margin-bottom:0; flex:1;">
+                  <input type="text" id="reg-member-${m}-name" class="form-input team-member-input" placeholder="Member ${m} Full Name" style="padding:0.45rem 0.7rem; font-size:0.8rem;" ${isRequired}>
+                </div>
+                <div class="form-group" style="margin-bottom:0; flex:1;">
+                  <input type="text" id="reg-member-${m}-num" class="form-input team-member-input" placeholder="Member ${m} Reg No." style="padding:0.45rem 0.7rem; font-size:0.8rem;" ${isRequired}>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        teamFields.innerHTML = fieldsHtml;
+      }
+    }
+
+    if (window.lucide) lucide.createIcons();
   }
 
   // Render event details dynamically based on selected event
@@ -1066,6 +1146,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (formFields.dept) formFields.dept.value = "";
     if (formFields.year) formFields.year.value = "";
     if (formFields.agree) formFields.agree.checked = false;
+    document.querySelectorAll(".team-member-input").forEach(inp => inp.value = "");
 
     const defaultEvent = Object.keys(eventsDb)[0] || "Tech Talk";
     appState.registration = {
@@ -1088,28 +1169,57 @@ document.addEventListener("DOMContentLoaded", () => {
     formFields.btnPay.addEventListener("click", (e) => {
       e.preventDefault();
 
-      // Form validation & security sanitization (Autofill safe)
-      const fullName = (appState.registration.fullName || (formFields.name ? formFields.name.value : "")).trim();
-      const regNum = (appState.registration.registerNumber || (formFields.registerNumber ? formFields.registerNumber.value : "")).trim();
-      const dept = (appState.registration.dept || (formFields.dept ? formFields.dept.value : "")).trim();
-      const year = (appState.registration.year || (formFields.year ? formFields.year.value : "")).trim();
-      const agree = (appState.registration.agreeRules || (formFields.agree ? formFields.agree.checked : false));
+      // Form validation & team member collection (Autofill safe)
+      const leadName = (formFields.name ? formFields.name.value : "").trim() || (appState.registration.fullName || "").trim();
+      const leadReg = (formFields.registerNumber ? formFields.registerNumber.value : "").trim() || (appState.registration.registerNumber || "").trim();
+      const dept = (formFields.dept ? formFields.dept.value : "").trim() || (appState.registration.dept || "").trim();
+      const year = (formFields.year ? formFields.year.value : "").trim() || (appState.registration.year || "").trim();
+      const agree = (formFields.agree ? formFields.agree.checked : false) || appState.registration.agreeRules;
       const regEventEl = document.getElementById("reg-event-select");
       const activeEventKey = appState.registration.selectedEvent || (regEventEl ? regEventEl.value : "") || Object.keys(eventsDb)[0] || "Tech Talk";
-      const eventName = eventsDb[activeEventKey] ? eventsDb[activeEventKey].name : activeEventKey;
+      const eventObj = eventsDb[activeEventKey];
+      const eventName = eventObj ? eventObj.name : activeEventKey;
+      const isSolo = !eventObj || /^solo|^indiv/i.test((eventObj.teamSize || "Solo").trim());
 
-      if (!fullName || fullName.length < 2) {
-        alert("Please enter a valid Full Name (at least 2 characters).");
+      if (!leadName || leadName.length < 2) {
+        alert(isSolo ? "Please enter your Full Name (at least 2 characters)." : "Please enter the Team Leader / Member 1 Full Name.");
+        if (formFields.name) formFields.name.focus();
         return;
       }
-      if (fullName.length > 80) {
+      if (leadName.length > 80) {
         alert("Name cannot exceed 80 characters.");
         return;
       }
-      if (!regNum || regNum.length < 4 || regNum.length > 30) {
-        alert("Please enter a valid Register Number (4 to 30 characters).");
+      if (!leadReg || leadReg.length < 4 || leadReg.length > 30) {
+        alert(isSolo ? "Please enter a valid Register Number (4 to 30 characters)." : "Please enter Team Leader / Member 1 Register Number.");
+        if (formFields.registerNumber) formFields.registerNumber.focus();
         return;
       }
+
+      // Collect team members if team event
+      const memberNames = [leadName];
+      const memberRegs = [leadReg];
+
+      if (!isSolo) {
+        for (let m = 2; m <= 4; m++) {
+          const mNameEl = document.getElementById(`reg-member-${m}-name`);
+          const mRegEl = document.getElementById(`reg-member-${m}-num`);
+          const mName = mNameEl ? mNameEl.value.trim() : "";
+          const mReg = mRegEl ? mRegEl.value.trim() : "";
+          if (mName && mReg) {
+            memberNames.push(mName);
+            memberRegs.push(mReg);
+          } else if (m === 2) {
+            alert("Please enter Team Member 2 details (Name and Register Number).");
+            if (mNameEl) mNameEl.focus();
+            return;
+          }
+        }
+      }
+
+      const fullName = memberNames.join(", ");
+      const regNum = memberRegs.join(", ");
+
       if (!dept) {
         alert("Please select your Department.");
         return;
@@ -1186,7 +1296,14 @@ document.addEventListener("DOMContentLoaded", () => {
             receipt: newRecord.receipt,
             receiptId: newRecord.receipt,
             status: newRecord.status,
-            timestamp: newRecord.timestamp
+            timestamp: newRecord.timestamp,
+            teamLeader: leadName,
+            member2Name: (document.getElementById("reg-member-2-name") ? document.getElementById("reg-member-2-name").value.trim() : ""),
+            member2Reg: (document.getElementById("reg-member-2-num") ? document.getElementById("reg-member-2-num").value.trim() : ""),
+            member3Name: (document.getElementById("reg-member-3-name") ? document.getElementById("reg-member-3-name").value.trim() : ""),
+            member3Reg: (document.getElementById("reg-member-3-num") ? document.getElementById("reg-member-3-num").value.trim() : ""),
+            member4Name: (document.getElementById("reg-member-4-name") ? document.getElementById("reg-member-4-name").value.trim() : ""),
+            member4Reg: (document.getElementById("reg-member-4-num") ? document.getElementById("reg-member-4-num").value.trim() : "")
           });
 
           const syncUrl = `${REGISTRATION_SHEET_URL}?${queryParams.toString()}`;
