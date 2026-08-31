@@ -283,6 +283,101 @@ document.addEventListener("DOMContentLoaded", () => {
     saveStoredDb(STORAGE_KEYS.REGISTRATIONS, registrationsDb);
   }
 
+  // Client-Side Outbox Sync Queue (Protects Google Apps Script from concurrent thundering herds)
+  let isSyncingQueue = false;
+
+  function enqueueSync(record, p1Name, p1Reg, p2Name, p2Reg, isDuo) {
+    let queue = [];
+    try {
+      queue = JSON.parse(localStorage.getItem("tq26_sync_queue")) || [];
+    } catch (e) {}
+
+    if (!queue.some(item => item.record.receipt === record.receipt)) {
+      queue.push({
+        record: record,
+        p1Name: p1Name,
+        p1Reg: p1Reg,
+        p2Name: p2Name,
+        p2Reg: p2Reg,
+        isDuo: isDuo,
+        addedAt: Date.now()
+      });
+      localStorage.setItem("tq26_sync_queue", JSON.stringify(queue));
+    }
+
+    // Process immediately with jitter delay (100ms - 900ms)
+    setTimeout(processSyncQueue, Math.random() * 800 + 100);
+  }
+
+  function processSyncQueue() {
+    if (isSyncingQueue) return;
+
+    let queue = [];
+    try {
+      queue = JSON.parse(localStorage.getItem("tq26_sync_queue")) || [];
+    } catch (e) {}
+
+    if (queue.length === 0) return;
+
+    isSyncingQueue = true;
+    const item = queue[0];
+
+    const queryParams = new URLSearchParams({
+      action: "register",
+      id: String(item.record.id),
+      name: item.record.name,
+      fullName: item.record.name,
+      registerNumber: item.record.registerNumber,
+      regNum: item.record.registerNumber,
+      department: item.record.department,
+      dept: item.record.department,
+      year: item.record.year,
+      event: item.record.event,
+      selectedEvent: item.record.event,
+      receipt: item.record.receipt,
+      receiptId: item.record.receipt,
+      status: item.record.status,
+      timestamp: item.record.timestamp,
+      participationMode: item.isDuo ? "Duo" : "Solo",
+      participant1Name: item.p1Name,
+      participant1Reg: item.p1Reg,
+      participant2Name: item.p2Name,
+      participant2Reg: item.p2Reg,
+      member2Name: item.p2Name,
+      member2Reg: item.p2Reg
+    });
+
+    const syncUrl = `${REGISTRATION_SHEET_URL}?${queryParams.toString()}`;
+
+    // Perform serialized fetch channel sync
+    fetch(syncUrl, {
+      method: "GET",
+      mode: "no-cors",
+      cache: "no-cache"
+    })
+    .then(() => {
+      console.log("[Sync Queue Success] Synced receipt:", item.record.receipt);
+      removeReceiptFromSyncQueue(item.record.receipt);
+      isSyncingQueue = false;
+      setTimeout(processSyncQueue, 400); // 400ms stagger delay before next row
+    })
+    .catch(err => {
+      console.warn("[Sync Queue Failed] Will retry:", item.record.receipt, err);
+      isSyncingQueue = false;
+      setTimeout(processSyncQueue, 6000); // Retry in 6 seconds
+    });
+  }
+
+  function removeReceiptFromSyncQueue(receipt) {
+    let queue = [];
+    try {
+      queue = JSON.parse(localStorage.getItem("tq26_sync_queue")) || [];
+    } catch (e) {}
+
+    queue = queue.filter(item => item.record.receipt !== receipt);
+    localStorage.setItem("tq26_sync_queue", JSON.stringify(queue));
+  }
+
   function persistEventsDb() {
     saveStoredDb(STORAGE_KEYS.EVENTS, eventsDb);
     sendCloudAction("save_events", eventsDb);
@@ -1269,74 +1364,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (paymentModal) {
         paymentModal.style.display = "flex";
 
-        // Multi-Channel Bulletproof Google Sheets Sync
+        // Bulletproof Client-Side Staggered Sync Queue
         if (REGISTRATION_SHEET_URL && REGISTRATION_SHEET_URL !== "YOUR_DEPLOYED_WEB_APP_URL_HERE") {
-          const queryParams = new URLSearchParams({
-            action: "register",
-            id: String(newRecord.id),
-            name: newRecord.name,
-            fullName: newRecord.name,
-            registerNumber: newRecord.registerNumber,
-            regNum: newRecord.registerNumber,
-            department: newRecord.department,
-            dept: newRecord.department,
-            year: newRecord.year,
-            event: newRecord.event,
-            selectedEvent: newRecord.event,
-            receipt: newRecord.receipt,
-            receiptId: newRecord.receipt,
-            status: newRecord.status,
-            timestamp: newRecord.timestamp,
-            participationMode: isDuo ? "Duo" : "Solo",
-            participant1Name: p1Name,
-            participant1Reg: p1Reg,
-            participant2Name: p2Name,
-            participant2Reg: p2Reg,
-            member2Name: p2Name,
-            member2Reg: p2Reg
-          });
-
-          const syncUrl = `${REGISTRATION_SHEET_URL}?${queryParams.toString()}`;
-
-          // Channel 1: fetch with keepalive: true
-          try {
-            fetch(syncUrl, {
-              method: "GET",
-              mode: "no-cors",
-              keepalive: true,
-              cache: "no-cache"
-            }).then(() => {
-              console.log("Registration synced via fetch channel.");
-            }).catch(e => console.warn("Fetch channel sync attempt:", e));
-          } catch (e) {}
-
-          // Channel 2: Image background beacon
-          try {
-            const pingImg = new Image();
-            pingImg.src = `${syncUrl}&_img=${Date.now()}`;
-          } catch (e) {}
-
-          // Channel 3: Script tag beacon
-          try {
-            const scriptBeacon = document.createElement("script");
-            scriptBeacon.src = `${syncUrl}&_script=${Date.now()}`;
-            scriptBeacon.async = true;
-            document.body.appendChild(scriptBeacon);
-            setTimeout(() => {
-              try { document.body.removeChild(scriptBeacon); } catch (err) {}
-            }, 4000);
-          } catch (e) {}
-
-          // Channel 4: Secondary Web App URL fallback if configured
-          if (EVENT_MGMT_SCRIPT_URL && EVENT_MGMT_SCRIPT_URL !== REGISTRATION_SHEET_URL) {
-            try {
-              fetch(`${EVENT_MGMT_SCRIPT_URL}?${queryParams.toString()}`, {
-                method: "GET",
-                mode: "no-cors",
-                keepalive: true
-              }).catch(() => {});
-            } catch (e) {}
-          }
+          enqueueSync(newRecord, p1Name, p1Reg, p2Name, p2Reg, isDuo);
         }
 
         // Simulate Gateway Delay
@@ -3326,4 +3356,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   }, 15000);
+
+  // Initialize Client-Side Outbox Sync Queue on Startup
+  setTimeout(processSyncQueue, 2000);
+  setInterval(processSyncQueue, 10000);
 });
