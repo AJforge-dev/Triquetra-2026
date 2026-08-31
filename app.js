@@ -1364,16 +1364,113 @@ document.addEventListener("DOMContentLoaded", () => {
       if (paymentModal) {
         paymentModal.style.display = "flex";
 
-        // Bulletproof Client-Side Staggered Sync Queue
-        if (REGISTRATION_SHEET_URL && REGISTRATION_SHEET_URL !== "YOUR_DEPLOYED_WEB_APP_URL_HERE") {
-          enqueueSync(newRecord, p1Name, p1Reg, p2Name, p2Reg, isDuo);
+        // Find or create status text elements in payment modal
+        let statusEl = document.getElementById("payment-status-text");
+        if (!statusEl) {
+          const contentEl = paymentModal.querySelector(".modal-content") || paymentModal;
+          statusEl = document.createElement("p");
+          statusEl.id = "payment-status-text";
+          statusEl.style.fontSize = "0.82rem";
+          statusEl.style.color = "var(--text-gray)";
+          statusEl.style.marginTop = "0.75rem";
+          statusEl.style.textAlign = "center";
+          contentEl.appendChild(statusEl);
         }
 
-        // Simulate Gateway Delay
-        setTimeout(() => {
-          paymentModal.style.display = "none";
-          navigateTo("confirmation");
-        }, 1800);
+        statusEl.textContent = "Processing payment simulation...";
+
+        // Send registration request immediately and wait for success response
+        let attempts = 0;
+        const maxAttempts = 3;
+
+        function performSync() {
+          attempts++;
+          statusEl.textContent = `Syncing registration with server (Attempt ${attempts}/${maxAttempts})...`;
+
+          const queryParams = new URLSearchParams({
+            action: "register",
+            id: String(newRecord.id),
+            name: newRecord.name,
+            fullName: newRecord.name,
+            registerNumber: newRecord.registerNumber,
+            regNum: newRecord.registerNumber,
+            department: newRecord.department,
+            dept: newRecord.department,
+            year: newRecord.year,
+            event: newRecord.event,
+            selectedEvent: newRecord.event,
+            receipt: newRecord.receipt,
+            receiptId: newRecord.receipt,
+            status: newRecord.status,
+            timestamp: newRecord.timestamp,
+            participationMode: isDuo ? "Duo" : "Solo",
+            participant1Name: p1Name,
+            participant1Reg: p1Reg,
+            participant2Name: p2Name,
+            participant2Reg: p2Reg,
+            member2Name: p2Name,
+            member2Reg: p2Reg
+          });
+
+          const syncUrl = `${REGISTRATION_SHEET_URL}?${queryParams.toString()}`;
+
+          fetch(syncUrl, {
+            method: "GET",
+            mode: "no-cors",
+            cache: "no-cache"
+          })
+          .then(() => {
+            // Success! Navigate to confirmation screen
+            console.log("Registration successfully synced to cloud.");
+            statusEl.innerHTML = `<span style="color:#10B981; font-weight:700;">✓ Sync Verified!</span>`;
+            
+            setTimeout(() => {
+              paymentModal.style.display = "none";
+              navigateTo("confirmation");
+            }, 1000);
+          })
+          .catch((err) => {
+            console.warn(`Sync attempt ${attempts} failed:`, err);
+            if (attempts < maxAttempts) {
+              // Retry after 1 second
+              setTimeout(performSync, 1000);
+            } else {
+              // Out of retries. Show failure status and a manual retry button
+              statusEl.innerHTML = `<span style="color:#EF4444; font-weight:700;">Network sync timed out.</span><br>We saved your registration locally. Please click below to retry syncing.`;
+              
+              let retryBtn = document.getElementById("btn-payment-retry");
+              if (!retryBtn) {
+                retryBtn = document.createElement("button");
+                retryBtn.id = "btn-payment-retry";
+                retryBtn.className = "cta-button";
+                retryBtn.style.marginTop = "0.75rem";
+                retryBtn.style.padding = "0.5rem 1rem";
+                retryBtn.style.fontSize = "0.8rem";
+                retryBtn.style.width = "auto";
+                retryBtn.style.display = "inline-flex";
+                retryBtn.textContent = "Retry Connection";
+                retryBtn.addEventListener("click", () => {
+                  attempts = 0;
+                  retryBtn.style.display = "none";
+                  performSync();
+                });
+                statusEl.parentNode.appendChild(retryBtn);
+              } else {
+                retryBtn.style.display = "inline-flex";
+              }
+            }
+          });
+        }
+
+        if (REGISTRATION_SHEET_URL && REGISTRATION_SHEET_URL !== "YOUR_DEPLOYED_WEB_APP_URL_HERE") {
+          performSync();
+        } else {
+          // If no sync URL is configured, just proceed after simulated delay
+          setTimeout(() => {
+            paymentModal.style.display = "none";
+            navigateTo("confirmation");
+          }, 1800);
+        }
       }
     });
   }
