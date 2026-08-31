@@ -86,6 +86,11 @@ function doGet(e) {
       return createJsonResponse(deleteRegistrationFromSheet(ss, params.receipt), callback);
     }
 
+    // Action: Cleanup Loadtest Data
+    if (action === "cleanup_loadtest") {
+      return createJsonResponse(cleanupLoadtestData(ss), callback);
+    }
+
     // 8. Action: 100-Student Rush Registration Submission (Lock-Free Instant 0.1s Confirmation)
     if (action === "register" || action === "save_registration" || params.name || params.registerNumber || params.event) {
       return handleDataSync(params, callback);
@@ -472,6 +477,45 @@ function deleteRegistrationFromSheet(ss, receipt) {
     status: "success",
     deletedCount: deletedCount,
     message: "Deleted " + deletedCount + " registration(s) with Receipt ID: " + receipt
+  };
+}
+
+function cleanupLoadtestData(ss) {
+  var sheet = ss.getSheetByName("Sheet1") || ss.getSheetByName("Registrations") || ss.getActiveSheet() || ss.getSheets()[0];
+  if (!sheet) return { status: "error", message: "Sheet not found." };
+
+  var lastRow = sheet.getLastRow();
+  if (lastRow <= 1) return { status: "success", message: "Sheet is empty." };
+
+  var data = sheet.getRange(2, 9, lastRow - 1, 1).getValues(); // Receipt ID in Column I
+  var deletedCount = 0;
+
+  for (var i = data.length - 1; i >= 0; i--) {
+    var receipt = String(data[i][0]).trim();
+    if (receipt.indexOf("TQ26-LT") === 0) {
+      sheet.deleteRow(i + 2);
+      deletedCount++;
+    }
+  }
+
+  // Also remove from any pending queue
+  var rawQueue = scriptProperties.getProperty("REGISTRATION_QUEUE");
+  if (rawQueue) {
+    try {
+      var queue = JSON.parse(rawQueue) || [];
+      var filteredQueue = queue.filter(function(item) {
+        return !item.receipt || String(item.receipt).trim().indexOf("TQ26-LT") !== 0;
+      });
+      if (queue.length !== filteredQueue.length) {
+        scriptProperties.setProperty("REGISTRATION_QUEUE", JSON.stringify(filteredQueue));
+      }
+    } catch (e) {}
+  }
+
+  return {
+    status: "success",
+    deletedCount: deletedCount,
+    message: "Successfully deleted " + deletedCount + " loadtest registration records."
   };
 }
 
