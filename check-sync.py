@@ -3,11 +3,11 @@ import urllib.request
 import urllib.parse
 import json
 import ssl
+import sys
 
 WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwn1zDZVMlg1ayNKtfIo9aSdv4-VH1O1LEDEY5PGzbWVwBBZmoyJ0to46-QLNnPxyWxNg/exec'
 
 def fetch_url(url):
-    # Disable SSL verification checks for test stability if needed
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_NONE
@@ -21,11 +21,30 @@ def fetch_url(url):
             return data
 
 def main():
+    # Check if restore argument is passed
+    run_restore = len(sys.argv) > 1 and sys.argv[1] == '--restore'
+
     print('\033[96m\n======================================================')
     print('   TRIQUETRA 2026 - TERMINAL SYNC MONITOR & FLUSHER')
     print('======================================================\033[0m')
-    print('Connecting to Google Apps Script sync engine...\n')
+    
+    if run_restore:
+        print('Connecting to restore missing registrations from backup logs...\n')
+        try:
+            res = fetch_url(f"{WEB_APP_URL}?action=restore_from_backup")
+            if res and isinstance(res, dict) and res.get('status') == 'success':
+                print('\033[92m✓ Success: ' + res.get('message') + '\033[0m')
+                print(f"👉 Restored Rows Count: \033[93m{res.get('restoredCount')}\033[0m")
+            else:
+                msg = res.get('message') if isinstance(res, dict) else 'Unknown error'
+                print('\033[91m✖ Restore Failed: ' + msg + '\033[0m')
+        except Exception as e:
+            print('\033[91mAn unexpected error occurred during restore:\033[0m')
+            print(e)
+        print('\033[96m======================================================\n\033[0m')
+        return
 
+    print('Connecting to Google Apps Script sync engine...\n')
     try:
         # 1. Fetch current queue status
         status = fetch_url(f"{WEB_APP_URL}?action=get_queue_status")
@@ -59,6 +78,9 @@ def main():
                 print('\033[91m' + f"✖ Flush Failed: {msg}" + '\033[0m')
         else:
             print('\033[92m✓ Sheet is fully synced. No pending registration queue entries.\033[0m')
+            
+        print('\n\033[90m💡 TIP: If rows were accidentally deleted, run:\033[0m')
+        print('\033[93m   python3 check-sync.py --restore\033[0m')
         print('\033[96m======================================================\n\033[0m')
 
     except Exception as e:
