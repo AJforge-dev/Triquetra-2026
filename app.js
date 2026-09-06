@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let scheduleDb = loadStoredDb(STORAGE_KEYS.SCHEDULE, DEFAULT_SCHEDULE_DB);
   let categoriesDb = loadStoredDb(STORAGE_KEYS.CATEGORIES, DEFAULT_CATEGORIES_DB);
 
-  // Sanitize function to permanently ban dummy mock candidates (Karan Sharma, Arthi Murali, Deepak Raj, Sneha V, TQ01-TQ04)
+  // Sanitize function to permanently ban dummy mock candidates and load test data (Karan Sharma, Arthi Murali, Deepak Raj, Sneha V, TQ01-TQ04, TQ26-LT-*)
   function sanitizeRegistrations(list) {
     if (!Array.isArray(list)) return [];
     return list.filter(r => {
@@ -207,8 +207,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const name = (r.name || "").toLowerCase();
       const evt = (r.event || "").trim().toLowerCase();
       const rec = (r.receipt || "").toUpperCase();
+      const reg = (r.registerNumber || "").toUpperCase();
       if (name.includes("karan") || name.includes("arthi") || name.includes("deepak") || name.includes("sneha")) return false;
       if (rec === "TQ01" || rec === "TQ02" || rec === "TQ03" || rec === "TQ04" || rec === "TQ-01" || rec === "TQ-02" || rec === "TQ-03" || rec === "TQ-04") return false;
+      if (rec.startsWith("TQ26-LT") || rec.includes("LT-") || name.includes("loadtest") || reg.startsWith("LT-") || reg.includes("LT-")) return false;
       if (BLACKLISTED_DUMMY_EVENTS.includes(evt)) return false;
       return true;
     });
@@ -2189,12 +2191,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Strict deduplication for clean, non-repeated PDF export
+    // Strict deduplication & purge load test records for clean, non-repeated PDF export
     const seenPdfKeys = new Set();
     list = list.filter(r => {
       const reg = String(r.registerNumber || "").trim().toUpperCase();
       const evt = String(r.event || "Tech Talk").trim().toLowerCase();
       const name = String(r.name || "").trim().toLowerCase();
+      const rec = String(r.receipt || "").trim().toUpperCase();
+
+      if (rec.startsWith("TQ26-LT") || rec.includes("LT-") || name.includes("loadtest") || reg.startsWith("LT-") || reg.includes("LT-")) {
+        return false;
+      }
+
       const key = reg ? `${reg}_${evt}` : `${name}_${evt}`;
       if (seenPdfKeys.has(key)) return false;
       seenPdfKeys.add(key);
