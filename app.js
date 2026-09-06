@@ -2178,8 +2178,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Filter by Event (Dynamically works for every existing and future event)
     if (eventFilter && eventFilter !== "ALL") {
-      const cleanEvt = eventFilter.trim().toLowerCase();
-      list = list.filter(r => (r.event || "").trim().toLowerCase() === cleanEvt);
+      if (eventFilter === "EXCEPT_TECHNICAL_QUIZ") {
+        list = list.filter(r => {
+          const ev = (r.event || "").trim().toLowerCase();
+          return !ev.includes("quiz");
+        });
+      } else {
+        const cleanEvt = eventFilter.trim().toLowerCase();
+        list = list.filter(r => (r.event || "").trim().toLowerCase() === cleanEvt);
+      }
     }
 
     // Strict deduplication for clean, non-repeated PDF export
@@ -2196,13 +2203,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (list.length === 0) {
       const deptLabel = deptFilter !== "ALL" ? deptFilter : "All Departments";
-      const evtLabel = eventFilter !== "ALL" ? eventFilter : "All Events";
+      const evtLabel = eventFilter === "EXCEPT_TECHNICAL_QUIZ" ? "All Events (Except Technical Quiz)" : (eventFilter !== "ALL" ? eventFilter : "All Events");
       alert(`No registered candidates found matching "${deptLabel}" and "${evtLabel}".`);
       return;
     }
 
     const deptTitle = deptFilter === "ALL" ? "All Departments (IT, AI&DS, CSBS)" : deptFilter;
-    const evtTitle = eventFilter === "ALL" ? "All Events" : eventFilter;
+    const evtTitle = eventFilter === "EXCEPT_TECHNICAL_QUIZ" ? "All Events (Except Technical Quiz)" : (eventFilter === "ALL" ? "All Events" : eventFilter);
     const currentDate = new Date().toLocaleDateString('en-IN', {
       day: '2-digit',
       month: 'short',
@@ -2213,7 +2220,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     let filename = "Triquetra_2026";
-    if (eventFilter && eventFilter !== "ALL") {
+    if (eventFilter === "EXCEPT_TECHNICAL_QUIZ") {
+      filename += "_All_Except_Technical_Quiz_List";
+    } else if (eventFilter && eventFilter !== "ALL") {
       filename += `_${eventFilter.replace(/[^a-zA-Z0-9]/g, "_")}_Participation_List`;
     } else {
       filename += "_Candidates_Roster";
@@ -2256,7 +2265,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         doc.setFont("helvetica", "bold");
         doc.setFontSize(10.5);
-        if (eventFilter && eventFilter !== "ALL") {
+        if (eventFilter === "EXCEPT_TECHNICAL_QUIZ") {
+          doc.text("EVENT PARTICIPATION LIST: ALL EVENTS EXCEPT TECHNICAL QUIZ", 40, 47);
+        } else if (eventFilter && eventFilter !== "ALL") {
           doc.text(`EVENT PARTICIPATION LIST: ${eventFilter.toUpperCase()}`, 40, 47);
         } else {
           doc.text("OFFICIAL CANDIDATES ROSTER", 40, 47);
@@ -2536,8 +2547,34 @@ document.addEventListener("DOMContentLoaded", () => {
     // Render Quick 1-Click Event Export Badges
     if (quickContainer) {
       quickContainer.innerHTML = "";
+
+      // Quick pill: All Except Technical Quiz
+      let countExceptQuiz = 0;
+      (registrationsDb || []).forEach(r => {
+        const ev = (r.event || "").trim().toLowerCase();
+        if (!ev.includes("quiz")) countExceptQuiz++;
+      });
+      const btnExcept = document.createElement("button");
+      btnExcept.type = "button";
+      btnExcept.className = "export-btn";
+      btnExcept.style.padding = "5px 9px";
+      btnExcept.style.fontSize = "0.75rem";
+      btnExcept.style.display = "inline-flex";
+      btnExcept.style.alignItems = "center";
+      btnExcept.style.gap = "5px";
+      btnExcept.style.background = "linear-gradient(135deg, #1E40AF, #2563EB)";
+      btnExcept.style.color = "#FFF";
+      btnExcept.style.borderColor = "#3B82F6";
+      btnExcept.innerHTML = `📋 All Except Technical Quiz <span style="background:#60A5FA; color:#0F172A; padding:1px 6px; border-radius:10px; font-size:0.68rem; font-weight:800">${countExceptQuiz}</span>`;
+      btnExcept.addEventListener("click", () => downloadCandidatesPdf("ALL", "EXCEPT_TECHNICAL_QUIZ", btnExcept));
+      quickContainer.appendChild(btnExcept);
+
       if (eventNames.length === 0) {
-        quickContainer.innerHTML = `<span style="font-size:0.75rem; color:var(--text-gray);">No events loaded</span>`;
+        const emptySpan = document.createElement("span");
+        emptySpan.style.fontSize = "0.75rem";
+        emptySpan.style.color = "var(--text-gray)";
+        emptySpan.textContent = "No events loaded";
+        quickContainer.appendChild(emptySpan);
       } else {
         eventNames.forEach(name => {
           const count = eventCounts[name] || 0;
@@ -2576,6 +2613,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnExportAll = document.getElementById("btn-export-all");
   if (btnExportAll) {
     btnExportAll.addEventListener("click", () => downloadCandidatesPdf("ALL", "ALL", btnExportAll));
+  }
+
+  const btnExportExceptQuiz = document.getElementById("btn-export-except-quiz");
+  if (btnExportExceptQuiz) {
+    btnExportExceptQuiz.addEventListener("click", () => downloadCandidatesPdf("ALL", "EXCEPT_TECHNICAL_QUIZ", btnExportExceptQuiz));
   }
 
   const btnExportFiltered = document.getElementById("btn-export-filtered");
