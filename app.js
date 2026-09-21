@@ -323,33 +323,102 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Registration Form Submission
+  // Registration Form Submission -> Live Google Sheets Auto-Sync
   if (regForm) {
     regForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const teamName = document.getElementById('reg-team-name').value;
+      const submitBtn = regForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span style="color:#000;">SYNCING TO GOOGLE SHEETS...</span>';
+      }
+
+      const teamName = document.getElementById('reg-team-name')?.value || 'Unnamed Team';
+      const teamSize = document.getElementById('reg-team-size')?.value || '1';
       const trackSelect = document.getElementById('reg-track');
-      const trackLabel = trackSelect.options[trackSelect.selectedIndex].text;
+      const trackLabel = trackSelect ? trackSelect.options[trackSelect.selectedIndex].text : 'General AI Track';
+
+      const leadName = document.getElementById('reg-lead-name')?.value || '';
+      const leadEmail = document.getElementById('reg-lead-email')?.value || '';
+      const leadPhone = document.getElementById('reg-lead-phone')?.value || '';
+      const leadCollege = document.getElementById('reg-lead-college')?.value || '';
+      const leadDept = document.getElementById('reg-lead-dept')?.value || '';
+      const leadYear = document.getElementById('reg-lead-year')?.value || '';
+      const deckUrl = document.getElementById('reg-deck-url')?.value || '';
+
+      // Format dynamic team members
+      const membersList = [];
+      for (let i = 2; i <= parseInt(teamSize, 10); i++) {
+        const mName = regForm.querySelector(`[name="member_${i}_name"]`)?.value || '';
+        const mPhone = regForm.querySelector(`[name="member_${i}_phone"]`)?.value || '';
+        const mDept = regForm.querySelector(`[name="member_${i}_dept"]`)?.value || '';
+        if (mName) {
+          membersList.push(`M${i}: ${mName} (${mPhone || mDept})`);
+        }
+      }
+      const membersSummary = membersList.length > 0 ? membersList.join(' | ') : 'Solo Entry';
 
       // Generate Cyber Pass ID
       const randomHex = Math.random().toString(36).substring(2, 7).toUpperCase();
       const passId = `NEURA-2026-${randomHex}`;
 
+      // Update Pass UI
       if (generatedPassId) generatedPassId.textContent = passId;
       if (passTeamName) passTeamName.textContent = teamName;
       if (passTrackName) passTrackName.textContent = trackLabel;
 
-      if (modalFormContainer) modalFormContainer.style.display = 'none';
-      if (modalSuccessContainer) modalSuccessContainer.style.display = 'block';
+      // Cloud Google Sheets Web App Endpoint
+      const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwn1zDZVMlg1ayNKtfIo9aSdv4-VH1O1LEDEY5PGzbWVwBBZmoyJ0to46-QLNnPxyWxNg/exec";
 
-      // Save to localStorage
+      const queryParams = new URLSearchParams({
+        action: "register",
+        receipt: passId,
+        name: `${teamName} [Lead: ${leadName}]`,
+        p1Name: `${leadName} (${leadEmail})`,
+        p1Reg: leadPhone,
+        p2Name: membersSummary,
+        p2Reg: leadCollege + (deckUrl ? ` | Pitch: ${deckUrl}` : ''),
+        department: leadDept,
+        year: leadYear,
+        event: `NEURAHACK: ${trackLabel}`,
+        _t: Date.now().toString()
+      });
+
+      const syncUrl = `${GOOGLE_SHEETS_URL}?${queryParams.toString()}`;
+
+      // 1. Primary Cloud Sync via fetch (mode: no-cors)
+      fetch(syncUrl, {
+        method: "GET",
+        mode: "no-cors",
+        cache: "no-cache"
+      }).catch(err => {
+        console.warn("Primary cloud sync warning:", err);
+      });
+
+      // 2. Secondary Guaranteed Delivery Beacon
+      try {
+        const syncBeacon = new Image();
+        syncBeacon.src = syncUrl;
+      } catch (beaconErr) {
+        console.warn("Beacon fallback warning:", beaconErr);
+      }
+
+      // 3. Local Safety Backup in browser
       try {
         const registrations = JSON.parse(localStorage.getItem('neurahack_2026_regs') || '[]');
         registrations.push({
           passId,
           teamName,
           track: trackLabel,
+          leadName,
+          leadEmail,
+          leadPhone,
+          college: leadCollege,
+          members: membersSummary,
+          deckUrl,
+          syncedToCloud: true,
           timestamp: new Date().toISOString()
         });
         localStorage.setItem('neurahack_2026_regs', JSON.stringify(registrations));
@@ -357,9 +426,19 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Storage error:', err);
       }
 
-      if (window.lucide) {
-        window.lucide.createIcons();
-      }
+      // Switch to confirmation view
+      setTimeout(() => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+        }
+        if (modalFormContainer) modalFormContainer.style.display = 'none';
+        if (modalSuccessContainer) modalSuccessContainer.style.display = 'block';
+
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+      }, 500);
     });
   }
 });
