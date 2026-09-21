@@ -1,0 +1,11 @@
+{
+  "name": "neurahack-2026",
+  "version": "1.0.0",
+  "description": "National Flagship AI & Data Science 6-Hour Hackathon - Department of AI & DS, GTEC",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": ["hackathon", "ai", "data-science", "gtec", "neurahack"],
+  "author": "Department of AI & DS, GTEC",
+  "license": "MIT"
+}

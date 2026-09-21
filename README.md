@@ -1,5 +1,5 @@
 # NEURAHACK 2026
-### National Flagship AI & Data Science 24-Hour Hackathon
+### National Flagship AI & Data Science 6-Hour Hackathon
 **Conducted & Organized Exclusively by:**
 Department of Artificial Intelligence & Data Science (AI & DS)
 Ganadipathy Tulsi's Jain Engineering College (GTEC), Vellore - 632 102
@@ -7,7 +7,7 @@ Ganadipathy Tulsi's Jain Engineering College (GTEC), Vellore - 632 102
 ---
 
 ## ⚡ Overview
-**NEURAHACK 2026** is a cyberpunk-themed 24-hour hackathon designed to test and showcase student talent across Generative AI, Deep Neural Networks, Multimodal Computer Vision, Big Data Analytics, and Bio-Informatics.
+**NEURAHACK 2026** is a cyberpunk-themed 6-hour hackathon designed to test and showcase student talent across Generative AI, Deep Neural Networks, Multimodal Computer Vision, Big Data Analytics, and Bio-Informatics.
 
 ## 🏆 Problem Tracks
 1. **Generative AI**: Autonomous Multi-Agent Systems & LLMs
@@ -22,7 +22,7 @@ Ganadipathy Tulsi's Jain Engineering College (GTEC), Vellore - 632 102
 - **AI Lab Incubation & GPU Credits**: Direct research incubation access at GTEC AI Labs with high-compute cloud resources.
 - **Certificates of Excellence**: Official merit and participation certificates endorsed by the Dept of AI & DS.
 - **Internship & Mentorship**: 1-on-1 jury feedback, research mentoring, and fast-track internship interview opportunities.
-- **24-Hour Non-Stop Hack Sprint**: Immersive 24-hour on-campus hackathon at GTEC AI Labs.
+- **6-Hour Intensive Hack Sprint**: Immersive 6-hour on-campus hackathon at GTEC AI Labs.
 - **Networking & Tech Swag**: Connect with student AI researchers across colleges and receive exclusive tech merchandise.
 
 ## 🚀 Running Locally
