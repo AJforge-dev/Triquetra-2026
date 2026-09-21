@@ -1156,8 +1156,11 @@ body {
 
 .prize-amount-gold {
   font-family: var(--font-display);
-  font-size: 3.2rem;
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
   font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1.25;
+  margin: 0.75rem 0;
   background: linear-gradient(135deg, #fef08a 0%, #ca8a04 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1165,16 +1168,22 @@ body {
 }
 .prize-amount-silver {
   font-family: var(--font-display);
-  font-size: 2.6rem;
+  font-size: clamp(1.2rem, 2.2vw, 1.7rem);
   font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1.25;
+  margin: 0.75rem 0;
   background: linear-gradient(135deg, #ffffff 0%, #9ca3af 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 .prize-amount-bronze {
   font-family: var(--font-display);
-  font-size: 2.6rem;
+  font-size: clamp(1.2rem, 2.2vw, 1.7rem);
   font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1.25;
+  margin: 0.75rem 0;
   background: linear-gradient(135deg, #fdba74 0%, #c2410c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
