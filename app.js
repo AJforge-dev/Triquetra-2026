@@ -1,7 +1,9 @@
 /**
- * GTEC CYBER HACKATHON v4.0 - APP SCRIPT
- * Reference: cyberhack-hackathon.vercel.app
- * Instituted for: Ganadipathy Tulsi's Jain Engineering College (GTEC)
+ * NEURAHACK 2026 - APP SCRIPT
+ * National Flagship AI & Data Science Hackathon
+ * Organized Exclusively by:
+ * Department of Artificial Intelligence & Data Science (AI & DS)
+ * Ganadipathy Tulsi's Jain Engineering College (GTEC)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,133 +29,133 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- Track / Problem Statement Data ---
+  // --- Dedicated AI & Data Science Track Data ---
   const trackData = {
-    "ai-forensics": {
-      category: "AI Forensics",
-      title: "Deepfake & AI Content Detection",
-      background: "The rapid advancement of Artificial Intelligence has enabled the creation of highly realistic synthetic media such as deepfake videos, AI-generated images, cloned voices, and manipulated digital content. These technologies are increasingly being misused for misinformation, impersonation, financial fraud, and cybercrime.",
-      objective: "Develop a system capable of detecting AI-generated or manipulated media content and assisting law enforcement agencies in verifying authenticity.",
+    "genai-agents": {
+      category: "Generative AI",
+      title: "Autonomous Multi-Agent Systems & LLMs",
+      background: "The advent of reasoning models, open-weight LLMs, and agentic workflows has revolutionized automated problem-solving. Autonomous AI swarms can collaborate to analyze complex codebases, execute distributed research, and synthesize actionable intelligence without constant human intervention.",
+      objective: "Develop an autonomous multi-agent system utilizing open-weight LLMs or fine-tuned reasoning models capable of executing multi-step complex workflows with robust self-correction.",
       scope: [
-        "Detection of deepfake videos, images, or audio",
-        "Identification of AI-generated content signatures",
-        "Metadata and visual frequency spectrum analysis",
-        "Confidence scoring for media authenticity",
-        "Real-time or near real-time forensic scanning capability"
+        "Orchestration of specialized autonomous sub-agents with role division",
+        "Integration of local/open-weight LLMs (DeepSeek, Llama 3, Mistral) or API models",
+        "Retrieval-Augmented Generation (RAG) with vector databases for knowledge grounding",
+        "Self-reflection, chain-of-thought verification, and automated error-correction loops",
+        "Interactive chat or task-dashboard for real-time human-in-the-loop oversight"
       ],
       evaluation: [
-        "Detection accuracy - identifying source AI model/website",
-        "Scalability and inference latency",
-        "Ease of use for investigative teams",
-        "Innovation in biometric/artifact detection approach",
-        "Practical applicability for cyber forensics"
+        "Agent autonomy, reasoning depth, and task completion success rate",
+        "Handling of tool-calling, API integration, and unexpected execution failures",
+        "Inference efficiency, context window utilization, and latency optimization",
+        "Novelty of agentic coordination architecture",
+        "Practical utility for enterprise workflows, software engineering, or research"
       ],
-      outcome: "A production-grade prototype tool that can assist cyber investigators in identifying manipulated or synthetic digital media reliably."
+      outcome: "A functional, autonomous multi-agent application demonstrating intelligent delegation, tool execution, and dependable reasoning."
     },
-    "blockchain": {
-      category: "Blockchain Analysis",
-      title: "Cryptocurrency Fund Tracing & Forensic Graph",
-      background: "Cryptocurrency transactions are frequently used in cybercrime, ransomware attacks, and illegal marketplaces due to pseudonymity and cross-border transfers. Tracking the flow of illicit funds across complex multi-hop wallet networks and decentralized exchanges remains a paramount challenge for cybercrime wings.",
-      objective: "Design a system that traces the movement of cryptocurrency funds across blockchain transactions and identifies suspicious multi-hop fund flows.",
+    "computer-vision": {
+      category: "Computer Vision",
+      title: "Real-Time Visual Analytics & Edge AI",
+      background: "Intelligent video surveillance, robotic navigation, and industrial quality inspection demand high-throughput computer vision models capable of running on constrained edge devices such as microcontrollers, Raspberry Pi, Jetson Orin, or mobile chipsets without sacrificing accuracy.",
+      objective: "Build an edge-optimized computer vision pipeline delivering real-time object detection, tracking, or visual anomaly detection with low power and ultra-low latency.",
       scope: [
-        "Visual graph analysis of transaction chains and token flows",
-        "Suspicious wallet cluster and linkage identification",
-        "Mixing service and privacy coin heuristic detection",
-        "Risk scoring and sanction list cross-referencing",
-        "Automated multi-hop transaction tracing and export"
+        "Real-time object detection and multi-object tracking (YOLO, MobileNet, EdgeTPU)",
+        "Model quantization (INT8/FP16), pruning, and acceleration with TensorRT / ONNX",
+        "Visual anomaly detection in manufacturing, campus safety, or smart traffic",
+        "Edge hardware deployment simulation or live camera feed integration",
+        "Lightweight notification and event-logging trigger mechanism"
       ],
       evaluation: [
-        "Accuracy of wallet linkage and path calculation",
-        "Clarity and responsiveness of forensic graph visualization",
-        "Depth of heuristic anomaly detection",
-        "Usability for cybercrime investigation units",
-        "Technical feasibility across Bitcoin, Ethereum, and Tron networks"
+        "Frames-per-second (FPS) throughput and inference latency on edge hardware",
+        "Detection precision (mAP) under varying lighting and occlusion conditions",
+        "Resource efficiency (RAM, CPU/GPU temperature, model size)",
+        "Ease of deployment and hardware compatibility",
+        "Applicability to smart cities, industrial safety, or security"
       ],
-      outcome: "A visualization and analysis platform that simplifies cryptocurrency investigation and aids in identifying fund laundering patterns."
+      outcome: "A deployed edge-AI vision prototype performing low-latency real-time inference with quantifiable benchmarks."
     },
-    "digital-forensics": {
-      category: "Digital Forensics",
-      title: "Cyber Forensic Triage & Rapid Evidence Discovery",
-      background: "Digital forensic investigations often involve analyzing massive volumes of seized electronic devices and storage drives. Investigators require quick triage tools on-site to prioritize evidence, extract artifacts, and detect critical evidence before forensic imaging.",
-      objective: "Develop a cyber forensic triage software that helps investigators quickly identify critical digital evidence from seized devices.",
+    "deepfake-forensics": {
+      category: "AI Ethics & Forensics",
+      title: "Deepfake Detection & Media Provenance",
+      background: "Rapid proliferation of generative image synthesis, voice cloning, and deepfake video generation has outpaced traditional authentication tools, creating severe societal risks in identity theft, financial fraud, and synthetic misinformation.",
+      objective: "Engineer a multimodal AI verification system capable of reliably distinguishing authentic digital media from AI-synthesized or manipulated videos, images, and audio.",
       scope: [
-        "Rapid non-destructive scanning of target storage media",
-        "Identification of deleted, hidden, or encrypted files",
-        "Instant extraction of high-value artifacts (browser history, logs, registry, chat databases)",
-        "Automated chronological event timeline generation",
-        "Priority-based evidence classification with forensic hashing"
+        "Biometric inconsistency analysis (eye blinking, pulse photoplethysmography, facial mesh)",
+        "Audio spectral artifact extraction to identify synthetic speech and cloned voices",
+        "Diffusion noise fingerprint detection and frequency domain analysis (FFT)",
+        "Cryptographic media provenance tracking and tamper-proof verification logs",
+        "Explainable AI dashboard providing visual heatmaps of manipulated regions"
       ],
       evaluation: [
-        "Triage speed and system resource efficiency",
-        "Accuracy of forensic artifact discovery",
-        "Integrity of data extraction without tampering source files",
-        "Automated report generation with cryptographic verification",
-        "Investigation workflow relevance"
+        "Detection accuracy across varied generative architectures (GANs, Diffusion, Voice Clones)",
+        "Resilience against compression, re-encoding, and adversarial perturbations",
+        "Low false-positive rate on authentic high-resolution media",
+        "Transparency and interpretability of forensic evidence heatmaps",
+        "Investigation readiness for cyber cells and media organizations"
       ],
-      outcome: "A lightweight forensic triage tool that significantly reduces investigation backlog and improves evidence prioritization."
+      outcome: "An explainable forensic detection tool providing authenticity scores and tamper localization heatmaps."
     },
-    "threat-intel": {
-      category: "Threat Intelligence",
-      title: 'Remote Suspect Attribution & Geo-Locating "Digital Tripwire"',
-      background: "In many investigations—such as cyber-extortion, kidnapping, or anonymous threats—suspects hide behind VPNs, Proxies, or the Tor network. Traditional IP logging at the server level often only reveals the datacenter IP rather than the true location or device identity. Investigators need an ethical mechanism to lure a suspect into revealing their actual digital footprint.",
-      objective: 'Develop a secure "Canary" platform that allows Law Enforcement Officers (LEOs) to generate trackable digital assets which, when accessed by a suspect, bypass common obfuscation to log forensic-grade identification data.',
+    "predictive-analytics": {
+      category: "Big Data & ML",
+      title: "High-Precision Predictive Analytics & Forecasting",
+      background: "Modern organizations generate vast streams of high-dimensional tabular, IoT, and time-series data. Extracting forward-looking intelligence requires sophisticated predictive modeling, anomaly scoring, and scalable feature engineering.",
+      objective: "Construct an end-to-end predictive analytics engine that analyzes complex tabular/time-series data to deliver accurate forecasts, risk projections, and early anomaly alerts.",
       scope: [
-        "Multi-Vector Bait Generation: Barbed links, PDF/DOCX canary beacons, and trackable images",
-        "Advanced Attribution: WebRTC IP leak checks, Canvas ID, hardware specs, OS version, GPU renderer",
-        "On-Demand High-Precision Geo-Fencing prompts disguised as verification",
-        "Real-Time Tactical Alerts (centralized dashboard notification upon trigger)",
-        "Tamper-proof Chain of Custody logging admissible in legal proceedings"
+        "High-throughput automated feature engineering and missing data imputation",
+        "Advanced time-series forecasting (Prophet, Transformers for Time-Series, XGBoost/LightGBM)",
+        "Multivariate anomaly detection for proactive failure prevention",
+        "Interactive exploratory data analysis (EDA) and drill-down visualization dashboards",
+        "Automated model drift monitoring and retraining triggers"
       ],
       evaluation: [
-        "Stealth and cross-browser reliability",
-        "De-anonymization capability against standard VPNs",
-        "Forensic integrity and non-repudiation audit trails",
-        "Operational security (OpSec) architecture",
-        "Speed and clarity of tactical alerts"
+        "Forecast accuracy metrics (RMSE, MAE, R-squared) against benchmark baselines",
+        "Robustness to non-stationary distributions and unexpected data spikes",
+        "Clarity and visual depth of the analytical executive dashboard",
+        "Scalability across large-scale historical datasets",
+        "Direct actionability of predictive insights for decision-makers"
       ],
-      outcome: "A stealthy, browser-agnostic tracking platform providing investigators with verified location and device attribution data."
+      outcome: "An enterprise-grade predictive analytics platform with real-time forecasting charts and automated risk alerts."
     },
-    "secure-ai": {
-      category: "Secure AI",
-      title: "Offline LLM for Advanced Cyber Investigation",
-      background: "Cyber investigations involve highly sensitive, confidential, and classified data that cannot be sent to cloud-based AI providers due to privacy laws and strict security boundaries. Investigative cells need intelligent AI assistance running purely on isolated, air-gapped forensic machines.",
-      objective: "Develop an offline Large Language Model (LLM)-based assistant that supports cybercrime investigation workflows completely without internet connectivity.",
+    "healthcare-ai": {
+      category: "Bio-Informatics",
+      title: "AI in Healthcare Diagnostics & Clinical Intelligence",
+      background: "Clinical decision support systems powered by deep learning and medical foundation models can dramatically accelerate early disease detection, radiological scans analysis, and automated clinical report synthesis while safeguarding patient privacy.",
+      objective: "Develop a privacy-centric clinical AI assistant for medical imaging segmentation, electronic health record summarization, or preliminary risk triaging.",
       scope: [
-        "100% Offline document analysis and forensic log summarization",
-        "Natural language querying over extracted forensic timelines",
-        "Cyber law (IT Act) and procedural reference lookup",
-        "Automated incident summary generation for charge sheets",
-        "Secure, containerized local deployment using open-weight models"
+        "Medical imaging analysis (X-ray, MRI, CT scans, or histopathology segmentation)",
+        "Natural language extraction from unstructured clinical notes and discharge summaries",
+        "Differential diagnostic suggestion system with strict anti-hallucination safeguards",
+        "Privacy-preserving HIPAA/GDPR-compliant data handling architecture",
+        "Doctor-facing intuitive consultation interface with citation references"
       ],
       evaluation: [
-        "True air-gapped offline operation without telemetry",
-        "Accuracy, citation fidelity, and lack of hallucinations",
-        "Strict local privacy and data security compliance",
-        "Inference efficiency on standard investigative workstations",
-        "Practical utility for case officers"
+        "Diagnostic sensitivity, specificity, and Area Under the ROC Curve (AUC)",
+        "Reliability and factual grounding of clinical summaries",
+        "Strict adherence to medical data privacy guidelines",
+        "Usability and ergonomic workflow for healthcare practitioners",
+        "Clinical relevance and societal impact"
       ],
-      outcome: "An offline AI assistant that drastically accelerates evidence synthesis while preserving total data confidentiality."
+      outcome: "A clinically grounded diagnostic or medical reporting copilot with high precision and explainable visual evidence."
     },
-    "web3-innovation": {
+    "open-ai-ds": {
       category: "Open Innovation",
-      title: "Smart Campus & Web3 Security Ecosystem",
-      background: "Modern educational and corporate campuses face expanding attack surfaces, from IoT access control vulnerabilities to unverified credentials and phishing. Next-generation systems require decentralized identity and automated threat mitigation.",
-      objective: "Create a decentralized identity and automated security enforcement framework for campus credentials and smart infrastructure.",
+      title: "Next-Gen Applied AI & Data Science Solutions",
+      background: "Artificial Intelligence and Data Science are transforming every facet of society, from sustainable agriculture and educational personalization to smart logistics, renewable energy grid balancing, and natural language translation for regional dialects.",
+      objective: "Pioneer a creative, groundbreaking application of machine learning, neural networks, or data science that solves an urgent real-world problem.",
       scope: [
-        "Verifiable digital credentials using decentralized identifiers (DIDs)",
-        "Zero-Knowledge Proofs (ZKP) for privacy-preserving authentication",
-        "Automated smart contract security auditing and vulnerability scanning",
-        "Real-time campus network anomaly detection and intrusion alerting",
-        "Unified mobile dashboard for students and security administrators"
+        "Application of novel machine learning or deep neural architectures",
+        "Demonstrated domain impact (e.g. Agritech, Climate, EdTech, Accessibility, Smart Cities)",
+        "Robust data pipeline from ingestion to inference and visualization",
+        "Scalable cloud or containerized deployment architecture",
+        "User-centric product design and clean API integrations"
       ],
       evaluation: [
-        "Security robustness and cryptographic sound architecture",
-        "Practical implementation on campus networks",
-        "User experience and barrier to entry",
-        "Scalability for thousands of concurrent users",
-        "Novelty and technical depth"
+        "Novelty and originality of the conceptual approach",
+        "Technical depth and execution rigor of the ML model/data pipeline",
+        "Practical feasibility and potential societal or commercial viability",
+        "Quality of user experience and interactive demonstration",
+        "Completeness of the end-to-end working system"
       ],
-      outcome: "A tamper-proof identity and campus security infrastructure that prevents credential forgery and unauthorized access."
+      outcome: "A deployable end-to-end AI product with demonstrated societal or industrial transformation potential."
     }
   };
 
@@ -311,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
               <div class="form-field">
                 <label>Department & Year *</label>
-                <input type="text" name="member_${i}_dept" required placeholder="e.g. IT, 3rd Year">
+                <input type="text" name="member_${i}_dept" required placeholder="e.g. AI & DS, 3rd Year">
               </div>
             </div>
           </div>
@@ -332,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Generate Cyber Pass ID
       const randomHex = Math.random().toString(36).substring(2, 7).toUpperCase();
-      const passId = `GTEC-CYBER-${randomHex}`;
+      const passId = `NEURA-2026-${randomHex}`;
 
       if (generatedPassId) generatedPassId.textContent = passId;
       if (passTeamName) passTeamName.textContent = teamName;
@@ -343,14 +345,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Save to localStorage
       try {
-        const registrations = JSON.parse(localStorage.getItem('gtec_cyberhack_regs') || '[]');
+        const registrations = JSON.parse(localStorage.getItem('neurahack_2026_regs') || '[]');
         registrations.push({
           passId,
           teamName,
           track: trackLabel,
           timestamp: new Date().toISOString()
         });
-        localStorage.setItem('gtec_cyberhack_regs', JSON.stringify(registrations));
+        localStorage.setItem('neurahack_2026_regs', JSON.stringify(registrations));
       } catch (err) {
         console.warn('Storage error:', err);
       }
