@@ -1492,7 +1492,8 @@ body {
   padding-top: 2rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  text-align: center;
   flex-wrap: wrap;
   gap: 1rem;
 }
