@@ -1,1084 +1,1081 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Triquetra - Event Symposium App</title>
-  
-  <!-- CSS Link -->
-  <link rel="stylesheet" href="styles.css">
-  
-  <!-- Lucide Icons CDN -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyber Hackathon v4.0 | Ganadipathy Tulsi's Jain Engineering College (GTEC)</title>
+  <meta name="description" content="Official Cyber Hackathon organized by Ganadipathy Tulsi's Jain Engineering College (GTEC) in collaboration with IT, AI&DS, and CSBS Departments." />
+  <link rel="icon" href="logo_small.png" type="image/png" />
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="cyber-grid-bg">
 
-  <!-- Master Responsive App Layout -->
-  <div class="app-container">
-    
-    <!-- Top Sticky Web App Header -->
-    <header class="app-header">
-      <div class="app-brand">
-        <img src="logo.png" alt="Triquetra Logo" class="app-n-logo">
-        <span class="app-title-wordmark" id="header-title">TRIQUETRA</span>
+  <!-- ================= MATRIX BINARY STREAMS ================= -->
+  <div class="stream-container stream-left">
+    <div class="stream-col">
+      <div class="stream-text stream-text-down">
+        <span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span>
+        <span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span>
+        <span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span>
+        <span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span>
       </div>
-      <div class="app-header-right">
-        <!-- Shield Lock Icon for Admin Console -->
-        <button class="app-admin-btn" id="btn-admin-portal" title="Admin Portal Dashboard" style="display:flex; align-items:center; gap:6px; padding: 6px 12px; border-radius: 20px; border: 1.5px solid var(--primary-teal); background: var(--primary-teal-light); color: var(--primary-teal); font-weight: 700; font-size: 0.75rem; cursor:pointer;">
-          <i data-lucide="shield-check" style="width:16px;height:16px"></i>
-          <span>Admin Portal</span>
-        </button>
-      </div>
-    </header>
-
-    <!-- Main Content Area -->
-    <div class="app-content-wrapper" id="app-content-wrapper">
-      
-      <!-- Payment loading overlay -->
-      <div class="payment-loading-modal" id="payment-modal">
-        <div class="spinner"></div>
-        <p class="payment-text">Processing Registration</p>
-        <p class="payment-subtext">Connecting to gateway securely...</p>
-      </div>
-
-      <!-- ================= SCREEN 1: HOME ================= -->
-      <div class="app-screen active" id="screen-home">
-        <div class="screen-inner">
-          <div class="home-layout-centered">
-            
-            <!-- College Info Badge -->
-            <div class="home-college-badge">
-              <div class="home-college-logo">
-                <i data-lucide="graduation-cap" style="width:14px;height:14px"></i>
-              </div>
-              <span>Ganadipathy Tulsi's Jain Engineering College</span>
-            </div>
-            
-            <!-- Department Badge -->
-            <div class="dept-pill" style="max-width: 340px; text-align: center; display: inline-block;">
-              STUDENT ASSOCIATION OF IT, AI&DS and CSBS
-            </div>
-
-            <!-- Symposium Official Emblem -->
-            <div class="mascot-container">
-              <div class="mascot-glow-ring"></div>
-              <img src="triquetra_logo.png" alt="Triquetra Emblem" class="mascot-img">
-              <i data-lucide="sparkle" class="mascot-deco-diamond mascot-deco-diamond-1" style="width:24px;height:24px;"></i>
-              <i data-lucide="sparkle" class="mascot-deco-diamond mascot-deco-diamond-2" style="width:18px;height:18px;"></i>
-            </div>
-
-            <!-- Main Titles -->
-            <h2 class="home-title">Intra College Symposium 2026</h2>
-            <p class="home-subtitle">A platform to showcase ideas, innovation and technical excellence.</p>
-
-            <!-- CTA Button -->
-            <button class="cta-button" id="btn-explore-events" style="margin-bottom: 2rem; max-width: 320px;">
-              Explore Events <i data-lucide="arrow-right" style="width: 18px; height:18px"></i>
-            </button>
-
-
-
-            <!-- About Box -->
-            <div class="section-card" style="text-align: left; width: 100%;">
-              <h3 class="section-title">About the Symposium</h3>
-              <p class="section-desc">
-                Triquetra 2026 is organized by the
-                <strong>students with IT, AI&DS and CSBS</strong>
-                to bring together creative and ambitious students across college campuses. Structured around a three-Department pattern, the symposium provides a dynamic platform for participants to showcase their technical prowess, problem-solving skills, and innovative capabilities.
-              </p>
-            </div>
-            
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= SCREEN 2: ALL EVENTS ================= -->
-      <div class="app-screen" id="screen-categories">
-        <div class="screen-inner">
-          <div class="screen-title-area">
-            <div>
-              <h2 class="screen-title">Symposium Events</h2>
-              <p class="screen-subtitle">Explore all competitions, hackathons, and challenges</p>
-            </div>
-          </div>
-
-          <!-- Responsive Grid of Live Events -->
-          <div class="events-grid" id="categories-list-container">
-            <!-- Populated dynamically with all live events by JS -->
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= SCREEN 3: EVENT DETAIL ================= -->
-      <div class="app-screen" id="screen-detail">
-        <div class="screen-inner">
-          
-          <!-- Breadcrumb -->
-          <div class="breadcrumb" id="detail-breadcrumb">
-            <span id="breadcrumb-category-link" style="cursor:pointer; color:var(--text-gray); transition:color 0.2s;">Events</span>
-            <i data-lucide="chevron-right" style="width:12px;height:12px"></i>
-            <span id="detail-breadcrumb-cat" style="color: var(--primary-teal); font-weight:700">Technical</span>
-          </div>
-
-          <!-- Category Events Switcher (Pills) -->
-          <div class="category-events-switcher" id="category-events-switcher">
-            <!-- Populated dynamically by JS -->
-          </div>
-
-          <!-- Event Header Category Badge -->
-          <div style="margin-bottom: 1.25rem;">
-            <span class="detail-banner-tag" id="detail-banner-tag" style="position:static; display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; padding:0.4rem 0.9rem; border-radius:20px; background:var(--primary-teal); color:#FFFFFF; font-weight:700;">
-              <i data-lucide="tag" style="width:14px;height:14px"></i> <span id="detail-tag-text">Technical</span>
-            </span>
-          </div>
-
-          <div class="detail-layout-grid">
-            <!-- Left Info Column -->
-            <div class="detail-left-col">
-              <h2 class="detail-title" id="detail-title">CodeCraze</h2>
-              <p class="detail-desc" id="detail-desc">
-                Put your coding skills to the test in this ultimate speed-programming challenge.
-              </p>
-
-              <!-- About Paragraph -->
-              <div class="section-card">
-                <h3 class="section-title">About the Event</h3>
-                <p class="section-desc" id="detail-about">
-                  Event details will appear here.
-                </p>
-              </div>
-            </div>
-
-            <!-- Right Parameters Column -->
-            <div class="detail-right-col">
-              <!-- Quick Info Details Grid (Live-loaded from JS state) -->
-              <div class="info-grid" id="detail-info-grid">
-                <!-- Inner HTML is rendered dynamically in app.js -->
-              </div>
-
-              <!-- Rules Section -->
-              <div class="section-card rules-card-wrapper">
-                <div class="rules-card-header">
-                  <div class="rules-title-group">
-                    <div class="rules-header-icon"><i data-lucide="shield-check"></i></div>
-                    <div>
-                      <h3 class="section-title" style="margin-bottom:2px;">Event Rules &amp; Guidelines</h3>
-                      <p class="rules-subtitle">Official criteria and participation conduct</p>
-                    </div>
-                  </div>
-                  <span class="rules-policy-badge"><i data-lucide="award"></i> Official</span>
-                </div>
-                <div class="rules-list-container" id="detail-rules-list">
-                  <!-- Inner HTML rendered dynamically -->
-                </div>
-              </div>
-
-              <!-- Action Register Button -->
-              <button class="cta-button" id="btn-register-now" style="margin-top: 1rem;">
-                Register Now <i data-lucide="edit-3" style="width: 18px; height: 18px"></i>
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ================= SCREEN 4: EVENT SCHEDULE ================= -->
-      <div class="app-screen" id="screen-schedule">
-        <div class="screen-inner">
-          <div class="schedule-container">
-            
-            <div class="screen-title-area" style="text-align: center;">
-              <h2 class="screen-title">Event Schedule</h2>
-              <p class="screen-subtitle">Plan your day and don't miss out on any events.</p>
-            </div>
-
-            <!-- Date Pills Row -->
-            <div class="date-tabs-container">
-              <div class="date-pill active">23 May 2026</div>
-              <div class="date-pill">24 May 2026</div>
-              <div class="date-pill">25 May 2026</div>
-            </div>
-
-            <!-- Timeline vertical layout -->
-            <div class="timeline-list" id="schedule-list">
-              <!-- Populated Dynamically by JS -->
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= SCREEN 5: REGISTRATION FORM ================= -->
-      <div class="app-screen" id="screen-register">
-        <div class="screen-inner">
-          <div class="screen-title-area">
-            <h2 class="screen-title">Register for Event</h2>
-            <p class="screen-subtitle">Fill in your details to participate in the symposium.</p>
-          </div>
-
-          <form id="symposium-reg-form" onsubmit="return false;">
-            <div class="form-layout-grid">
-              
-              <!-- Left Column: User fields -->
-              <div class="form-left-col">
-                <div class="form-section-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
-                  <span id="reg-form-section-title">Participant Details</span>
-                  <span id="reg-form-type-badge" style="font-size:0.72rem; font-weight:700; background:#EFF6FF; color:var(--royal-sapphire); border:1px solid #BFDBFE; padding:2px 10px; border-radius:12px; display:inline-flex; align-items:center; gap:4px;">
-                    <i data-lucide="user" style="width:12px;height:12px"></i> Solo Registration
-                  </span>
-                </div>
-                
-                <!-- Participation Mode Dropdown (Solo or Duo) -->
-                <div class="form-group" style="margin-bottom: 0.85rem;">
-                  <label class="form-label" for="reg-mode-select" style="font-weight:700;">Participation Mode</label>
-                  <div class="dropdown-icon-wrapper">
-                    <select id="reg-mode-select" class="form-input select" style="font-weight:600;">
-                      <option value="Solo">Solo (1 Participant)</option>
-                      <option value="Duo">Duo (2 Participants)</option>
-                    </select>
-                  </div>
-                </div>
-
-                <!-- Participant 1 Details -->
-                <div class="form-group">
-                  <label class="form-label" id="label-reg-name" for="reg-name">Full Name</label>
-                  <input type="text" id="reg-name" class="form-input" placeholder="Enter your full name" required>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label" id="label-reg-num" for="reg-num">Register Number</label>
-                  <input type="text" id="reg-num" class="form-input" placeholder="Enter your register number" required>
-                </div>
-
-                <!-- Participant 2 Details (Duo Mode) -->
-                <div id="duo-participant-wrapper" style="display:none; margin-bottom:1rem; padding:12px; background:#F8FAFC; border:1.5px dashed #93C5FD; border-radius:10px;">
-                  <div style="font-size:0.78rem; font-weight:800; color:var(--royal-sapphire); margin-bottom:8px; display:flex; align-items:center; gap:5px;">
-                    <i data-lucide="user-plus" style="width:15px;height:15px"></i> Participant 2 Details (Duo)
-                  </div>
-                  
-                  <div class="form-group" style="margin-bottom:0.6rem;">
-                    <label class="form-label" for="reg-p2-name" style="font-size:0.75rem; font-weight:700;">Participant 2 Full Name</label>
-                    <input type="text" id="reg-p2-name" class="form-input" placeholder="Enter 2nd participant full name" style="padding:0.5rem 0.75rem; font-size:0.82rem;">
-                  </div>
-
-                  <div class="form-group" style="margin-bottom:0;">
-                    <label class="form-label" for="reg-p2-num" style="font-size:0.75rem; font-weight:700;">Participant 2 Register Number</label>
-                    <input type="text" id="reg-p2-num" class="form-input" placeholder="Enter 2nd participant register number" style="padding:0.5rem 0.75rem; font-size:0.82rem;">
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label class="form-label" for="reg-dept">Department</label>
-                    <div class="dropdown-icon-wrapper">
-                      <select id="reg-dept" class="form-input select" required>
-                        <option value="" disabled selected hidden>Select Department</option>
-                        <option value="IT">IT</option>
-                        <option value="AI&DS">AI&amp;DS</option>
-                        <option value="CSBS">CSBS</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label class="form-label" for="reg-year">Year</label>
-                    <div class="dropdown-icon-wrapper">
-                      <select id="reg-year" class="form-input select" required>
-                        <option value="" disabled selected hidden>Select Year</option>
-                        <option value="I">I Year</option>
-                        <option value="II">II Year</option>
-                        <option value="III">III Year</option>
-                        <option value="IV">IV Year</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Right Column: Event Info & Payment -->
-              <div class="form-right-col">
-                <div class="form-section-title">Event Selection</div>
-                
-                <!-- Select Event Dropdown -->
-                <div class="form-group" style="margin-bottom: 1rem;">
-                  <label class="form-label" for="reg-event-select">Select Event</label>
-                  <div class="dropdown-icon-wrapper">
-                    <select id="reg-event-select" class="form-input select">
-                      <!-- Populated dynamically -->
-                    </select>
-                  </div>
-                </div>
-
-                <!-- Selected event summary card -->
-                <div class="event-summary-card">
-                  <div class="event-summary-thumb">
-                    <i data-lucide="code"></i>
-                  </div>
-                  <div class="event-summary-info">
-                    <!-- Inner HTML is rendered dynamically in app.js -->
-                  </div>
-                </div>
-
-                <!-- Registration Fee Box -->
-                <div class="fee-container">
-                  <span class="fee-label">Registration Fee</span>
-                  <div class="fee-amount-group">
-                    <span class="fee-amount">Free</span>
-                  </div>
-                </div>
-
-                <!-- Rules Agreement Checkbox -->
-                <label class="checkbox-label" for="reg-agree">
-                  <input type="checkbox" id="reg-agree" class="checkbox-input" required>
-                  <span>I agree to the event rules, guidelines, and code of conduct defined by the coordinators.</span>
-                </label>
-
-                <!-- Action Button -->
-                <button type="submit" class="cta-button" id="btn-proceed-pay">
-                  Proceed to Register
-                </button>
-              </div>
-
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- ================= SCREEN 6: CONFIRMATION ================= -->
-      <div class="app-screen" id="screen-confirmation">
-        <div class="screen-inner">
-          <div class="conf-container">
-            
-            <!-- Confetti Check Circle -->
-            <div class="conf-badge-wrapper">
-              <div class="confetti confetti-1"></div>
-              <div class="confetti confetti-2"></div>
-              <div class="confetti confetti-3"></div>
-              <div class="confetti confetti-4"></div>
-              <div class="confetti confetti-5"></div>
-              <div class="confetti confetti-6"></div>
-              
-              <div class="conf-badge">
-                <i data-lucide="check"></i>
-              </div>
-            </div>
-
-            <h2 class="conf-heading">Thank You!</h2>
-            <p class="conf-subtext">
-              Take a screenshot for future reference.
-            </p>
-
-            <!-- Receipt Card Details -->
-            <div class="conf-card">
-              <div style="font-size:0.85rem; font-weight:800; border-bottom:1px solid var(--bg-light); padding-bottom: 8px; margin-bottom: 8px; display:flex; justify-content:space-between; align-items:center;">
-                <span>REGISTRATION ID</span>
-                <span style="color:var(--primary-teal);" id="conf-val-id">TQ-01</span>
-              </div>
-              
-              <div class="conf-detail-row">
-                <span class="conf-detail-label">Participant</span>
-                <span class="conf-detail-value" id="conf-val-name">Amit Kumar</span>
-              </div>
-              <div class="conf-detail-row">
-                <span class="conf-detail-label">Register Number</span>
-                <span class="conf-detail-value" id="conf-val-reg-num">-</span>
-              </div>
-              <div class="conf-detail-row">
-                <span class="conf-detail-label">Class</span>
-                <span class="conf-detail-value" id="conf-val-dept">AI & DS (III Year)</span>
-              </div>
-              <div class="conf-detail-row">
-                <span class="conf-detail-label">Registered Event</span>
-                <span class="conf-detail-value" id="conf-val-event" style="color:var(--primary-teal);">CodeCraze</span>
-              </div>
-              <div class="conf-detail-row">
-                <span class="conf-detail-label">Status</span>
-                <span class="conf-detail-value" style="color:#10B981; display:flex; align-items:center; gap:2px">
-                  <i data-lucide="shield-check" style="width:14px;height:14px"></i> Registered
-                </span>
-              </div>
-            </div>
-
-            <!-- Back to Home CTA -->
-            <button class="cta-button" id="btn-back-to-home">
-              <i data-lucide="home" style="width: 18px; height: 18px"></i> Back to Home
-            </button>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= SCREEN 7: CONTACT (BONUS) ================= -->
-      <div class="app-screen" id="screen-contact">
-        <div class="screen-inner">
-          
-          <div class="screen-title-area">
-            <h2 class="screen-title">Symposium Helpdesk</h2>
-            <p class="screen-subtitle">Feel free to reach out to us for any queries.</p>
-          </div>
-
-          <div class="contact-grid">
-            
-            <div class="contact-card">
-              <div class="contact-title">Organizing Department</div>
-              <p style="font-size:0.85rem; color:var(--text-gray); line-height: 1.5;">
-                Department of IT, AI & DS and CSBS,<br>
-                Ganadipathy Tulsi's Jain Engineering College
-              </p>
-            </div>
-
-
-            <div class="contact-card">
-              <div class="contact-title">Student Coordinators</div>
-              <div style="display:flex; flex-direction:column; gap:10px; font-size:0.85rem; padding: 4px 0;">
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed #E2E8F0; padding-bottom:8px;">
-                  <div>
-                    <span style="font-weight:600; color:var(--text-dark); display:block;">Kamalesh K</span>
-                    <span style="font-size:0.75rem; color:var(--text-light)">Student Coordinator</span>
-                  </div>
-                  <span style="color:var(--text-gray); font-weight:500;">+91 63842 14459</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <div>
-                    <span style="font-weight:600; color:var(--text-dark); display:block;">Sanjay</span>
-                    <span style="font-size:0.75rem; color:var(--text-light)">Student Coordinator</span>
-                  </div>
-                  <span style="color:var(--text-gray); font-weight:500;">+91 90922 94965</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ================= SCREEN 8: ADMIN LOGIN AUTHORIZATION ================= -->
-      <div class="app-screen" id="screen-admin-login">
-        <div class="screen-inner" style="max-width: 480px;">
-          <div class="screen-title-area" style="text-align: center;">
-            <h2 class="screen-title">Admin Authorization</h2>
-            <p class="screen-subtitle">Sign in to access the symposium administrative workspace</p>
-          </div>
-
-          <div class="section-card">
-            <form id="admin-login-form" autocomplete="off">
-              <div class="form-group">
-                <label class="form-label" for="admin-login-email">Admin Username</label>
-                <input type="text" id="admin-login-email" class="form-input" placeholder="Enter admin username" autocomplete="off" required>
-              </div>
-
-              <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label class="form-label" for="admin-login-pass">Security Password</label>
-                <input type="password" id="admin-login-pass" class="form-input" placeholder="Enter password" autocomplete="new-password" required>
-              </div>
-
-              <div class="sql-error-box" id="login-error-msg" style="margin-bottom: 1.25rem; display:none;"></div>
-
-              <button type="submit" class="cta-button" id="btn-admin-login-submit">
-                Unlock Admin Console <i data-lucide="unlock" style="width:16px;height:16px"></i>
-              </button>
-            </form>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- ================= SCREEN 9: ADMIN WORKSPACE CONSOLE ================= -->
-      <div class="app-screen" id="screen-admin">
-        <div class="screen-inner">
-          <div class="screen-title-area" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
-            <div>
-              <h2 class="screen-title">Admin Workstation</h2>
-              <p class="screen-subtitle">Inspect registration tables, edit event rules, and configure date schedules.</p>
-            </div>
-            
-            <!-- Admin Top Actions -->
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="cta-button" id="btn-admin-logout" style="max-width: 130px; padding: 0.55rem 1rem; font-size: 0.8rem; background-color: #EF4444;">
-                Logout <i data-lucide="log-out" style="width:14px;height:14px"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Section Tabs -->
-          <div class="admin-tab-bar">
-            <button class="admin-tab active" data-section="sql">SQL Registrations</button>
-            <button class="admin-tab" data-section="events">Manage Events</button>
-            <button class="admin-tab" data-section="schedule">Manage Schedule</button>
-            <button class="admin-tab" data-section="categories">Manage Categories</button>
-          </div>
-
-          <!-- TAB 1: SQL DATABASE SIMULATOR -->
-          <div class="admin-section" id="admin-sec-sql">
-            <div class="sql-workspace">
-              
-              <!-- Left Sidebar: 100-Rush Queue Monitor, PDF Export, Presets, Live Sync -->
-              <div class="sql-sidebar-column">
-                
-                <!-- 100-Student Rush Async Queue & Batch Buffer Sync Card -->
-                <div class="sql-presets-card" style="border-color: #A7F3D0; background: linear-gradient(180deg, #F0FDF4 0%, #FFFFFF 100%); box-shadow: 0 4px 18px rgba(16, 185, 129, 0.08); margin-bottom: 1.25rem;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.4rem;">
-                    <h4 style="font-size:0.92rem; font-weight:800; color:#065F46; margin:0; display:flex; align-items:center; gap:8px">
-                      <i data-lucide="zap" style="width:18px;height:18px;color:#10B981"></i> 100-Rush Sync &amp; Queue
-                    </h4>
-                    <span id="queue-status-badge" style="font-size:0.68rem; font-weight:800; background:#D1FAE5; color:#065F46; border:1px solid #A7F3D0; padding:2px 8px; border-radius:12px">
-                      🟢 All Synced
-                    </span>
-                  </div>
-                  <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.45; margin-bottom: 0.85rem;">
-                    Instant 0.1s confirmation with background batch sync to Google Sheets (0 errors, 0 lost entries).
-                  </p>
-
-                  <!-- Live Queue Counters Grid -->
-                  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-bottom:0.85rem; text-align:center;">
-                    <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:6px 4px; border-radius:8px;">
-                      <div style="font-size:0.62rem; font-weight:700; color:var(--text-light); text-transform:uppercase;">In Sheets</div>
-                      <div id="queue-sheets-count" style="font-size:1.1rem; font-weight:900; color:#065F46;">0</div>
-                    </div>
-                    <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:6px 4px; border-radius:8px;">
-                      <div style="font-size:0.62rem; font-weight:700; color:var(--text-light); text-transform:uppercase;">Pending Queue</div>
-                      <div id="queue-pending-count" style="font-size:1.1rem; font-weight:900; color:#D97706;">0</div>
-                    </div>
-                    <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:6px 4px; border-radius:8px;">
-                      <div style="font-size:0.62rem; font-weight:700; color:var(--text-light); text-transform:uppercase;">Total Verified</div>
-                      <div id="queue-total-count" style="font-size:1.1rem; font-weight:900; color:var(--royal-sapphire);">0</div>
-                    </div>
-                  </div>
-
-                  <!-- Action buttons -->
-                  <div style="display:flex; gap:6px;">
-                    <button type="button" id="btn-flush-queue-now" class="cta-button" style="flex:1; padding:0.55rem; font-size:0.76rem; background:#10B981; font-weight:700;">
-                      <i data-lucide="zap" style="width:13px;height:13px"></i> Force Flush Queue Now
-                    </button>
-                    <button type="button" id="btn-refresh-queue-status" class="export-btn" style="padding:0.55rem 0.75rem; font-size:0.76rem;" title="Refresh Queue Status">
-                      <i data-lucide="refresh-cw" style="width:13px;height:13px"></i>
-                    </button>
-                  </div>
-
-                  <!-- Cancel / Delete Registration Section -->
-                  <div style="margin-top: 1rem; border-top: 1px dashed #E2E8F0; padding-top: 0.85rem;">
-                    <div style="font-size:0.72rem; font-weight:800; color:var(--text-dark); margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.5px;">Cancel / Delete Registration</div>
-                    <div style="display:flex; gap:6px;">
-                      <input type="text" id="admin-delete-receipt" class="form-input" style="flex:2; padding:0.45rem 0.6rem; font-size:0.78rem; text-align:center; font-family:monospace; margin:0;" placeholder="e.g. TQ26-1094">
-                      <button type="button" id="btn-delete-registration" class="cta-button" style="flex:1; padding:0.45rem; font-size:0.75rem; background:#EF4444; font-weight:700; border-color:#EF4444;">
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Download Candidates List Card (PDF Format with Direct Live Sync) -->
-                <div class="sql-presets-card" style="border-color: #BFDBFE; background: #FFFFFF; box-shadow: 0 4px 18px rgba(37, 99, 235, 0.06); margin-bottom: 1.25rem;">
-                  <h4 style="font-size:0.92rem; font-weight:800; color:var(--text-dark); margin-bottom: 0.35rem; display:flex; align-items:center; gap:8px">
-                    <i data-lucide="file-text" style="width:18px;height:18px;color:var(--royal-sapphire)"></i> Event Participation PDF Export
-                  </h4>
-                  <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.45; margin-bottom: 0.85rem;">
-                    Select an event and department to download the live participation roster directly as an official PDF.
-                  </p>
-
-                  <!-- 1-Click Quick Event Exports (Populated dynamically with participant counts) -->
-                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">1-Click Quick Event Export</div>
-                  <div id="quick-event-export-buttons" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom: 1rem;">
-                    <!-- Dynamically populated -->
-                  </div>
-
-                  <!-- Selection of Event & Department -->
-                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Custom Event &amp; Department Export</div>
-                  <div style="display:flex; flex-direction:column; gap:8px; margin-bottom: 1.15rem;">
-                    <div>
-                      <label style="font-size:0.72rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:3px;">Select Event</label>
-                      <div class="dropdown-icon-wrapper">
-                        <select id="export-event-filter" class="form-input select" style="padding:0.52rem 0.8rem; font-size:0.8rem; font-weight:600;">
-                          <option value="ALL">All Events (Complete Roster)</option>
-                          <option value="EXCEPT_TECHNICAL_QUIZ">All Events (Except Technical Quiz)</option>
-                          <!-- Dynamically populated with events & live counts -->
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label style="font-size:0.72rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:3px;">Department (Optional Filter)</label>
-                      <div class="dropdown-icon-wrapper">
-                        <select id="export-dept-filter" class="form-input select" style="padding:0.48rem 0.75rem; font-size:0.78rem;">
-                          <option value="ALL">All Departments (IT, AI&amp;DS, CSBS)</option>
-                          <option value="IT">IT (Information Technology)</option>
-                          <option value="AI&DS">AI&amp;DS (Artificial Intelligence)</option>
-                          <option value="CSBS">CSBS (Computer Science &amp; Business)</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <button type="button" class="cta-button" id="btn-export-filtered" style="padding:0.7rem; font-size:0.84rem; font-weight:700; margin-top:2px;">
-                      <i data-lucide="download" style="width:15px;height:15px"></i> Download Event Participation PDF
-                    </button>
-                  </div>
-
-                  <!-- 1-Click Department Exports -->
-                  <div style="font-size:0.7rem; font-weight:800; color:var(--text-light); text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Quick Department &amp; Special PDF Export</div>
-                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
-                    <button type="button" class="export-btn" id="btn-export-it">📄 IT Dept (PDF)</button>
-                    <button type="button" class="export-btn" id="btn-export-aids">📄 AI&amp;DS Dept (PDF)</button>
-                    <button type="button" class="export-btn" id="btn-export-csbs">📄 CSBS Dept (PDF)</button>
-                    <button type="button" class="export-btn export-btn-all" id="btn-export-all">📄 All Depts (PDF)</button>
-                    <button type="button" class="export-btn" id="btn-export-except-quiz" style="grid-column: span 2; background: linear-gradient(135deg, #1E40AF, #2563EB); color: #FFF; font-weight: 700; border: 1.5px solid #3B82F6; box-shadow: 0 2px 6px rgba(37,99,235,0.25);">
-                      📋 All Except Technical Quiz (PDF)
-                    </button>
-                  </div>
-                </div>
-
-                <!-- SQL Query Presets -->
-                <div class="sql-presets-card">
-                  <h4 style="font-size:0.85rem; font-weight:700; color:var(--text-dark); margin-bottom: 0.5rem; display:flex; align-items:center; gap:4px">
-                    <i data-lucide="database" style="width:14px;height:14px"></i> SQL Query Presets
-                  </h4>
-                  <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.4; margin-bottom: 0.75rem;">
-                    Click any query below to execute live against registrations.
-                  </p>
-                  
-                  <div class="sql-presets-list">
-                    <button class="sql-preset" data-sql="SELECT * FROM registrations;">Show All Registrations</button>
-                    <button class="sql-preset" data-sql="SELECT * FROM registrations WHERE department = 'AI&DS';">Filter AI&DS Students</button>
-                    <button class="sql-preset" data-sql="SELECT * FROM registrations WHERE department = 'IT';">Filter IT Students</button>
-                    <button class="sql-preset" data-sql="SELECT * FROM registrations WHERE department = 'CSBS';">Filter CSBS Students</button>
-                    <button class="sql-preset" data-sql="SELECT department, COUNT(*) as count FROM registrations GROUP BY department;">Registrations by Department</button>
-                    <button class="sql-preset" data-sql="SELECT event, COUNT(*) as count FROM registrations GROUP BY event;">Registrations by Event</button>
-                  </div>
-                </div>
-
-                <!-- Google Sheets Live Sync Link -->
-                <div class="sql-presets-card" style="margin-top: 1rem; border-color: rgba(16, 185, 129, 0.2); background-color: rgba(16, 185, 129, 0.03);">
-                  <h4 style="font-size:0.85rem; font-weight:700; color:#10B981; margin-bottom: 0.4rem; display:flex; align-items:center; gap:4px">
-                    <i data-lucide="file-text" style="width:14px;height:14px"></i> Google Sheets Live Sync
-                  </h4>
-                  <p style="font-size:0.73rem; color:var(--text-gray); line-height: 1.4; margin-bottom: 0.75rem;">
-                    Live data auto-syncs directly with your Google Sheet.
-                  </p>
-                  <a id="btn-google-sheets-link" href="#" target="_blank" class="cta-button" style="padding: 0.5rem; font-size: 0.75rem; background-color: #10B981; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 4px;">
-                    Open Google Sheet <i data-lucide="external-link" style="width:12px;height:12px"></i>
-                  </a>
-                </div>
-
-              </div>
-
-              <!-- Right Console: Interactive SQL Terminal & QUERY RESULTS -->
-              <div class="sql-console-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:8px;">
-                  <h4 style="font-size:0.95rem; font-weight:800; color:var(--text-dark); margin:0;">
-                    Interactive SQL Terminal
-                  </h4>
-                  <button type="button" id="btn-sync-cloud-sheets" class="cta-button" style="width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #10B981;">
-                    <i data-lucide="refresh-cw" style="width:12px;height:12px"></i> Sync from Google Sheets
-                  </button>
-                </div>
-                
-                <div class="sql-textarea-wrapper">
-                  <textarea id="sql-query-input" class="sql-textarea" placeholder="SELECT * FROM registrations;">SELECT * FROM registrations;</textarea>
-                </div>
-
-                <div class="sql-error-box" id="sql-error-box"></div>
-
-                <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-                  <button class="cta-button" id="btn-run-sql" style="max-width: 180px; padding: 0.75rem 1.25rem; font-size: 0.85rem;">
-                    Run SQL Query <i data-lucide="play" style="width:14px;height:14px"></i>
-                  </button>
-                </div>
-
-                <!-- Query Outputs (Wider & Spacious) -->
-                <div class="sql-output-area">
-                  <div class="sql-output-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                      <h5 style="font-size:0.85rem; font-weight:800; text-transform:uppercase; color:var(--text-dark); margin:0;">QUERY RESULTS</h5>
-                      <span id="sql-rows-count" style="font-size:0.75rem; font-weight:600; color:var(--royal-sapphire); background-color:#EFF6FF; border:1px solid #BFDBFE; padding:2px 10px; border-radius:12px">0 rows returned</span>
-                    </div>
-                    <button type="button" id="btn-export-table" class="export-btn export-btn-all" style="padding:5px 12px; font-size:0.75rem; display:inline-flex; align-items:center; gap:5px;">
-                      <i data-lucide="file-text" style="width:13px;height:13px"></i> Export Query (PDF)
-                    </button>
-                  </div>
-                  
-                  <div class="sql-table-wrapper">
-                    <table class="sql-results-table" id="sql-results-table">
-                      <!-- Populated dynamically -->
-                    </table>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-          </div>
-
-          <!-- TAB 2: MANAGE EVENTS -->
-          <div class="admin-section" id="admin-sec-events" style="display:none;">
-            <div class="admin-events-grid">
-              
-              <!-- Form to edit / add events -->
-              <div class="section-card" style="margin-bottom:0">
-                <h4 class="section-title" id="admin-evt-form-title">Add / Edit Event Details</h4>
-                <form id="admin-form-event">
-                  
-                  <div class="form-group">
-                    <label class="form-label" for="admin-evt-name">Event Title</label>
-                    <input type="text" id="admin-evt-name" class="form-input" placeholder="e.g. CodeCraze" required>
-                  </div>
-
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label class="form-label" for="admin-evt-category">Event Category</label>
-                      <div class="dropdown-icon-wrapper">
-                        <select id="admin-evt-category" class="form-input select" required>
-                          <!-- Populated dynamically -->
-                        </select>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label" for="admin-evt-fee">Registration Fee</label>
-                      <input type="text" id="admin-evt-fee" class="form-input" placeholder="e.g. Free" required>
-                    </div>
-                  </div>
-
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label class="form-label" for="admin-evt-date">Event Date</label>
-                      <input type="text" id="admin-evt-date" class="form-input" placeholder="e.g. 24 May 2026" required>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label" for="admin-evt-time">Start Time</label>
-                      <input type="text" id="admin-evt-time" class="form-input" placeholder="e.g. 10:00 AM" required>
-                    </div>
-                  </div>
-
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label class="form-label" for="admin-evt-venue">Venue</label>
-                      <input type="text" id="admin-evt-venue" class="form-input" placeholder="e.g. Computer Lab 3" required>
-                    </div>
-                    <div class="form-group">
-                      <label class="form-label" for="admin-evt-team">Participation Type (Solo / Team)</label>
-                      <div class="dropdown-icon-wrapper">
-                        <select id="admin-evt-team" class="form-input select" required>
-                          <option value="Solo (Individual)">Solo (Individual)</option>
-                          <option value="Team (2 Members)">Team (2 Members)</option>
-                          <option value="Team (3 Members)">Team (3 Members)</option>
-                          <option value="Team (2-4 Members)">Team (2-4 Members)</option>
-                          <option value="Team (4 Members)">Team (4 Members)</option>
-                          <option value="Custom">Custom Participation Type...</option>
-                        </select>
-                      </div>
-                      <input type="text" id="admin-evt-team-custom" class="form-input" style="display:none; margin-top:6px;" placeholder="e.g. 1-2 Members">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label" for="admin-evt-desc">Tagline / Short Overview</label>
-                    <input type="text" id="admin-evt-desc" class="form-input" placeholder="e.g. Put your coding skills to the test in this speed-programming challenge" required>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label" for="admin-evt-about">About the Event</label>
-                    <textarea id="admin-evt-about" class="form-input" style="height: 65px; resize: vertical;" placeholder="Detailed info about event structure, rounds, compiler tools, etc."></textarea>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label" for="admin-evt-rules">Rules (one per line)</label>
-                    <textarea id="admin-evt-rules" class="form-input" style="height: 65px; resize: vertical;" placeholder="Calculators and pre-written code snippets are prohibited&#10;Plagiarism leads to immediate disqualification&#10;Judge decision will be final"></textarea>
-                  </div>
-
-                  <div style="display:flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <button type="submit" class="cta-button" id="btn-evt-submit" style="max-width: 220px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 0.5rem;">
-                      Save Event Details <i data-lucide="save" style="width:14px;height:14px"></i>
-                    </button>
-                    <button type="button" class="cta-button" id="btn-evt-cancel" style="display:none; max-width: 120px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 0.5rem; background-color: var(--text-gray);">
-                      Cancel <i data-lucide="x" style="width:14px;height:14px"></i>
-                    </button>
-                  </div>
-
-                </form>
-              </div>
-
-              <!-- Current Events and Actions -->
-              <div class="section-card" style="margin-bottom:0">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:8px;">
-                  <h4 class="section-title" style="margin-bottom:0;">Current Events</h4>
-                  <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <button type="button" id="btn-evt-delete-selected" class="cta-button" style="display:none; width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #EF4444;">
-                      <i data-lucide="trash-2" style="width:12px;height:12px"></i> Delete Selected (<span id="count-evt-selected">0</span>)
-                    </button>
-                    <button type="button" id="btn-evt-save-all" class="cta-button" style="width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #10B981;">
-                      <i data-lucide="check-circle" style="width:12px;height:12px"></i> Save Events
-                    </button>
-                    <button type="button" id="btn-evt-new" class="cta-button" style="width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem;">
-                      <i data-lucide="plus" style="width:12px;height:12px"></i> New Event
-                    </button>
-                  </div>
-                </div>
-                <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.4; margin-bottom: 1rem;">
-                  Select checkboxes to delete multiple events at once, or click an event to edit.
-                </p>
-                
-                <div class="sql-table-wrapper" style="max-height: 380px; overflow-y: auto; margin-bottom: 1.25rem;">
-                  <table class="sql-results-table">
-                    <thead>
-                      <tr>
-                        <th style="width:40px; text-align:center;"><input type="checkbox" id="chk-evt-select-all" title="Select All Events" class="table-checkbox"></th>
-                        <th>Event Name</th>
-                        <th>Category</th>
-                        <th>Date & Venue</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody id="admin-events-list-body">
-                      <!-- Populated dynamically by JS -->
-                    </tbody>
-                  </table>
-                </div>
-
-                <div style="background-color: var(--primary-teal-light); border: 1px dashed rgba(26,107,107,0.25); padding: 0.8rem; border-radius: 8px;">
-                  <h5 style="font-size:0.75rem; font-weight:700; color:var(--primary-teal); margin-bottom: 0.25rem;">Live Auto-Fetching Across App</h5>
-                  <p style="font-size:0.7rem; color:var(--text-gray); line-height: 1.4;">
-                    Updating, adding, or deleting events immediately recalculates category counts on Screen 2, syncs registration choices, and updates detail views in real-time.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- TAB 3: MANAGE SCHEDULE -->
-          <div class="admin-section" id="admin-sec-schedule" style="display:none;">
-            <div class="schedule-manager-grid">
-              
-              <!-- Form to add / edit schedule entry -->
-              <div class="section-card" style="margin-bottom: 0;">
-                <h4 class="section-title" id="admin-sch-form-title">Add Timeline Event</h4>
-                <form id="admin-form-schedule">
-                  
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label class="form-label" for="admin-sch-day">Schedule Day</label>
-                      <input type="text" id="admin-sch-day" class="form-input" placeholder="e.g. 23 May 2026" required>
-                    </div>
-                    
-                    <div class="form-group">
-                      <label class="form-label" for="admin-sch-time">Slot Time</label>
-                      <input type="text" id="admin-sch-time" class="form-input" placeholder="e.g. 11:30 AM" required>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label" for="admin-sch-name">Event/Task Name</label>
-                    <input type="text" id="admin-sch-name" class="form-input" placeholder="e.g. AI Project Presentation" required>
-                  </div>
-
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label class="form-label" for="admin-sch-venue">Venue / Room</label>
-                      <input type="text" id="admin-sch-venue" class="form-input" placeholder="e.g. Seminar Hall 3" required>
-                    </div>
-                    
-                    <div class="form-group">
-                      <label class="form-label" for="admin-sch-icon">Activity Icon</label>
-                      <div class="dropdown-icon-wrapper">
-                        <select id="admin-sch-icon" class="form-input select">
-                          <option value="calendar">Calendar (Default)</option>
-                          <option value="sparkles">Sparkles (Inauguration)</option>
-                          <option value="presentation">Presentation (Speech)</option>
-                          <option value="code">Code (Programming)</option>
-                          <option value="coffee">Coffee (Break)</option>
-                          <option value="lightbulb">Lightbulb (Idea Pitching)</option>
-                          <option value="users">Users (Group)</option>
-                          <option value="activity">Activity (Gaming/Robotics)</option>
-                          <option value="palette">Palette (Design)</option>
-                          <option value="monitor">Monitor (Exhibition)</option>
-                          <option value="award">Award (Prize Distribution)</option>
-                          <option value="help-circle">Quiz / Help</option>
-                          <option value="briefcase">Briefcase (Business/AdMad)</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style="display:flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <button type="submit" class="cta-button" id="btn-sch-submit" style="max-width: 220px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 1rem;">
-                      Add to Schedule <i data-lucide="plus" style="width:14px;height:14px"></i>
-                    </button>
-                    <button type="button" class="cta-button" id="btn-sch-cancel" style="display:none; max-width: 120px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 1rem; background-color: var(--text-gray);">
-                      Cancel <i data-lucide="x" style="width:14px;height:14px"></i>
-                    </button>
-                  </div>
-
-                </form>
-              </div>
-
-              <!-- List of current slots to edit or delete -->
-              <div class="section-card" style="margin-bottom: 0;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:8px;">
-                  <h4 class="section-title" style="margin-bottom:0;">Current Timeline Entries</h4>
-                  <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <button type="button" id="btn-sch-delete-selected" class="cta-button" style="display:none; width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #EF4444;">
-                      <i data-lucide="trash-2" style="width:12px;height:12px"></i> Delete Selected (<span id="count-sch-selected">0</span>)
-                    </button>
-                    <button type="button" id="btn-sch-save-all" class="cta-button" style="width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #10B981;">
-                      <i data-lucide="check-circle" style="width:12px;height:12px"></i> Save Schedule
-                    </button>
-                  </div>
-                </div>
-                <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.4; margin-bottom: 1rem;">
-                  Select checkboxes to delete multiple timeline slots at once, or click Edit to modify.
-                </p>
-                
-                <div class="sql-table-wrapper" style="max-height: 380px; overflow-y: auto;">
-                  <table class="sql-results-table">
-                    <thead>
-                      <tr>
-                        <th style="width:40px; text-align:center;"><input type="checkbox" id="chk-sch-select-all" title="Select All Slots" class="table-checkbox"></th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Event</th>
-                        <th>Venue</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody id="admin-schedule-list-body">
-                      <!-- Populated dynamically -->
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- TAB 4: MANAGE CATEGORIES -->
-          <div class="admin-section" id="admin-sec-categories" style="display:none;">
-            <div class="admin-events-grid">
-              
-              <!-- Form to add/edit categories -->
-              <div class="section-card" style="margin-bottom:0">
-                <h4 class="section-title" id="admin-cat-form-title">Add / Edit Category</h4>
-                <form id="admin-form-category">
-                  
-                  <div class="form-group">
-                    <label class="form-label" for="admin-cat-name">Category Name</label>
-                    <input type="text" id="admin-cat-name" class="form-input" placeholder="e.g. Non-Technical" required>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label" for="admin-cat-desc">Description</label>
-                    <input type="text" id="admin-cat-desc" class="form-input" placeholder="e.g. Managerial and business tasks" required>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label" for="admin-cat-icon">Category Icon</label>
-                    <div class="dropdown-icon-wrapper">
-                      <select id="admin-cat-icon" class="form-input select">
-                        <option value="code">Code (Programming)</option>
-                        <option value="briefcase">Briefcase (Non-Tech)</option>
-                        <option value="palette">Palette (Design)</option>
-                        <option value="lightbulb">Lightbulb (Innovation)</option>
-                        <option value="presentation">Presentation (PPT)</option>
-                        <option value="smile">Smile (Fun/Games)</option>
-                        <option value="award">Award (Competition)</option>
-                        <option value="coffee">Coffee (Break)</option>
-                        <option value="users">Users (Group)</option>
-                        <option value="activity">Activity (Robotics)</option>
-                        <option value="help-circle">Help / Quiz</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div style="display:flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <button type="submit" class="cta-button" id="btn-cat-submit" style="max-width: 220px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 1rem;">
-                      Save Category <i data-lucide="save" style="width:14px;height:14px"></i>
-                    </button>
-                    <button type="button" class="cta-button" id="btn-cat-cancel" style="display:none; max-width: 120px; padding: 0.8rem 1rem; font-size: 0.85rem; margin-top: 1rem; background-color: var(--text-gray);">
-                      Cancel <i data-lucide="x" style="width:14px;height:14px"></i>
-                    </button>
-                  </div>
-
-                </form>
-              </div>
-
-              <!-- Current Categories and Actions -->
-              <div class="section-card" style="margin-bottom:0">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.75rem; flex-wrap:wrap; gap:8px;">
-                  <h4 class="section-title" style="margin-bottom:0;">Current Categories</h4>
-                  <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <button type="button" id="btn-cat-delete-selected" class="cta-button" style="display:none; width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #EF4444;">
-                      <i data-lucide="trash-2" style="width:12px;height:12px"></i> Delete Selected (<span id="count-cat-selected">0</span>)
-                    </button>
-                    <button type="button" id="btn-cat-save-all" class="cta-button" style="width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem; background-color: #10B981;">
-                      <i data-lucide="check-circle" style="width:12px;height:12px"></i> Save Categories
-                    </button>
-                    <button type="button" id="btn-cat-new" class="cta-button" style="width:auto; padding: 0.45rem 0.85rem; font-size: 0.75rem;">
-                      <i data-lucide="plus" style="width:12px;height:12px"></i> New Category
-                    </button>
-                  </div>
-                </div>
-                <p style="font-size:0.75rem; color:var(--text-gray); line-height: 1.4; margin-bottom: 1rem;">
-                  Select checkboxes to delete multiple categories at once, or click a category to edit.
-                </p>
-                
-                <div class="sql-table-wrapper" style="max-height: 380px; overflow-y: auto; margin-bottom: 1.25rem;">
-                  <table class="sql-results-table">
-                    <thead>
-                      <tr>
-                        <th style="width:40px; text-align:center;"><input type="checkbox" id="chk-cat-select-all" title="Select All Categories" class="table-checkbox"></th>
-                        <th>Category</th>
-                        <th>Icon</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody id="admin-categories-list-body">
-                      <!-- Populated dynamically by JS -->
-                    </tbody>
-                  </table>
-                </div>
-
-                <div style="background-color: var(--primary-teal-light); border: 1px dashed rgba(26,107,107,0.25); padding: 0.8rem; border-radius: 8px;">
-                  <h5 style="font-size:0.75rem; font-weight:700; color:var(--primary-teal); margin-bottom: 0.25rem;">Dynamic Portal Categories</h5>
-                  <p style="font-size:0.7rem; color:var(--text-gray); line-height: 1.4;">
-                    Adding or deleting categories instantly updates the home dashboard categories grid and updates the event creation category dropdown.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
-
     </div>
-
-    <!-- Sticky Bottom Navigation Tabs -->
-    <nav class="app-bottom-nav">
-      <button class="nav-tab active" id="tab-home">
-        <span class="tab-icon-wrapper"><i data-lucide="home" class="tab-icon"></i></span>
-        <span class="tab-label">Home</span>
-      </button>
-      <button class="nav-tab" id="tab-events">
-        <span class="tab-icon-wrapper"><i data-lucide="grid" class="tab-icon"></i></span>
-        <span class="tab-label">Events</span>
-      </button>
-      <button class="nav-tab" id="tab-schedule">
-        <span class="tab-icon-wrapper"><i data-lucide="calendar" class="tab-icon"></i></span>
-        <span class="tab-label">Schedule</span>
-      </button>
-      <button class="nav-tab" id="tab-register">
-        <span class="tab-icon-wrapper"><i data-lucide="edit-3" class="tab-icon"></i></span>
-        <span class="tab-label">Register</span>
-      </button>
-      <button class="nav-tab" id="tab-contact">
-        <span class="tab-icon-wrapper"><i data-lucide="help-circle" class="tab-icon"></i></span>
-        <span class="tab-label">Contact</span>
-      </button>
-    </nav>
-
+    <div class="stream-col">
+      <div class="stream-text stream-text-up">
+        <span>0</span><span>1</span><span>1</span><span>0</span><span>0</span><span>1</span><span>0</span><span>1</span>
+        <span>1</span><span>0</span><span>0</span><span>1</span><span>1</span><span>0</span><span>0</span><span>1</span>
+        <span>0</span><span>1</span><span>1</span><span>0</span><span>0</span><span>1</span><span>0</span><span>1</span>
+        <span>1</span><span>0</span><span>0</span><span>1</span><span>1</span><span>0</span><span>0</span><span>1</span>
+      </div>
+    </div>
   </div>
 
-  <!-- JS Scripts -->
-  <script src="app.js?v=20260906_2206"></script>
+  <div class="stream-container stream-right">
+    <div class="stream-col">
+      <div class="stream-text stream-text-down">
+        <span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span>
+        <span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span>
+        <span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span>
+        <span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span>
+      </div>
+    </div>
+    <div class="stream-col">
+      <div class="stream-text stream-text-up">
+        <span>1</span><span>1</span><span>0</span><span>0</span><span>1</span><span>0</span><span>1</span><span>1</span>
+        <span>0</span><span>0</span><span>1</span><span>1</span><span>0</span><span>1</span><span>0</span><span>0</span>
+        <span>1</span><span>1</span><span>0</span><span>0</span><span>1</span><span>0</span><span>1</span><span>1</span>
+        <span>0</span><span>0</span><span>1</span><span>1</span><span>0</span><span>1</span><span>0</span><span>0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= STICKY NAVIGATION ================= -->
+  <nav class="cyber-nav">
+    <div class="nav-container">
+      <a href="#" class="nav-brand">
+        <div class="brand-cube">
+          <div class="brand-cube-inner"></div>
+        </div>
+        <span class="brand-text">GTEC<span class="text-cyber-primary">HACK</span><span class="brand-badge font-mono">v4.0</span></span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#problems">Problems</a></li>
+        <li><a href="#judging">Judging</a></li>
+        <li><a href="#prizes">Prizes</a></li>
+        <li><a href="#schedule">Schedule</a></li>
+        <li><a href="#register">Register</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="#register" class="cyber-btn-primary clip-path-slant btn-open-register">
+          <i data-lucide="zap" style="width:16px;height:16px;"></i>
+          <span>REGISTER NOW</span>
+        </a>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation">
+          <i data-lucide="menu" style="width:22px;height:22px;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+      <a href="#about">About</a>
+      <a href="#problems">Problem Statements</a>
+      <a href="#judging">Judging Criteria</a>
+      <a href="#prizes">Prizes</a>
+      <a href="#schedule">Event Schedule</a>
+      <a href="#register">Register</a>
+      <a href="#contact">Contact & Venue</a>
+      <button class="cyber-btn-primary clip-path-slant btn-open-register" style="margin-top: 0.5rem; width:100%;">
+        REGISTER NOW
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================= HERO SECTION ================= -->
+  <section class="hero-section">
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+
+    <div class="hero-content">
+      <!-- Live Status Badges -->
+      <div class="hero-badges">
+        <div class="status-pill status-pill-open">
+          <span class="pulse-dot">
+            <span class="pulse-ping"></span>
+            <span class="pulse-solid"></span>
+          </span>
+          <span>REGISTRATION OPEN</span>
+        </div>
+
+        <a href="https://meet.google.com/nmw-hzyj-ccs" target="_blank" rel="noopener noreferrer" class="status-pill status-pill-meet">
+          <span class="pulse-dot">
+            <span class="pulse-ping" style="background-color: #60a5fa;"></span>
+            <span class="pulse-solid" style="background-color: #60a5fa;"></span>
+          </span>
+          <i data-lucide="video" style="width:14px;height:14px;"></i>
+          <span>JOIN QUERY MEETING (6:00 - 6:30 PM)</span>
+        </a>
+      </div>
+
+      <!-- College Banner Badge -->
+      <div class="college-crest-tag">
+        <i data-lucide="shield-check" class="text-cyber-primary" style="width:18px;height:18px;"></i>
+        <span class="college-crest-text">
+          Ganadipathy Tulsi's Jain Engineering College &bull;
+          <span class="dept-crest-highlight">Departments of IT, AI &amp; DS, and CSBS</span>
+        </span>
+      </div>
+
+      <!-- Main Headline -->
+      <h1 class="hero-title font-display">
+        <span class="hero-title-white">CYBER HACKATHON</span><br />
+        <span class="hero-title-cyber animate-flicker">v4.0</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Official Flagship Hackathon of <strong>Ganadipathy Tulsi's Jain Engineering College (GTEC)</strong>,
+        uniting visionary minds in cybersecurity, digital forensics, intelligent systems, and autonomous defense.
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="hero-actions">
+        <a href="#register" class="cyber-btn-outline clip-path-slant btn-open-register">
+          <i data-lucide="terminal" style="width:18px;height:18px;"></i>
+          <span>REGISTER NOW</span>
+        </a>
+
+        <a href="https://chat.whatsapp.com/B7b7feUouKq57duA2kH2wt" target="_blank" rel="noopener noreferrer" class="cyber-btn-green clip-path-slant">
+          <i data-lucide="message-circle" style="width:18px;height:18px;"></i>
+          <span>OFFICIAL WHATSAPP</span>
+        </a>
+
+        <a href="#about" class="cyber-btn-glass">
+          <span>LEARN MORE</span>
+          <i data-lucide="arrow-down" style="width:16px;height:16px;"></i>
+        </a>
+      </div>
+
+      <!-- Key Info Grid -->
+      <div class="hero-info-grid">
+        <div class="hero-info-item">
+          <i data-lucide="calendar" class="hero-info-icon text-cyber-secondary"></i>
+          <span class="hero-info-title">FINAL EVENT</span>
+          <span class="hero-info-sub font-mono">March 06 - 07, 2026</span>
+        </div>
+
+        <div class="hero-info-item">
+          <i data-lucide="map-pin" class="hero-info-icon text-cyber-accent"></i>
+          <span class="hero-info-title">VENUE</span>
+          <span class="hero-info-sub">GTEC Campus, Kaniyambadi, Vellore</span>
+        </div>
+
+        <div class="hero-info-item">
+          <i data-lucide="award" class="hero-info-icon text-cyber-primary"></i>
+          <span class="hero-info-title">ORGANIZERS</span>
+          <span class="hero-info-sub">GTEC &bull; IT, AI&DS, and CSBS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT SECTION ================= -->
+  <section id="about" class="about-section">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <div class="section-tag">
+            <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
+            <span>OFFICIAL EVENT</span>
+          </div>
+
+          <h2 class="section-title">
+            SECURING THE <span class="text-cyber-secondary">DIGITAL FRONTIER</span>
+          </h2>
+
+          <p class="about-text">
+            <strong>Cyber Hackathon v4.0</strong> is a premier 24-hour hackathon organized by
+            <span class="text-cyber-secondary">Ganadipathy Tulsi's Jain Engineering College</span>,
+            driven by the Student Associations of
+            <span class="text-cyber-primary">Information Technology (IT)</span>,
+            <span class="text-cyber-secondary">Artificial Intelligence &amp; Data Science (AI &amp; DS)</span>, and
+            <span class="text-cyber-accent">Computer Science &amp; Business Systems (CSBS)</span>.
+          </p>
+
+          <p class="about-text">
+            We invite student hackers, security researchers, and developers to build robust, real-world solutions
+            combating cyber threats, digital financial fraud, and deepfake synthesis. Collaborate with industry mentors,
+            test your skills in an electrifying 24-hour sprint, and win from a prize pool of <strong>&#8377;1,55,000</strong>.
+          </p>
+        </div>
+
+        <div class="pillars-grid">
+          <div class="pillar-card">
+            <i data-lucide="code" class="pillar-icon text-cyber-primary"></i>
+            <h3 class="pillar-title">Innovation</h3>
+            <p class="pillar-desc">Build cutting-edge prototypes tackling genuine digital security bottlenecks.</p>
+          </div>
+
+          <div class="pillar-card">
+            <i data-lucide="lock" class="pillar-icon text-cyber-secondary"></i>
+            <h3 class="pillar-title">Security</h3>
+            <p class="pillar-desc">Architect resilient defenses against advanced threat actors and social manipulation.</p>
+          </div>
+
+          <div class="pillar-card">
+            <i data-lucide="users" class="pillar-icon text-cyber-accent"></i>
+            <h3 class="pillar-title">Community</h3>
+            <p class="pillar-desc">Network with like-minded ethical hackers, forensic specialists, and faculty mentors.</p>
+          </div>
+
+          <div class="pillar-card">
+            <i data-lucide="cpu" class="pillar-icon" style="color:#ffffff;"></i>
+            <h3 class="pillar-title">Technology</h3>
+            <p class="pillar-desc">Leverage modern AI, offline LLMs, blockchain analytics, and triage pipelines.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROBLEM STATEMENTS ================= -->
+  <section id="problems" class="problems-section">
+    <div class="container">
+      <div style="margin-bottom: 3rem;">
+        <div class="section-tag">
+          <i data-lucide="crosshair" style="width:14px;height:14px;"></i>
+          <span>CHALLENGE TRACKS</span>
+        </div>
+        <h2 class="section-title">Problem Statements</h2>
+        <p style="color:#9ca3af; max-width:650px; font-size:1.05rem;">
+          Select a track below to explore the detailed operational requirements, evaluation criteria, and expected outcomes.
+        </p>
+      </div>
+
+      <!-- Desktop View: Split Tab Layout -->
+      <div class="track-desktop-box">
+        <!-- Left Side: Track Tabs List -->
+        <div class="track-tabs-col">
+          <button class="track-tab-btn active" data-track="ai-forensics">
+            <div class="track-tab-left">
+              <div class="track-icon-box">
+                <i data-lucide="cpu" style="width:20px;height:20px;"></i>
+              </div>
+              <div>
+                <div class="track-tab-category">AI Forensics</div>
+                <div class="track-tab-title">Deepfake &amp; AI Content Detection</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+          </button>
+
+          <button class="track-tab-btn" data-track="blockchain">
+            <div class="track-tab-left">
+              <div class="track-icon-box">
+                <i data-lucide="activity" style="width:20px;height:20px;"></i>
+              </div>
+              <div>
+                <div class="track-tab-category">Blockchain Analysis</div>
+                <div class="track-tab-title">Cryptocurrency Fund Tracing</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+          </button>
+
+          <button class="track-tab-btn" data-track="digital-forensics">
+            <div class="track-tab-left">
+              <div class="track-icon-box">
+                <i data-lucide="search" style="width:20px;height:20px;"></i>
+              </div>
+              <div>
+                <div class="track-tab-category">Digital Forensics</div>
+                <div class="track-tab-title">Cyber Forensic Triage Software</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+          </button>
+
+          <button class="track-tab-btn" data-track="threat-intel">
+            <div class="track-tab-left">
+              <div class="track-icon-box">
+                <i data-lucide="target" style="width:20px;height:20px;"></i>
+              </div>
+              <div>
+                <div class="track-tab-category">Threat Intelligence</div>
+                <div class="track-tab-title">Suspect Attribution "Digital Tripwire"</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+          </button>
+
+          <button class="track-tab-btn" data-track="secure-ai">
+            <div class="track-tab-left">
+              <div class="track-icon-box">
+                <i data-lucide="shield" style="width:20px;height:20px;"></i>
+              </div>
+              <div>
+                <div class="track-tab-category">Secure AI</div>
+                <div class="track-tab-title">Offline LLM for Investigation</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+          </button>
+
+          <button class="track-tab-btn" data-track="web3-innovation">
+            <div class="track-tab-left">
+              <div class="track-icon-box">
+                <i data-lucide="sparkles" style="width:20px;height:20px;"></i>
+              </div>
+              <div>
+                <div class="track-tab-category">Open Innovation</div>
+                <div class="track-tab-title">Smart Campus &amp; Web3 Security</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+          </button>
+        </div>
+
+        <!-- Right Side: Detailed Problem Scope -->
+        <div class="track-details-pane">
+          <div class="track-status-pill">
+            <span style="width:8px;height:8px;border-radius:50%;background:var(--cyber-primary);"></span>
+            <span id="track-category">AI Forensics</span>
+          </div>
+
+          <h3 class="track-details-heading" id="track-heading">
+            Deepfake &amp; AI Content Detection
+          </h3>
+
+          <div class="track-block">
+            <div class="track-block-label text-cyber-primary">Background</div>
+            <p class="track-block-desc" id="track-background">
+              The rapid advancement of Artificial Intelligence has enabled the creation of highly realistic synthetic media such as deepfake videos, AI-generated images, cloned voices, and manipulated digital content. These technologies are increasingly being misused for misinformation, impersonation, financial fraud, and cybercrime.
+            </p>
+          </div>
+
+          <div class="track-block">
+            <div class="track-block-label text-cyber-secondary">Objective</div>
+            <p class="track-objective-text" id="track-objective">
+              Develop a system capable of detecting AI-generated or manipulated media content and assisting law enforcement agencies in verifying authenticity.
+            </p>
+          </div>
+
+          <div class="track-two-col">
+            <div>
+              <div class="track-block-label" style="color:#9ca3af; border-bottom:1px solid var(--cyber-border); padding-bottom:0.5rem;">
+                Solution Scope
+              </div>
+              <ul class="track-sublist" id="track-scope-list">
+                <li><div class="track-dot track-dot-primary"></div><span>Detection of deepfake videos, images, or audio</span></li>
+                <li><div class="track-dot track-dot-primary"></div><span>Identification of AI-generated content signatures</span></li>
+                <li><div class="track-dot track-dot-primary"></div><span>Metadata and visual frequency spectrum analysis</span></li>
+                <li><div class="track-dot track-dot-primary"></div><span>Confidence scoring for media authenticity</span></li>
+                <li><div class="track-dot track-dot-primary"></div><span>Real-time or near real-time forensic scanning capability</span></li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="track-block-label" style="color:#9ca3af; border-bottom:1px solid var(--cyber-border); padding-bottom:0.5rem;">
+                Evaluation Parameters
+              </div>
+              <ul class="track-sublist" id="track-eval-list">
+                <li><div class="track-dot track-dot-secondary"></div><span>Detection accuracy - identifying source AI model/website</span></li>
+                <li><div class="track-dot track-dot-secondary"></div><span>Scalability and inference latency</span></li>
+                <li><div class="track-dot track-dot-secondary"></div><span>Ease of use for investigative teams</span></li>
+                <li><div class="track-dot track-dot-secondary"></div><span>Innovation in biometric/artifact detection approach</span></li>
+                <li><div class="track-dot track-dot-secondary"></div><span>Practical applicability for cyber forensics</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="track-outcome-box">
+            <div class="track-block-label" style="color:#9ca3af; margin-bottom:0.4rem;">Expected Outcome</div>
+            <p id="track-outcome">
+              A production-grade prototype tool that can assist cyber investigators in identifying manipulated or synthetic digital media reliably.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile View: Collapsible Accordion -->
+      <div class="track-mobile-accordion">
+        <!-- Item 1 -->
+        <div class="accordion-item active">
+          <button class="accordion-header">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <i data-lucide="cpu" class="text-cyber-primary" style="width:20px;height:20px;"></i>
+              <span style="font-family:var(--font-display); font-weight:700;">AI Forensics: Deepfake Detection</span>
+            </div>
+            <i data-lucide="chevron-right" class="accordion-chevron" style="width:18px;height:18px; transform: rotate(90deg);"></i>
+          </button>
+          <div class="accordion-body">
+            <p style="color:#d1d5db; font-size:0.9rem; margin-bottom:1rem;">
+              Detect manipulated synthetic media (deepfake video, cloned voice, synthetic images) and extract model fingerprints to aid law enforcement investigations.
+            </p>
+            <div class="track-outcome-box">
+              <span style="color:var(--cyber-primary); font-size:0.75rem; font-weight:700;">OUTCOME:</span>
+              <p style="font-size:0.85rem; color:#e5e7eb; margin-top:0.25rem;">Real-time media verification and confidence scoring tool.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <i data-lucide="activity" class="text-cyber-secondary" style="width:20px;height:20px;"></i>
+              <span style="font-family:var(--font-display); font-weight:700;">Blockchain: Crypto Fund Tracing</span>
+            </div>
+            <i data-lucide="chevron-right" class="accordion-chevron" style="width:18px;height:18px;"></i>
+          </button>
+          <div class="accordion-body">
+            <p style="color:#d1d5db; font-size:0.9rem; margin-bottom:1rem;">
+              Trace illicit fund flows across multi-hop blockchain wallets, mixer services, and decentralized exchanges with graph intelligence.
+            </p>
+            <div class="track-outcome-box">
+              <span style="color:var(--cyber-secondary); font-size:0.75rem; font-weight:700;">OUTCOME:</span>
+              <p style="font-size:0.85rem; color:#e5e7eb; margin-top:0.25rem;">Interactive transaction flow visualization with automated wallet risk scoring.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <i data-lucide="search" class="text-cyber-accent" style="width:20px;height:20px;"></i>
+              <span style="font-family:var(--font-display); font-weight:700;">Digital Forensics: Triage Software</span>
+            </div>
+            <i data-lucide="chevron-right" class="accordion-chevron" style="width:18px;height:18px;"></i>
+          </button>
+          <div class="accordion-body">
+            <p style="color:#d1d5db; font-size:0.9rem; margin-bottom:1rem;">
+              Lightweight on-site scanning tool to extract browser artifacts, deleted caches, event logs, and build cryptographic chain-of-custody reports.
+            </p>
+            <div class="track-outcome-box">
+              <span style="color:var(--cyber-accent); font-size:0.75rem; font-weight:700;">OUTCOME:</span>
+              <p style="font-size:0.85rem; color:#e5e7eb; margin-top:0.25rem;">Rapid triage utility delivering fast evidence discovery from target hardware.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <i data-lucide="target" style="width:20px;height:20px; color:#f59e0b;"></i>
+              <span style="font-family:var(--font-display); font-weight:700;">Threat Intel: Digital Tripwire</span>
+            </div>
+            <i data-lucide="chevron-right" class="accordion-chevron" style="width:18px;height:18px;"></i>
+          </button>
+          <div class="accordion-body">
+            <p style="color:#d1d5db; font-size:0.9rem; margin-bottom:1rem;">
+              Canary asset generation engine that extracts real device signatures and coordinates, bypassing standard obfuscations and alerting officers in real time.
+            </p>
+            <div class="track-outcome-box">
+              <span style="color:#f59e0b; font-size:0.75rem; font-weight:700;">OUTCOME:</span>
+              <p style="font-size:0.85rem; color:#e5e7eb; margin-top:0.25rem;">Tactical alerting dashboard with non-repudiation forensic logging.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <i data-lucide="shield" class="text-cyber-primary" style="width:20px;height:20px;"></i>
+              <span style="font-family:var(--font-display); font-weight:700;">Secure AI: Offline Forensic LLM</span>
+            </div>
+            <i data-lucide="chevron-right" class="accordion-chevron" style="width:18px;height:18px;"></i>
+          </button>
+          <div class="accordion-body">
+            <p style="color:#d1d5db; font-size:0.9rem; margin-bottom:1rem;">
+              100% air-gapped local AI agent for natural language evidence summarization, charge sheet synthesis, and cyber law references.
+            </p>
+            <div class="track-outcome-box">
+              <span style="color:var(--cyber-primary); font-size:0.75rem; font-weight:700;">OUTCOME:</span>
+              <p style="font-size:0.85rem; color:#e5e7eb; margin-top:0.25rem;">Zero-telemetry local LLM pipeline preserving complete data confidentiality.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <div style="display:flex; align-items:center; gap:0.75rem;">
+              <i data-lucide="sparkles" class="text-cyber-secondary" style="width:20px;height:20px;"></i>
+              <span style="font-family:var(--font-display); font-weight:700;">Open Track: Smart Campus &amp; Web3</span>
+            </div>
+            <i data-lucide="chevron-right" class="accordion-chevron" style="width:18px;height:18px;"></i>
+          </button>
+          <div class="accordion-body">
+            <p style="color:#d1d5db; font-size:0.9rem; margin-bottom:1rem;">
+              Decentralized credentials, automated zero-knowledge campus access, and smart infrastructure security auditing.
+            </p>
+            <div class="track-outcome-box">
+              <span style="color:var(--cyber-secondary); font-size:0.75rem; font-weight:700;">OUTCOME:</span>
+              <p style="font-size:0.85rem; color:#e5e7eb; margin-top:0.25rem;">Tamper-proof verifiable credentials and intrusion detection ecosystem.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= JUDGING CRITERIA ================= -->
+  <section id="judging" class="judging-section">
+    <div class="container">
+      <div style="text-align:center; margin-bottom: 3.5rem;">
+        <div class="section-tag">
+          <i data-lucide="scale" style="width:14px;height:14px;"></i>
+          <span>EVALUATION PROTOCOL</span>
+        </div>
+        <h2 class="section-title">Judging Criteria</h2>
+        <p style="color:#9ca3af; max-width:600px; margin:0 auto; font-size:1.05rem;">
+          How jury members and technical experts will evaluate your hackathon submissions.
+        </p>
+      </div>
+
+      <div class="judging-grid">
+        <div class="judging-card">
+          <div class="judging-icon-bubble">
+            <i data-lucide="zap" style="width:28px;height:28px;"></i>
+          </div>
+          <h3 class="judging-card-title">Innovation &amp; Originality</h3>
+          <p class="judging-card-desc">Creativity of the idea and uniqueness of the technical approach in addressing the problem statement.</p>
+        </div>
+
+        <div class="judging-card">
+          <div class="judging-icon-bubble">
+            <i data-lucide="code" style="width:28px;height:28px;"></i>
+          </div>
+          <h3 class="judging-card-title">Technical Implementation</h3>
+          <p class="judging-card-desc">Code quality, system architecture robustness, modularity, and effective utilization of modern technologies.</p>
+        </div>
+
+        <div class="judging-card">
+          <div class="judging-icon-bubble">
+            <i data-lucide="layers" style="width:28px;height:28px;"></i>
+          </div>
+          <h3 class="judging-card-title">Completeness of Solution</h3>
+          <p class="judging-card-desc">The project must be a working end-to-end prototype with functional UI and backend, not merely mockups or conceptual slides.</p>
+        </div>
+
+        <div class="judging-card">
+          <div class="judging-icon-bubble">
+            <i data-lucide="users" style="width:28px;height:28px;"></i>
+          </div>
+          <h3 class="judging-card-title">Scalability &amp; Usability</h3>
+          <p class="judging-card-desc">System capability to handle real-world load, accompanied by an intuitive, simple user experience for operators.</p>
+        </div>
+
+        <div class="judging-card">
+          <div class="judging-icon-bubble">
+            <i data-lucide="sliders" style="width:28px;height:28px;"></i>
+          </div>
+          <h3 class="judging-card-title">Practical Impact</h3>
+          <p class="judging-card-desc">Effectiveness of the software in solving urgent cyber defense, digital evidence preservation, and investigation challenges.</p>
+        </div>
+
+        <div class="judging-card">
+          <div class="judging-icon-bubble">
+            <i data-lucide="mic" style="width:28px;height:28px;"></i>
+          </div>
+          <h3 class="judging-card-title">Presentation &amp; Demo</h3>
+          <p class="judging-card-desc">Clarity in articulating the core problem, live interactive software demonstration, and response to jury questions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PRIZES SECTION ================= -->
+  <section id="prizes" class="prizes-section">
+    <div class="container">
+      <div style="text-align:center; margin-bottom: 2rem;">
+        <div class="prize-banner-pill font-display">
+          <i data-lucide="trophy" style="width:16px;height:16px;"></i>
+          <span>TOTAL PRIZE POOL: &#8377;1,55,000</span>
+        </div>
+        <h2 class="section-title">
+          WINNING <span class="text-cyber-primary">REWARDS</span>
+        </h2>
+        <div style="width:80px; height:4px; background:var(--cyber-primary); margin: 0 auto; border-radius:9999px;"></div>
+      </div>
+
+      <div class="prizes-podium">
+        <!-- 2nd Place: Silver -->
+        <div class="prize-card prize-silver">
+          <div class="prize-medal-icon silver-icon">
+            <i data-lucide="medal" style="width:36px;height:36px;"></i>
+          </div>
+          <h3 class="prize-rank-title">RUNNER UP</h3>
+          <div class="prize-tier-sub">Silver Tier Award</div>
+          <div class="prize-amount-silver">&#8377;50,000</div>
+          <p style="font-size:0.85rem; color:#9ca3af; margin-top:1rem;">
+            Trophy + Silver Medals + Merit Certificates &bull; Mentorship &amp; Internship Opportunities
+          </p>
+        </div>
+
+        <!-- 1st Place: Gold -->
+        <div class="prize-card prize-gold">
+          <div class="prize-tag">CHAMPION</div>
+          <div class="prize-medal-icon gold-icon">
+            <i data-lucide="trophy" style="width:44px;height:44px;"></i>
+          </div>
+          <h3 class="prize-rank-title" style="font-size:1.75rem;">WINNER</h3>
+          <div class="prize-tier-sub" style="color:#fde047;">Grand Championship Gold Tier</div>
+          <div class="prize-amount-gold">&#8377;75,000</div>
+          <p style="font-size:0.9rem; color:#fef08a; margin-top:1rem; line-height:1.6;">
+            Grand Winner Trophy + Gold Medals + Certificate of Excellence &bull; Direct Incubation Support
+          </p>
+        </div>
+
+        <!-- 3rd Place: Bronze -->
+        <div class="prize-card prize-bronze">
+          <div class="prize-medal-icon bronze-icon">
+            <i data-lucide="award" style="width:36px;height:36px;"></i>
+          </div>
+          <h3 class="prize-rank-title">2nd RUNNER UP</h3>
+          <div class="prize-tier-sub">Bronze Tier Award</div>
+          <div class="prize-amount-bronze">&#8377;30,000</div>
+          <p style="font-size:0.85rem; color:#9ca3af; margin-top:1rem;">
+            Trophy + Bronze Medals + Merit Certificates &bull; Industry Networking &amp; Goodies
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SCHEDULE / TIMELINE ================= -->
+  <section id="schedule" class="schedule-section">
+    <div class="container">
+      <div style="text-align:center; margin-bottom: 3.5rem;">
+        <div class="section-tag">
+          <i data-lucide="clock" style="width:14px;height:14px;"></i>
+          <span>ROADMAP</span>
+        </div>
+        <h2 class="section-title">EVENT TIMELINE</h2>
+        <div style="width:80px; height:4px; background:var(--cyber-primary); margin: 0 auto; border-radius:9999px;"></div>
+      </div>
+
+      <div class="timeline-spine-wrapper">
+        <div class="timeline-center-line"></div>
+
+        <!-- Milestone 1 -->
+        <div class="timeline-row left">
+          <div class="timeline-node" style="border-color:var(--cyber-primary);">
+            <i data-lucide="user-plus" class="text-cyber-primary" style="width:20px;height:20px;"></i>
+          </div>
+          <div class="timeline-card-box">
+            <div class="timeline-card">
+              <div class="timeline-date text-cyber-primary">18.02.2026</div>
+              <h3 class="timeline-title">Registration Starts</h3>
+              <p class="timeline-desc">Call for innovators and hackers! Online registrations officially open across all tracks.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestone 2 -->
+        <div class="timeline-row right">
+          <div class="timeline-node" style="border-color:var(--cyber-secondary);">
+            <i data-lucide="message-circle" class="text-cyber-secondary" style="width:20px;height:20px;"></i>
+          </div>
+          <div class="timeline-card-box">
+            <div class="timeline-card">
+              <div class="timeline-date text-cyber-secondary">21.02.2026</div>
+              <h3 class="timeline-title">Queries &amp; Orientation Meeting</h3>
+              <p class="timeline-desc">Interactive virtual briefing session to clarify problem statement scope and submission standards.</p>
+              <a href="https://meet.google.com/nmw-hzyj-ccs" target="_blank" rel="noopener noreferrer" class="cyber-btn-outline clip-path-slant" style="margin-top:0.75rem; padding:0.4rem 1rem; font-size:0.75rem;">
+                <span>JOIN GOOGLE MEET</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestone 3 -->
+        <div class="timeline-row left">
+          <div class="timeline-node" style="border-color:var(--cyber-accent);">
+            <i data-lucide="clock" class="text-cyber-accent" style="width:20px;height:20px;"></i>
+          </div>
+          <div class="timeline-card-box">
+            <div class="timeline-card">
+              <div class="timeline-date text-cyber-accent">25.02.2026</div>
+              <h3 class="timeline-title">Registration Closes</h3>
+              <p class="timeline-desc">Final deadline to submit team rosters, problem statement selection, and project abstract decks.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestone 4 -->
+        <div class="timeline-row right">
+          <div class="timeline-node" style="border-color:#ffffff;">
+            <i data-lucide="check-circle-2" style="width:20px;height:20px; color:#ffffff;"></i>
+          </div>
+          <div class="timeline-card-box">
+            <div class="timeline-card">
+              <div class="timeline-date" style="color:#ffffff;">28.02.2026</div>
+              <h3 class="timeline-title">Phase I Finalists Announced</h3>
+              <p class="timeline-desc">Top shortlisted student teams advance to the 24-hour physical Grand Finale at GTEC Campus.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestone 5 -->
+        <div class="timeline-row left">
+          <div class="timeline-node" style="border-color:#eab308;">
+            <i data-lucide="trophy" style="width:20px;height:20px; color:#eab308;"></i>
+          </div>
+          <div class="timeline-card-box">
+            <div class="timeline-card">
+              <div class="timeline-date" style="color:#eab308;">06.03.2026 – 07.03.2026</div>
+              <h3 class="timeline-title">Grand Finale (24-Hour Sprint)</h3>
+              <p class="timeline-desc">Intense 24-hour on-campus hackathon at Ganadipathy Tulsi's Jain Engineering College, followed by jury review &amp; prize distribution.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REGISTRATION SECTION ================= -->
+  <section id="register" class="register-section">
+    <div class="container">
+      <div class="section-tag">
+        <i data-lucide="scan" style="width:14px;height:14px;"></i>
+        <span>SCANNABLE ACCESS</span>
+      </div>
+
+      <h2 class="section-title">
+        REGISTER <span class="text-cyber-secondary">NOW</span>
+      </h2>
+
+      <!-- QR Card -->
+      <div class="qr-glow-card">
+        <div class="qr-inner-frame">
+          <div class="qr-white-sheet">
+            <!-- SVG QR Code Icon representation -->
+            <svg class="qr-code-img" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="100" height="100" fill="white"/>
+              <!-- Finder pattern top-left -->
+              <rect x="10" y="10" width="30" height="30" fill="black"/>
+              <rect x="15" y="15" width="20" height="20" fill="white"/>
+              <rect x="20" y="20" width="10" height="10" fill="black"/>
+              <!-- Finder pattern top-right -->
+              <rect x="60" y="10" width="30" height="30" fill="black"/>
+              <rect x="65" y="15" width="20" height="20" fill="white"/>
+              <rect x="70" y="20" width="10" height="10" fill="black"/>
+              <!-- Finder pattern bottom-left -->
+              <rect x="10" y="60" width="30" height="30" fill="black"/>
+              <rect x="15" y="65" width="20" height="20" fill="white"/>
+              <rect x="20" y="70" width="10" height="10" fill="black"/>
+              <!-- Data modules -->
+              <rect x="45" y="15" width="8" height="8" fill="black"/>
+              <rect x="45" y="30" width="8" height="8" fill="black"/>
+              <rect x="15" y="45" width="8" height="8" fill="black"/>
+              <rect x="30" y="45" width="8" height="8" fill="black"/>
+              <rect x="45" y="45" width="10" height="10" fill="#00ff9d"/>
+              <rect x="60" y="45" width="8" height="8" fill="black"/>
+              <rect x="75" y="45" width="8" height="8" fill="black"/>
+              <rect x="60" y="60" width="8" height="8" fill="black"/>
+              <rect x="75" y="60" width="8" height="8" fill="black"/>
+              <rect x="45" y="75" width="8" height="8" fill="black"/>
+              <rect x="65" y="75" width="8" height="8" fill="black"/>
+              <rect x="80" y="75" width="8" height="8" fill="black"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <p style="color:#9ca3af; font-size:1.15rem; max-width:600px; margin: 0 auto 2rem auto;">
+        Scan the QR code or click below to launch the official registration portal.
+      </p>
+
+      <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;">
+        <button class="cyber-btn-primary clip-path-slant btn-open-register" style="padding:1rem 2.5rem; font-size:1rem;">
+          <i data-lucide="file-text" style="width:20px;height:20px;"></i>
+          <span>OPEN REGISTRATION FORM</span>
+        </button>
+
+        <a href="https://forms.gle/c8Z6xuyUNecYJwhw8" target="_blank" rel="noopener noreferrer" class="cyber-btn-glass" style="padding:1rem 2.5rem; font-size:1rem;">
+          <i data-lucide="external-link" style="width:20px;height:20px;"></i>
+          <span>GOOGLE FORM BACKUP</span>
+        </a>
+      </div>
+
+      <p class="font-mono" style="margin-top:1.5rem; font-size:0.85rem; color:#71717a;">
+        PORTAL CLOSES: FEBRUARY 25, 2026 &bull; 11:59 PM IST
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= REGISTRATION MODAL ================= -->
+  <div class="cyber-modal-overlay" id="registration-modal">
+    <div class="cyber-modal-dialog">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <div class="brand-cube" style="width:1.5rem; height:1.5rem;">
+            <div class="brand-cube-inner" style="width:0.75rem; height:0.75rem;"></div>
+          </div>
+          <span class="modal-header-title">HACKATHON REGISTRATION</span>
+        </div>
+        <button class="modal-close-btn btn-close-modal" aria-label="Close modal">
+          <i data-lucide="x" style="width:22px;height:22px;"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body Form -->
+      <div class="modal-body" id="modal-form-container">
+        <form id="hackathon-registration-form">
+          <div class="form-field full">
+            <label>Team Name *</label>
+            <input type="text" id="reg-team-name" required placeholder="e.g. CyberSentinels" />
+          </div>
+
+          <div class="form-group-grid">
+            <div class="form-field">
+              <label>Team Size *</label>
+              <select id="reg-team-size" required>
+                <option value="1">1 Member (Solo)</option>
+                <option value="2">2 Members</option>
+                <option value="3">3 Members</option>
+                <option value="4" selected>4 Members</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Selected Track / Problem *</label>
+              <select id="reg-track" required>
+                <option value="ai-forensics">AI Forensics: Deepfake Detection</option>
+                <option value="blockchain">Blockchain: Crypto Fund Tracing</option>
+                <option value="digital-forensics">Digital Forensics: Triage Software</option>
+                <option value="threat-intel">Threat Intel: Digital Tripwire</option>
+                <option value="secure-ai">Secure AI: Offline Forensic LLM</option>
+                <option value="web3-innovation">Open Track: Campus &amp; Web3 Security</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Team Leader Details -->
+          <div style="font-family:var(--font-display); font-size:0.85rem; font-weight:800; color:var(--cyber-primary); margin:1.25rem 0 0.75rem 0;">
+            TEAM LEADER DETAILS
+          </div>
+
+          <div class="form-group-grid">
+            <div class="form-field">
+              <label>Leader Full Name *</label>
+              <input type="text" id="reg-lead-name" required placeholder="Full Name" />
+            </div>
+            <div class="form-field">
+              <label>Leader Email *</label>
+              <input type="email" id="reg-lead-email" required placeholder="leader@college.edu" />
+            </div>
+            <div class="form-field">
+              <label>Leader WhatsApp Mobile *</label>
+              <input type="tel" id="reg-lead-phone" required placeholder="10-digit mobile number" />
+            </div>
+            <div class="form-field">
+              <label>College / Institution *</label>
+              <input type="text" id="reg-lead-college" required value="Ganadipathy Tulsi's Jain Engineering College" placeholder="College Name" />
+            </div>
+            <div class="form-field">
+              <label>Department *</label>
+              <select id="reg-lead-dept" required>
+                <option value="IT">Information Technology (IT)</option>
+                <option value="AI&DS">Artificial Intelligence &amp; Data Science (AI &amp; DS)</option>
+                <option value="CSBS">Computer Science &amp; Business Systems (CSBS)</option>
+                <option value="CSE">Computer Science &amp; Engineering (CSE)</option>
+                <option value="ECE">Electronics &amp; Communication (ECE)</option>
+                <option value="OTHER">Other Department</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Year of Study *</label>
+              <select id="reg-lead-year" required>
+                <option value="I">I Year</option>
+                <option value="II">II Year</option>
+                <option value="III" selected>III Year</option>
+                <option value="IV">IV Year</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Dynamic Team Members Container -->
+          <div class="team-members-header">
+            <span class="team-members-title">ADDITIONAL TEAM MEMBERS</span>
+          </div>
+
+          <div id="dynamic-members-container">
+            <!-- Member 2 -->
+            <div class="team-member-block" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+              <div style="font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; color: var(--cyber-primary); margin-bottom: 0.75rem;">TEAM MEMBER #2</div>
+              <div class="form-group-grid">
+                <div class="form-field"><label>Full Name *</label><input type="text" name="member_2_name" required placeholder="Member name" /></div>
+                <div class="form-field"><label>Email Address *</label><input type="email" name="member_2_email" required placeholder="member@college.edu" /></div>
+                <div class="form-field"><label>Phone Number *</label><input type="tel" name="member_2_phone" required placeholder="10-digit mobile" /></div>
+                <div class="form-field"><label>Department &amp; Year *</label><input type="text" name="member_2_dept" required placeholder="e.g. IT, 3rd Year" /></div>
+              </div>
+            </div>
+            <!-- Member 3 -->
+            <div class="team-member-block" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+              <div style="font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; color: var(--cyber-primary); margin-bottom: 0.75rem;">TEAM MEMBER #3</div>
+              <div class="form-group-grid">
+                <div class="form-field"><label>Full Name *</label><input type="text" name="member_3_name" required placeholder="Member name" /></div>
+                <div class="form-field"><label>Email Address *</label><input type="email" name="member_3_email" required placeholder="member@college.edu" /></div>
+                <div class="form-field"><label>Phone Number *</label><input type="tel" name="member_3_phone" required placeholder="10-digit mobile" /></div>
+                <div class="form-field"><label>Department &amp; Year *</label><input type="text" name="member_3_dept" required placeholder="e.g. AI&amp;DS, 3rd Year" /></div>
+              </div>
+            </div>
+            <!-- Member 4 -->
+            <div class="team-member-block" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+              <div style="font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; color: var(--cyber-primary); margin-bottom: 0.75rem;">TEAM MEMBER #4</div>
+              <div class="form-group-grid">
+                <div class="form-field"><label>Full Name *</label><input type="text" name="member_4_name" required placeholder="Member name" /></div>
+                <div class="form-field"><label>Email Address *</label><input type="email" name="member_4_email" required placeholder="member@college.edu" /></div>
+                <div class="form-field"><label>Phone Number *</label><input type="tel" name="member_4_phone" required placeholder="10-digit mobile" /></div>
+                <div class="form-field"><label>Department &amp; Year *</label><input type="text" name="member_4_dept" required placeholder="e.g. CSBS, 3rd Year" /></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-field full">
+            <label>Project Abstract Deck / Drive URL (Optional)</label>
+            <input type="url" id="reg-deck-url" placeholder="https://drive.google.com/... or GitHub link" />
+          </div>
+
+          <button type="submit" class="cyber-btn-primary clip-path-slant" style="width:100%; padding:1rem; margin-top:1rem; font-size:1rem;">
+            <i data-lucide="check-circle" style="width:20px;height:20px;"></i>
+            <span>SUBMIT HACKATHON ENTRY</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Modal Success View -->
+      <div class="modal-body" id="modal-success-container" style="display:none;">
+        <div class="pass-ticket-box">
+          <i data-lucide="shield-check" class="text-cyber-primary" style="width:54px;height:54px;margin-bottom:0.5rem;"></i>
+          <h3 class="font-display" style="font-size:1.5rem; color:#fff; margin-bottom:0.25rem;">
+            REGISTRATION CONFIRMED!
+          </h3>
+          <p style="color:#9ca3af; font-size:0.88rem;">
+            Your team has been successfully enrolled in the GTEC Cyber Hackathon v4.0.
+          </p>
+
+          <div class="pass-id-badge" id="generated-pass-id">
+            GTEC-CYBER-9X42A
+          </div>
+
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:1rem; text-align:left; margin:1.25rem 0;">
+            <div style="font-size:0.85rem; color:#9ca3af; margin-bottom:0.35rem;">
+              Team Name: <strong id="pass-team-name" style="color:#fff;">CyberSentinels</strong>
+            </div>
+            <div style="font-size:0.85rem; color:#9ca3af; margin-bottom:0.35rem;">
+              Selected Track: <strong id="pass-track-name" style="color:var(--cyber-primary);">AI Forensics</strong>
+            </div>
+            <div style="font-size:0.85rem; color:#9ca3af;">
+              Venue: <strong style="color:#fff;">GTEC Campus, Kaniyambadi, Vellore</strong>
+            </div>
+          </div>
+
+          <p style="font-size:0.8rem; color:#71717a; margin-bottom:1.5rem;">
+            Please screenshot or save your Cyber Hacker Pass ID. Our team coordinators will reach out via WhatsApp with further guidelines.
+          </p>
+
+          <div style="display:flex; justify-content:center; gap:1rem;">
+            <a href="https://chat.whatsapp.com/B7b7feUouKq57duA2kH2wt" target="_blank" rel="noopener noreferrer" class="cyber-btn-green clip-path-slant" style="padding:0.7rem 1.5rem;">
+              <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+              <span>JOIN WHATSAPP GROUP</span>
+            </a>
+            <button class="cyber-btn-glass btn-close-modal" style="padding:0.7rem 1.5rem;">
+              <span>DONE</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer id="contact" class="cyber-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="nav-brand" style="margin-bottom:1rem;">
+            <div class="brand-cube">
+              <div class="brand-cube-inner"></div>
+            </div>
+            <span class="brand-text">GTEC<span class="text-cyber-primary">HACK</span><span class="brand-badge font-mono">v4.0</span></span>
+          </a>
+
+          <p class="footer-brand-desc">
+            A flagship technology hackathon presented by Ganadipathy Tulsi's Jain Engineering College, fostering student excellence in cybersecurity, digital forensic intelligence, and ethical hacking.
+          </p>
+
+          <div style="display:flex; gap:0.75rem;">
+            <a href="https://chat.whatsapp.com/B7b7feUouKq57duA2kH2wt" target="_blank" rel="noopener noreferrer" class="cyber-btn-green clip-path-slant" style="padding:0.5rem 1.2rem; font-size:0.8rem;">
+              <i data-lucide="message-circle" style="width:14px;height:14px;"></i>
+              <span>OFFICIAL WHATSAPP GROUP</span>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">QUICK LINKS</h4>
+          <ul class="footer-links">
+            <li><a href="#about">About Event</a></li>
+            <li><a href="#problems">Problem Statements</a></li>
+            <li><a href="#judging">Judging Criteria</a></li>
+            <li><a href="#prizes">Prizes &amp; Rewards</a></li>
+            <li><a href="#schedule">Timeline</a></li>
+            <li><a href="#register">Register Team</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">CONTACT &amp; VENUE</h4>
+          <ul class="footer-contact-list">
+            <li class="footer-contact-item">
+              <i data-lucide="map-pin" class="footer-contact-icon"></i>
+              <span>
+                <strong>Ganadipathy Tulsi's Jain Engineering College (GTEC)</strong><br />
+                Chittoor-Cuddalore Road, Kaniyambadi,<br />
+                Vellore - 632 102, Tamil Nadu, India.
+              </span>
+            </li>
+            <li class="footer-contact-item">
+              <i data-lucide="mail" class="footer-contact-icon"></i>
+              <span>hackathon@gtec.ac.in / adsevent@gmail.com</span>
+            </li>
+            <li class="footer-contact-item">
+              <i data-lucide="phone" class="footer-contact-icon"></i>
+              <span>Student Coordinators: +91 94883 45678 / +91 98402 12345</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div class="footer-copyright font-mono">
+          &copy; 2026 GTEC Cyber Hackathon v4.0. All rights reserved.
+        </div>
+        <div class="footer-conductor">
+          Conducted by <strong>Student Associations of IT, AI &amp; DS, and CSBS</strong> &bull; GTEC
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="app.js"></script>
 </body>
 </html>
