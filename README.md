@@ -21,7 +21,6 @@ Ganadipathy Tulsi's Jain Engineering College (GTEC), Vellore - 632 102
 - **Cash Prizes & Trophies**: Exciting cash rewards, winner trophies, and medals for top teams.
 - **AI Lab Incubation & GPU Credits**: Direct research incubation access at GTEC AI Labs with high-compute cloud resources.
 - **Certificates of Excellence**: Official merit and participation certificates endorsed by the Dept of AI & DS.
-- **Internship & Mentorship**: 1-on-1 jury feedback, research mentoring, and fast-track internship interview opportunities.
 - **6-Hour Intensive Hack Sprint**: Immersive 6-hour on-campus hackathon at GTEC AI Labs.
 - **Networking & Tech Swag**: Connect with student AI researchers across colleges and receive exclusive tech merchandise.
 
