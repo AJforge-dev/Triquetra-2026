@@ -24,6 +24,13 @@ Ganadipathy Tulsi's Jain Engineering College (GTEC), Vellore - 632 102
 - **6-Hour Intensive Hack Sprint**: Immersive 6-hour on-campus hackathon at GTEC AI Labs.
 - **Networking & Tech Swag**: Connect with student AI researchers across colleges and receive exclusive tech merchandise.
 
+## 📅 Event Roadmap
+- **28.09.2026**: Online Registration Opens for student dev teams
+- **01.10.2026**: Official Evaluation Criteria & Benchmark Release
+- **05.10.2026**: Registration & Abstract Submission Closes (11:59 PM IST)
+- **07.10.2026**: Phase I Finalists Shortlist Announced
+- **09.10.2026**: Grand Finale (6-Hour On-Campus Hackathon at GTEC AI Labs)
+
 ## 🚀 Running Locally
 Open `index.html` directly in any web browser, or launch via Python:
 ```bash

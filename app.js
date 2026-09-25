@@ -211,18 +211,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- Mobile Accordion Logic ---
+  // --- Accordion Logic (Problem Tracks & Hackathon FAQ) ---
   const accordionHeaders = document.querySelectorAll('.accordion-header');
   accordionHeaders.forEach(header => {
     header.addEventListener('click', () => {
       const item = header.closest('.accordion-item');
+      if (!item) return;
+      const container = item.parentElement;
       const wasActive = item.classList.contains('active');
       
-      document.querySelectorAll('.accordion-item').forEach(i => {
-        i.classList.remove('active');
-        const icon = i.querySelector('.accordion-chevron');
-        if (icon) icon.style.transform = 'rotate(0deg)';
-      });
+      if (container) {
+        container.querySelectorAll('.accordion-item').forEach(i => {
+          i.classList.remove('active');
+          const icon = i.querySelector('.accordion-chevron');
+          if (icon) icon.style.transform = 'rotate(0deg)';
+        });
+      }
 
       if (!wasActive) {
         item.classList.add('active');

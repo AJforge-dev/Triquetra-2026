@@ -939,6 +939,9 @@ body {
   overflow: hidden;
   transition: all 0.3s ease;
 }
+.accordion-item:hover {
+  border-color: rgba(0, 255, 157, 0.4);
+}
 .accordion-header {
   width: 100%;
   padding: 1.25rem;
